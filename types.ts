@@ -20,7 +20,9 @@ export type ViewState =
   | 'automation-video'
   | 'privacy'
   | 'terms'
-  | 'cookies';
+  | 'cookies'
+  | 'blog'
+  | 'blog-post';
 
 export interface PlanFeature {
   text: string;

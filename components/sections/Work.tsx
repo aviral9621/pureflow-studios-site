@@ -94,7 +94,7 @@ function CaseStudyCard({ project, reduced, index }: { project: Project; reduced:
           {project.client}
         </p>
 
-        <h3 className="mt-2 font-display text-[1.05rem] font-bold leading-[1.2] tracking-tight text-white sm:text-[1.15rem] md:text-[1.2rem]">
+        <h3 className="mt-2 font-sans text-[1.05rem] font-semibold leading-[1.25] tracking-[-0.01em] text-white sm:text-[1.12rem] md:text-[1.18rem]">
           {project.title}
         </h3>
 

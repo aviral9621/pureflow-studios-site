@@ -1,320 +1,181 @@
-
-import React, { useLayoutEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import {
+  ArrowLeft,
+  ArrowRight,
+  Bot,
+  Users,
+  Globe,
+  Receipt,
+  Zap,
+  MessageSquare,
+  BarChart,
+  TrendingUp,
+} from 'lucide-react';
 import { ViewState } from '../types';
-import { ArrowLeft, ArrowDown, Bot, Users, Globe, Receipt, Zap, MessageSquare, BarChart, ChevronDown, ChevronRight, ChevronLeft, Cpu } from 'lucide-react';
-import gsap from 'gsap';
 
 interface AutomationPageProps {
   onViewChange: (view: ViewState) => void;
 }
 
-const AUTOMATION_STEPS = [
-  { icon: MessageSquare, label: "Lead Inflow", desc: "Automated capture" },
-  { icon: Bot, label: "AI Calling Agents", desc: "Instant qualification" },
-  { icon: Globe, label: "Website Sales", desc: "24/7 conversion" },
-  { icon: Users, label: "Deal Closing", desc: "CRM Pipeline logic" },
-  { icon: Zap, label: "Workflow Automation", desc: "Zero manual data entry" },
-  { icon: BarChart, label: "Marketing Ads", desc: "Retargeting on autopilot" },
-  { icon: Receipt, label: "Invoice Generation", desc: "Auto-send & track" },
-  { icon: ArrowDown, label: "Revenue", desc: "Money in the bank", highlight: true }
+const STEPS = [
+  { icon: MessageSquare, label: 'Lead Inflow', desc: 'WhatsApp, web forms, Meta ads — all captured into one inbox.' },
+  { icon: Bot, label: 'AI Calling Agent', desc: 'Auto-qualifies leads with a real phone conversation in 30 seconds.' },
+  { icon: Globe, label: 'Website Sales', desc: 'Smart landing pages convert traffic 24/7, even while you sleep.' },
+  { icon: Users, label: 'Deal Closing', desc: 'CRM pipeline logic routes hot leads to the right rep instantly.' },
+  { icon: Zap, label: 'Workflow Automation', desc: 'Zero manual data entry — every action triggers the next one.' },
+  { icon: BarChart, label: 'Retargeting Ads', desc: 'Lost leads pulled back via automatic Meta retargeting.' },
+  { icon: Receipt, label: 'Auto Invoicing', desc: 'GST invoices generated, sent, and tracked without lifting a finger.' },
+  { icon: TrendingUp, label: 'Revenue', desc: 'Money in the bank — fully tracked, fully attributed.', highlight: true },
 ];
 
 export const AutomationPage: React.FC<AutomationPageProps> = ({ onViewChange }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const textSectionRef = useRef<HTMLDivElement>(null);
+  const reduced = useReducedMotion();
 
-  useLayoutEffect(() => {
-    const ctx = gsap.context(() => {
-      // 1. Smooth Fade In of the whole page
-      gsap.fromTo(containerRef.current,
-        { opacity: 0 },
-        { opacity: 1, duration: 0.8, ease: "power2.out" }
-      );
-
-      // 2. Video Reveal - Faster
-      gsap.fromTo(".video-element",
-        { scale: 0.9, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1, delay: 0.2, ease: "power3.out" }
-      );
-
-      // 3. Text Content Reveal - Faster sequence
-      gsap.fromTo(".auto-text", 
-        { y: 30, opacity: 0 },
-        { y: 0, opacity: 1, stagger: 0.1, duration: 0.8, delay: 0.6, ease: "power2.out" }
-      );
-
-      // 4. Grid Items Reveal
-      gsap.fromTo(".grid-item",
-        { scale: 0.8, opacity: 0 },
-        { scale: 1, opacity: 1, stagger: 0.05, duration: 0.6, delay: 1.0, ease: "back.out(1.7)" }
-      );
-      
-      // 5. Connectors Reveal
-      gsap.fromTo(".connector-line",
-        { opacity: 0, scaleX: 0 },
-        { opacity: 1, scaleX: 1, duration: 0.5, delay: 1.5, stagger: 0.1 }
-      );
-
-    }, containerRef);
-
-    return () => ctx.revert();
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
-  const handleCtaClick = () => {
-    onViewChange('home');
-    setTimeout(() => {
-      const element = document.getElementById('automate-section');
-      if (element) {
-        element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    }, 400); // Small delay to allow Home component to mount
-  };
-
-  // Helper to determine visual order for Snake Layout
-  const getOrderClass = (index: number) => {
-    // Mobile (2 cols) - Snake Flow
-    // Pair 0 (0-1): Left->Right (Order 1, 2)
-    // Pair 1 (2-3): Right->Left (Order 4, 3) -> Item 2 is right, Item 3 is left
-    // Pair 2 (4-5): Left->Right (Order 5, 6)
-    // Pair 3 (6-7): Right->Left (Order 8, 7)
-    
-    const pair = Math.floor(index / 2);
-    let mobileOrder;
-    
-    if (pair % 2 === 0) {
-      // Even pairs (0, 2): Natural order
-      mobileOrder = index + 1;
-    } else {
-      // Odd pairs (1, 3): Reverse order within the pair
-      const base = pair * 2;
-      // if index is even (left item in array), it goes to right slot (base + 2)
-      // if index is odd (right item in array), it goes to left slot (base + 1)
-      mobileOrder = (index % 2 === 0) ? base + 2 : base + 1;
-    }
-
-    // Desktop (4 cols) - Snake Flow
-    // Row 1 (0-3): Left->Right (Order 1, 2, 3, 4)
-    // Row 2 (4-7): Right->Left (Order 8, 7, 6, 5)
-    let desktopOrder;
-    if (index < 4) {
-      desktopOrder = index + 1;
-    } else {
-      desktopOrder = 8 - (index - 4);
-    }
-    
-    return `order-${mobileOrder} md:order-${desktopOrder}`;
-  };
-
   return (
-    <div ref={containerRef} className="min-h-screen w-full bg-black text-white relative overflow-x-hidden font-sans">
-      
-      {/* Animation Styles */}
-      <style>{`
-        @keyframes textFlow {
-           0% { background-position: 0% 50%; }
-           100% { background-position: 200% 50%; }
-        }
-        .animate-text-flow {
-           background-size: 200% auto;
-           animation: textFlow 3s linear infinite;
-        }
-        @keyframes btnFlow {
-           0% { background-position: 0% 50%; }
-           100% { background-position: 200% 50%; }
-        }
-        .animate-btn-flow {
-           background: linear-gradient(90deg, #A452FF 0%, #FF20A0 50%, #A452FF 100%);
-           background-size: 200% auto;
-           animation: btnFlow 3s linear infinite;
-        }
-        
-        @keyframes scrollLoop {
-           0% { transform: translateY(0); opacity: 0.5; }
-           50% { transform: translateY(6px); opacity: 1; }
-           100% { transform: translateY(0); opacity: 0.5; }
-        }
-        .animate-scroll-loop {
-           animation: scrollLoop 1.5s ease-in-out infinite;
-        }
-        
-        /* Flow Animation for Chain */
-        @keyframes flowLine {
-           0% { background-position: 0% 50%; }
-           100% { background-position: 100% 50%; }
-        }
-        .flow-gradient {
-           background: linear-gradient(90deg, rgba(164,82,255,0.2) 0%, rgba(255,32,160,0.8) 50%, rgba(164,82,255,0.2) 100%);
-           background-size: 200% auto;
-           animation: flowLine 2s linear infinite;
-        }
-      `}</style>
+    <main className="relative min-h-screen overflow-hidden bg-black text-white">
+      {/* Ambient bg */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] bg-brand/[0.06] rounded-full blur-[140px]" />
+      </div>
 
-      {/* Back Button */}
-      <div className="fixed top-6 left-6 z-50">
-        <button 
+      <div className="relative z-10 mx-auto max-w-6xl px-5 pt-24 pb-16 sm:px-6 sm:pt-28 lg:px-10 lg:pt-32">
+        <button
           onClick={() => onViewChange('home')}
-          className="group flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-colors duration-300 bg-black/50 backdrop-blur-md px-4 py-2 rounded-full border border-white/10"
+          className="group mb-8 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white sm:mb-10"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          <span>Back</span>
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to home
         </button>
-      </div>
 
-      {/* Content Wrapper */}
-      <div className="w-full flex flex-col items-center pt-24 pb-24">
-        
-        {/* VIDEO CONTAINER */}
-        <div className="video-element relative w-full max-w-[90%] md:max-w-2xl mx-auto px-0 mb-12 z-10 flex justify-center">
-           
-           {/* Right Side Scroll Indicator (Desktop Only) */}
-           <div className="absolute -right-8 md:-right-32 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center gap-2 z-20">
-               <div className="flex flex-col items-center animate-scroll-loop">
-                  <span className="text-[10px] font-bold text-[#A452FF] tracking-[0.2em] uppercase" style={{ writingMode: 'vertical-rl', textOrientation: 'mixed', transform: 'rotate(180deg)' }}>
-                      Scroll
-                  </span>
-                  <ArrowDown className="w-5 h-5 text-[#A452FF] mt-2" />
-               </div>
-           </div>
+        {/* Hero */}
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center text-center"
+        >
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ff3f8d]/25 bg-[#ff3f8d]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff7eb2]">
+            AI Agents · 2026
+          </div>
+          <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1]">
+            The fully
+          </span>
+          <span
+            className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+            data-text="AUTOMATED BUSINESS."
+          >
+            AUTOMATED BUSINESS.
+          </span>
+          <p className="mt-6 max-w-2xl text-[14.5px] leading-relaxed text-white/60 sm:text-base">
+            From the first WhatsApp message to the final invoice — every step handled by AI agents
+            and automation. You focus on growth. The system handles the grind.
+          </p>
 
-           {/* Video Wrapper: Clean, no gradients, no borders */}
-           <div className="relative w-full overflow-hidden rounded-2xl bg-black">
-              <video 
-                src="https://jnytayxxwaydlmeuvtqr.supabase.co/storage/v1/object/sign/Review%20Videos/automation(1).mov?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9hNDg2YjZhNS0wYzE4LTQ4ZGUtYjZlZi02Nzc1ZmYxNDgyYTkiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJSZXZpZXcgVmlkZW9zL2F1dG9tYXRpb24oMSkubW92IiwiaWF0IjoxNzY1NDcxNDg2LCJleHAiOjE3NTMzNDcxNDg2fQ.nGUwD9BhT2g9dmSnXqvUum5QkWwmXoeXamtU6VXhhyA"
-                autoPlay
-                loop
-                muted
-                playsInline
-                className="w-full h-auto object-cover opacity-100"
-              />
-           </div>
+          <div className="mt-9 flex flex-col items-stretch gap-3 sm:flex-row sm:gap-4">
+            <button
+              onClick={() => onViewChange('contact')}
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_10px_40px_-12px_rgba(255,47,134,0.55)] transition-all hover:scale-[1.02] sm:h-14 sm:px-9 sm:text-[15px]"
+            >
+              Map my automation
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <a
+              href="https://wa.me/916393640650"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-7 text-[14px] font-semibold text-white transition-all hover:bg-white/10 hover:border-white/40 sm:h-14 sm:px-9 sm:text-[15px]"
+            >
+              Talk on WhatsApp
+            </a>
+          </div>
+        </motion.div>
+
+        {/* Steps */}
+        <div className="mt-16 sm:mt-20">
+          <motion.h2
+            initial={reduced ? false : { opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            className="mb-8 text-center font-sans text-[1.7rem] font-semibold leading-tight tracking-[-0.015em] text-white sm:mb-10 sm:text-[2rem]"
+          >
+            The full loop.
+          </motion.h2>
+
+          <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-5">
+            {STEPS.map((step, i) => {
+              const Icon = step.icon;
+              const isHighlight = step.highlight;
+              return (
+                <motion.div
+                  key={step.label}
+                  initial={reduced ? false : { opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, amount: 0.2 }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: (i % 4) * 0.06 }}
+                  className={`group relative overflow-hidden rounded-2xl border p-4 transition-all duration-300 hover:-translate-y-1 sm:p-5 ${
+                    isHighlight
+                      ? 'border-[#ff3f8d]/50 bg-gradient-to-br from-[#1a0a12] to-[#08060d] hover:border-[#ff3f8d]/80'
+                      : 'border-white/10 bg-[#08060d] hover:border-[#ff3f8d]/45'
+                  }`}
+                >
+                  <div className="mb-3 flex items-center justify-between">
+                    <div
+                      className={`flex h-9 w-9 items-center justify-center rounded-lg border bg-black text-white sm:h-10 sm:w-10 ${
+                        isHighlight ? 'border-[#ff3f8d]/70' : 'border-white/85'
+                      }`}
+                    >
+                      <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.9} />
+                    </div>
+                    <span className="text-[10px] font-bold text-white/35 sm:text-[11px]">{String(i + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h3 className="font-sans text-[14.5px] font-semibold tracking-[-0.01em] text-white sm:text-[15.5px]">
+                    {step.label}
+                  </h3>
+                  <p className="mt-1.5 text-[12.5px] leading-relaxed text-white/55 sm:text-[13px]">
+                    {step.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
         </div>
 
-        {/* TEXT CONTENT */}
-        <div ref={textSectionRef} className="max-w-5xl mx-auto px-6 text-center mt-4">
-           
-           <h2 className="auto-text text-3xl md:text-5xl font-bold mb-8 tracking-tight leading-tight">
-             Looks like <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A452FF] via-[#FF20A0] to-[#A452FF] animate-text-flow">Magic?</span>
-           </h2>
-
-           {/* Improved Subheading Presentation */}
-           <div className="auto-text flex justify-center mb-12">
-              <div className="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md shadow-lg">
-                 <div className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                    <Cpu className="w-3.5 h-3.5 text-blue-500" strokeWidth={2.5} />
-                 </div>
-                 <span className="text-gray-200 font-medium text-lg md:text-xl tracking-wide">
-                    Nope. Just good engineering.
-                 </span>
-              </div>
-           </div>
-
-           <p className="auto-text text-gray-400 text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-20">
-             Our team doesn't just build websites. We build <span className="text-white font-bold">self-driving businesses</span>. From the first click to the final invoice, we automate the boring stuff so you can focus on the big stuff.
-           </p>
-
-           {/* AUTOMATION CHAIN VISUAL (Snake Layout) */}
-           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 gap-y-12 md:gap-y-16 md:gap-x-6 relative mb-24 max-w-6xl mx-auto">
-              {AUTOMATION_STEPS.map((step, idx) => {
-                 return (
-                 <div 
-                   key={idx}
-                   className={`
-                     grid-item relative p-6 rounded-2xl border z-10
-                     ${step.highlight ? 'bg-[#A452FF] border-[#A452FF] shadow-[0_0_40px_rgba(164,82,255,0.4)]' : 'bg-[#121214] border-white/10 hover:border-white/20'}
-                     flex flex-col items-center justify-center gap-3 text-center
-                     transition-all duration-300 hover:-translate-y-1
-                     ${getOrderClass(idx)}
-                   `}
-                 >
-                    {/* --- DESKTOP CONNECTORS --- */}
-                    <div className="hidden md:block">
-                        {/* Right Arrow (For top row, except last item) */}
-                        {idx < 3 && (
-                            <div className="connector-line absolute top-1/2 -right-6 w-8 h-[2px] bg-[#333] z-0 overflow-hidden">
-                                <div className="absolute inset-0 flow-gradient" />
-                                <ChevronRight className="absolute -right-1.5 -top-[5px] w-3 h-3 text-[#FF20A0]" />
-                            </div>
-                        )}
-
-                        {/* Down Curve (For last item of top row connecting to bottom row) */}
-                        {idx === 3 && (
-                            <div className="connector-line absolute top-full left-1/2 -translate-x-1/2 w-[2px] h-16 bg-[#333] z-0 overflow-hidden origin-top">
-                                <div className="absolute inset-0 bg-gradient-to-b from-[#A452FF] to-[#FF20A0] opacity-50" />
-                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#FF20A0]" />
-                            </div>
-                        )}
-
-                        {/* Left Arrow (For bottom row, flowing right-to-left visually) */}
-                        {idx >= 4 && idx < 7 && (
-                           <div className="connector-line absolute top-1/2 -left-6 w-8 h-[2px] bg-[#333] z-0 overflow-hidden">
-                               <div className="absolute inset-0 flow-gradient" style={{ animationDirection: 'reverse' }} />
-                               <ChevronLeft className="absolute -left-1.5 -top-[5px] w-3 h-3 text-[#FF20A0]" />
-                           </div>
-                        )}
-                    </div>
-
-                    {/* --- MOBILE CONNECTORS (2-Col Snake Flow) --- */}
-                    <div className="md:hidden">
-                        {/* Horizontal Right (0->1, 4->5) */}
-                        {(idx === 0 || idx === 4) && (
-                            <div className="connector-line absolute top-1/2 -right-4 w-8 h-[2px] bg-[#333] z-0 overflow-hidden">
-                                <div className="absolute inset-0 flow-gradient" />
-                                <ChevronRight className="absolute -right-1.5 -top-[5px] w-3 h-3 text-[#FF20A0]" />
-                            </div>
-                        )}
-
-                        {/* Horizontal Left (2->3, 6->7) */}
-                        {(idx === 2 || idx === 6) && (
-                            <div className="connector-line absolute top-1/2 -left-4 w-8 h-[2px] bg-[#333] z-0 overflow-hidden">
-                                <div className="absolute inset-0 flow-gradient" style={{ animationDirection: 'reverse' }} />
-                                <ChevronLeft className="absolute -left-1.5 -top-[5px] w-3 h-3 text-[#FF20A0]" />
-                            </div>
-                        )}
-
-                        {/* Vertical Down (1->2, 3->4, 5->6) */}
-                        {(idx === 1 || idx === 3 || idx === 5) && (
-                            <div className="connector-line absolute top-full left-1/2 -translate-x-1/2 w-[2px] h-12 bg-[#333] z-0 overflow-hidden origin-top">
-                                <div className="absolute inset-0 bg-gradient-to-b from-[#A452FF] to-[#FF20A0] opacity-50" />
-                                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-[#FF20A0]" />
-                            </div>
-                        )}
-                    </div>
-
-
-                    {/* Card Icon */}
-                    <div className={`
-                      w-12 h-12 rounded-full flex items-center justify-center mb-2
-                      ${step.highlight ? 'bg-white text-[#A452FF]' : 'bg-white/5 text-gray-400'}
-                    `}>
-                       <step.icon className="w-6 h-6" strokeWidth={1.5} />
-                    </div>
-                    
-                    {/* Card Text */}
-                    <div>
-                      <h3 className={`font-bold text-sm md:text-base ${step.highlight ? 'text-white' : 'text-gray-200'}`}>
-                        {step.label}
-                      </h3>
-                      <p className={`text-[10px] uppercase tracking-wider font-medium mt-1 ${step.highlight ? 'text-white/80' : 'text-gray-500'}`}>
-                        {step.desc}
-                      </p>
-                    </div>
-                 </div>
-              )})}
-           </div>
-
-           {/* CTA */}
-           <div className="auto-text">
-              <button 
-                onClick={handleCtaClick}
-                className="animate-btn-flow px-10 py-5 md:px-14 md:py-6 rounded-full text-white font-bold text-lg md:text-xl tracking-wide shadow-[0_0_50px_rgba(164,82,255,0.4)] hover:shadow-[0_0_70px_rgba(164,82,255,0.6)] transform hover:scale-105 transition-all duration-300 w-full md:w-auto"
-              >
-                Automate My Business
-              </button>
-           </div>
-
-        </div>
-
+        {/* CTA */}
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 24 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="relative mt-16 overflow-hidden rounded-3xl border border-white/10 bg-[#08060d] p-7 text-center sm:mt-20 sm:p-10"
+        >
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse at 50% 0%, rgba(255,32,160,0.16) 0%, transparent 55%), radial-gradient(ellipse at 50% 100%, rgba(164,82,255,0.14) 0%, transparent 55%)',
+            }}
+          />
+          <h3 className="relative font-sans text-[1.4rem] font-semibold leading-tight tracking-[-0.015em] text-white sm:text-[1.7rem]">
+            Ready to put this loop on autopilot?
+          </h3>
+          <p className="relative mt-3 text-[14px] text-white/60 sm:text-[15px]">
+            We map your current workflow and tell you exactly where AI can take over — in 48 hours, free.
+          </p>
+          <button
+            onClick={() => onViewChange('contact')}
+            className="relative mt-7 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_10px_40px_-12px_rgba(255,47,134,0.55)] transition-all hover:scale-[1.02] sm:h-14 sm:px-9 sm:text-[15px]"
+          >
+            Get my automation map
+            <ArrowRight className="h-4 w-4" />
+          </button>
+        </motion.div>
       </div>
-    </div>
+    </main>
   );
 };

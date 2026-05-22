@@ -1,11 +1,12 @@
-
 import React, { useEffect } from 'react';
+import { ArrowLeft, ShieldAlert, CheckCircle2, XCircle } from 'lucide-react';
 import { ViewState } from '../types';
-import { ArrowLeft, CheckCircle, XCircle, ShieldAlert } from 'lucide-react';
 
 interface RefundPolicyPageProps {
   onViewChange: (view: ViewState) => void;
 }
+
+const CONTACT_EMAIL = 'support@pureflowdesigns.com';
 
 export const RefundPolicyPage: React.FC<RefundPolicyPageProps> = ({ onViewChange }) => {
   useEffect(() => {
@@ -13,128 +14,93 @@ export const RefundPolicyPage: React.FC<RefundPolicyPageProps> = ({ onViewChange
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#0C0C0E] pt-28 pb-20 relative animate-fade-in">
-       {/* Background */}
-       <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
-         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1200px] h-[1000px] bg-brand/5 rounded-full blur-[150px] opacity-30" />
+    <main className="relative min-h-screen overflow-hidden bg-black pt-24 pb-24 text-white sm:pt-28">
+      <div className="pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+        <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 h-[900px] w-[1100px] rounded-full bg-brand/5 opacity-30 blur-[150px]" />
       </div>
 
-      <div className="max-w-4xl mx-auto px-6 lg:px-8">
-        {/* Back Button */}
-        <button 
-          onClick={() => onViewChange('pricing')}
-          className="group flex items-center gap-2 text-sm text-gray-500 hover:text-white mb-10 transition-colors"
+      <div className="mx-auto max-w-3xl px-5 sm:px-6 lg:px-8">
+        <button
+          onClick={() => onViewChange('home')}
+          className="group mb-10 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
-          Back to Pricing
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to home
         </button>
 
-        {/* Title */}
-        <div className="border-b border-white/10 pb-10 mb-10">
-           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand/10 border border-brand/20 text-brand text-[10px] font-bold tracking-widest uppercase mb-4">
-              <ShieldAlert className="w-3 h-3" /> Policy
-           </div>
-           <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Pureflow Studios <br className="md:hidden"/> Social Media Growth Refund Policy
-           </h1>
-           <p className="text-gray-400 leading-relaxed max-w-2xl">
-              We stand by our results. Our refund policy ensures you only pay for guaranteed growth. Please read the terms below carefully.
-           </p>
+        {/* Header */}
+        <div className="mb-10 border-b border-white/8 pb-9">
+          <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-pink-500/25 bg-pink-500/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-pink-300">
+            <ShieldAlert className="h-3 w-3" /> Refund Policy
+          </div>
+          <h1 className="font-sans text-3xl font-bold leading-[1.05] tracking-tight text-white sm:text-4xl md:text-5xl">
+            Our refund policy.
+          </h1>
+          <p className="mt-5 max-w-2xl text-base leading-relaxed text-white/55">
+            We stand by our results. This refund policy covers our guaranteed-growth social media engagements
+            and one-time project services. Read the terms below carefully.
+          </p>
+          <p className="mt-4 text-xs uppercase tracking-[0.18em] text-white/35">Last updated · May 2026</p>
         </div>
 
-        {/* Content Blocks */}
-        <div className="space-y-12">
-           
-           {/* Eligibility */}
-           <section>
-              <h2 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                 1. Eligibility for Refund
-              </h2>
-              <div className="bg-[#141416] border border-white/5 rounded-2xl p-6 md:p-8">
-                 <p className="text-gray-400 mb-4">A client is eligible for a refund <span className="text-white font-bold">ONLY</span> if:</p>
-                 <ul className="space-y-3">
-                    {[
-                       "They purchased a plan that includes a growth guarantee.",
-                       "They provided all required footage, assets, and account access on time.",
-                       "They completed the full 30-day service cycle."
-                    ].map((item, i) => (
-                       <li key={i} className="flex items-start gap-3">
-                          <CheckCircle className="w-5 h-5 text-brand mt-0.5 shrink-0" />
-                          <span className="text-gray-300 text-sm">{item}</span>
-                       </li>
-                    ))}
-                 </ul>
-              </div>
-           </section>
+        {/* Eligibility */}
+        <section className="mb-10">
+          <h2 className="mb-4 flex items-center gap-2 font-sans text-xl font-bold tracking-tight text-white">
+            <CheckCircle2 className="h-5 w-5 text-emerald-400" strokeWidth={1.8} />
+            1. When you're eligible
+          </h2>
+          <ul className="space-y-2 pl-7 text-[15px] leading-relaxed text-white/65">
+            <li className="list-disc">If we fail to deliver the agreed scope within the agreed timeline (excluding delays caused by client review or third-party platforms).</li>
+            <li className="list-disc">If a guaranteed-growth retainer fails to meet the agreed monthly KPIs after two consecutive cycles.</li>
+            <li className="list-disc">If you cancel a one-time project before any production work has begun — full refund of the advance.</li>
+          </ul>
+        </section>
 
-           {/* Growth Targets */}
-           <section>
-              <h2 className="text-xl font-bold text-white mb-6">2. Growth Targets</h2>
-              <div className="grid md:grid-cols-2 gap-4">
-                 <div className="bg-[#141416] border border-white/5 rounded-2xl p-6 flex flex-col items-center text-center">
-                    <span className="text-sm text-gray-500 uppercase tracking-widest mb-2 font-bold">Starter Plan</span>
-                    <span className="text-3xl font-bold text-white mb-1">+5,000</span>
-                    <span className="text-sm text-gray-400">Followers Guaranteed</span>
-                 </div>
-                 <div className="bg-[#141416] border border-white/5 rounded-2xl p-6 flex flex-col items-center text-center relative overflow-hidden">
-                    <div className="absolute inset-0 bg-brand/5" />
-                    <span className="text-sm text-brand-light uppercase tracking-widest mb-2 font-bold relative z-10">Premium Plan</span>
-                    <span className="text-3xl font-bold text-white mb-1 relative z-10">+10,000</span>
-                    <span className="text-sm text-gray-400 relative z-10">Followers Guaranteed</span>
-                 </div>
-              </div>
-           </section>
+        {/* Not eligible */}
+        <section className="mb-10">
+          <h2 className="mb-4 flex items-center gap-2 font-sans text-xl font-bold tracking-tight text-white">
+            <XCircle className="h-5 w-5 text-rose-400" strokeWidth={1.8} />
+            2. When you're not eligible
+          </h2>
+          <ul className="space-y-2 pl-7 text-[15px] leading-relaxed text-white/65">
+            <li className="list-disc">After production deployment of a custom software or website project.</li>
+            <li className="list-disc">For monthly retainer services already rendered in the current billing cycle.</li>
+            <li className="list-disc">For ad spend already disbursed to Meta or any third-party platform.</li>
+            <li className="list-disc">If the project was paused or delayed because of unresponsive client feedback for more than 30 consecutive days.</li>
+          </ul>
+        </section>
 
-           {/* Refund Approval */}
-           <section>
-              <h2 className="text-xl font-bold text-white mb-6">3. When Refund Is Approved</h2>
-              <div className="bg-brand/5 border border-brand/20 rounded-2xl p-6 md:p-8">
-                 <p className="text-gray-300 mb-4 leading-relaxed">
-                    If the Pureflow Studios team fails to achieve the guaranteed growth despite:
-                 </p>
-                 <ul className="list-disc list-inside text-gray-400 space-y-2 mb-6 ml-2">
-                    <li>Daily posting execution</li>
-                    <li>Proper strategy implementation</li>
-                    <li>Adequate access and assets provided by the client</li>
-                 </ul>
-                 <div className="p-4 bg-brand/10 rounded-xl border border-brand/20 text-center">
-                    <span className="text-white font-bold">→ 100% of the plan amount will be refunded.</span>
-                 </div>
-              </div>
-           </section>
+        {/* Process */}
+        <section className="mb-10">
+          <h2 className="mb-4 font-sans text-xl font-bold tracking-tight text-white">3. Refund process</h2>
+          <ol className="space-y-3 pl-7 text-[15px] leading-relaxed text-white/65">
+            <li className="list-decimal">
+              Email <a href={`mailto:${CONTACT_EMAIL}`} className="text-pink-400 hover:underline">{CONTACT_EMAIL}</a> with the subject line "Refund Request" and your project reference.
+            </li>
+            <li className="list-decimal">We review the request and respond within 5 business days with our decision and reasoning.</li>
+            <li className="list-decimal">Approved refunds are processed within 7–10 business days via the original payment method, minus any non-refundable third-party fees (e.g. payment gateway charges, ad spend already deployed).</li>
+          </ol>
+        </section>
 
-           {/* Not Eligible */}
-           <section>
-              <h2 className="text-xl font-bold text-white mb-6">4. Not Eligible Cases</h2>
-              <div className="bg-[#141416] border border-white/5 rounded-2xl p-6 md:p-8">
-                 <ul className="grid md:grid-cols-2 gap-4">
-                    {[
-                       "Client did not provide required footage",
-                       "Client was not responsive to approvals",
-                       "Account was restricted/banned due to client actions",
-                       "Client changed login credentials mid-project",
-                       "Client interfered with posting schedule",
-                       "Service cancelled before 30 days"
-                    ].map((item, i) => (
-                       <li key={i} className="flex items-center gap-3 bg-white/[0.02] p-3 rounded-lg">
-                          <XCircle className="w-4 h-4 text-red-400 shrink-0" />
-                          <span className="text-gray-400 text-sm">{item}</span>
-                       </li>
-                    ))}
-                 </ul>
-              </div>
-           </section>
+        {/* Pro-rata */}
+        <section className="mb-10">
+          <h2 className="mb-4 font-sans text-xl font-bold tracking-tight text-white">4. Pro-rata refunds</h2>
+          <p className="text-[15px] leading-relaxed text-white/65">
+            For monthly retainers, we offer pro-rata refunds for the unused portion of the current cycle, provided written
+            cancellation is received at least 7 days before the next billing date.
+          </p>
+        </section>
 
-           {/* Timeline */}
-           <section className="mb-12">
-              <h2 className="text-xl font-bold text-white mb-4">5. Refund Timeline</h2>
-              <p className="text-gray-400 text-sm">
-                 Refunds will be processed within <span className="text-white font-bold">7 working days</span> after approval via the original payment method.
-              </p>
-           </section>
-
-        </div>
+        {/* Contact */}
+        <section>
+          <h2 className="mb-4 font-sans text-xl font-bold tracking-tight text-white">5. Contact</h2>
+          <p className="text-[15px] leading-relaxed text-white/65">
+            Questions about this policy? Email{' '}
+            <a href={`mailto:${CONTACT_EMAIL}`} className="text-pink-400 hover:underline">{CONTACT_EMAIL}</a> or call{' '}
+            <a href="tel:+916393640650" className="text-pink-400 hover:underline">+91 63936 40650</a>.
+          </p>
+        </section>
       </div>
-    </div>
+    </main>
   );
 };

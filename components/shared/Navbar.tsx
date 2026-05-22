@@ -15,11 +15,11 @@ type NavItem =
   | { label: string; section: string };
 
 const navItems: NavItem[] = [
-  { label: 'Work', view: 'home' },
+  { label: 'Work', section: 'work' },
   { label: 'Services', section: 'services' },
   { label: 'Process', section: 'process' },
   { label: 'About', section: 'about' },
-  { label: 'Journal', section: 'journal' },
+  { label: 'Good Stuff', view: 'blog' },
 ];
 
 const WHATSAPP_URL = 'https://wa.me/916393640650';

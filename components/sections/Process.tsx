@@ -109,7 +109,7 @@ function ProcessStep({ step, reduced }: StepProps) {
 
       {/* RIGHT — content */}
       <div className="flex flex-col justify-center lg:col-span-9">
-        <h3 className="font-display text-[1.85rem] font-bold leading-[1.1] tracking-tight text-white sm:text-3xl lg:text-4xl">
+        <h3 className="font-sans text-[1.5rem] font-semibold leading-[1.2] tracking-[-0.015em] text-white sm:text-[1.7rem] lg:text-[1.85rem]">
           {step.title}
         </h3>
         <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-white/65 sm:text-base">

@@ -1,23 +1,32 @@
-
-import React, { useState, useEffect } from 'react';
-import { ViewState } from '../types';
-import { 
-  ArrowRight, MapPin, Instagram, MessageCircle, 
-  Mail, Phone, Send, CheckCircle, ExternalLink 
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import {
+  ArrowRight,
+  MapPin,
+  Instagram,
+  MessageCircle,
+  Mail,
+  Phone,
+  Send,
+  CheckCircle,
+  Linkedin,
 } from 'lucide-react';
+import { ViewState } from '../types';
 
 interface ContactPageProps {
   onViewChange: (view: ViewState) => void;
 }
 
-export const ContactPage: React.FC<ContactPageProps> = ({ onViewChange }) => {
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
-    message: ''
-  });
+const EMAIL = 'support@pureflowdesigns.com';
+const PHONE_DISPLAY = '+91 63936 40650';
+const PHONE_RAW = '+916393640650';
+const WHATSAPP_URL = 'https://wa.me/916393640650';
+
+export const ContactPage: React.FC<ContactPageProps> = ({ onViewChange: _onViewChange }) => {
+  const reduced = useReducedMotion();
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' });
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -25,203 +34,282 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onViewChange }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate submission
-    setTimeout(() => setIsSubmitted(true), 800);
+    setTimeout(() => setSubmitted(true), 600);
   };
 
-  const contactCards = [
+  const channels = [
     {
-      id: 'whatsapp',
       icon: MessageCircle,
-      title: 'Chat on WhatsApp',
-      value: '+91 6393640650',
-      buttonText: 'Start Chat',
-      link: 'https://wa.me/916393640650',
-      color: 'text-green-500 dark:text-green-400',
-      bgGlow: 'bg-green-500/20'
+      label: 'WhatsApp',
+      value: PHONE_DISPLAY,
+      href: WHATSAPP_URL,
+      external: true,
     },
     {
-      id: 'instagram',
+      icon: Mail,
+      label: 'Email',
+      value: EMAIL,
+      href: `mailto:${EMAIL}`,
+      external: false,
+    },
+    {
+      icon: Phone,
+      label: 'Call',
+      value: PHONE_DISPLAY,
+      href: `tel:${PHONE_RAW}`,
+      external: false,
+    },
+    {
       icon: Instagram,
-      title: 'Follow Us on Instagram',
+      label: 'Instagram',
       value: '@pureflowstudios',
-      buttonText: 'Visit Profile',
-      link: 'https://instagram.com/pureflowstudios',
-      color: 'text-pink-500 dark:text-pink-400',
-      bgGlow: 'bg-pink-500/20'
+      href: 'https://instagram.com/pureflowstudios',
+      external: true,
     },
     {
-      id: 'office',
+      icon: Linkedin,
+      label: 'LinkedIn',
+      value: 'Pureflow Studios',
+      href: 'https://www.linkedin.com/company/pureflow-studios',
+      external: true,
+    },
+    {
       icon: MapPin,
-      title: 'Visit Our Office',
-      value: 'E4/77 Aamrapali Yojna, Near LPS School, Dubagga, Lucknow — 226003',
-      buttonText: 'Open in Maps',
-      link: 'https://share.google/DxEVxcjWRKFPl8TDA', // Using prompt specific link
-      color: 'text-brand dark:text-brand-light',
-      bgGlow: 'bg-brand/20'
-    }
+      label: 'Visit',
+      value: 'Lucknow, Uttar Pradesh',
+      href: 'https://maps.google.com/?q=Lucknow,Uttar+Pradesh',
+      external: true,
+    },
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-[#0C0C0E] pt-28 pb-20 relative animate-fade-in overflow-hidden transition-colors duration-300">
-      
-      {/* Ambient Background */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[600px] bg-brand/5 blur-[120px] rounded-full pointer-events-none -z-10" />
-      
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        
-        {/* 1. Header Section */}
-        <div className="text-center max-w-3xl mx-auto mb-12 md:mb-20">
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white tracking-tight mb-6">
-            Get in Touch with <br />
-            <span className="relative inline-block text-gray-900 dark:text-white">
-               Pureflow Studios
-               <div className="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand to-transparent opacity-70 blur-[2px]" />
-            </span>
-          </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 font-light leading-relaxed">
-            We’re here to bring your ideas to life. Reach out for collaborations, inquiries, or just to say hello.
+    <main className="relative min-h-screen overflow-hidden bg-black text-white">
+      {/* Ambient bg */}
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute top-[10%] left-1/2 -translate-x-1/2 w-[900px] h-[700px] bg-brand/[0.07] rounded-full blur-[140px]" />
+        <div
+          className="absolute bottom-[-15%] left-[-10%] h-[500px] w-[500px]"
+          style={{
+            background:
+              'radial-gradient(closest-side, rgba(255,32,160,0.18), transparent 70%)',
+            filter: 'blur(50px)',
+          }}
+        />
+        <div
+          className="absolute bottom-[-15%] right-[-10%] h-[500px] w-[500px]"
+          style={{
+            background:
+              'radial-gradient(closest-side, rgba(164,82,255,0.18), transparent 70%)',
+            filter: 'blur(50px)',
+          }}
+        />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-6xl px-5 pt-24 pb-20 sm:px-6 sm:pt-28 lg:px-10 lg:pt-32 lg:pb-24">
+        {/* ── Header ── */}
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="flex flex-col items-center text-center"
+        >
+          <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+            Let's start
+          </span>
+          <span
+            className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+            data-text="A CONVERSATION."
+          >
+            A CONVERSATION.
+          </span>
+          <p className="mt-5 max-w-xl text-[15px] leading-relaxed text-white/60 sm:text-base">
+            Tell us about your project. We respond within 24 hours — no sales theatre,
+            no slide decks, no chasing.
           </p>
-        </div>
+        </motion.div>
 
-        {/* 2. Contact Cards Section */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
-          {contactCards.map((card, idx) => (
-            <div 
-              key={card.id}
-              className={`
-                group relative bg-white dark:bg-[#141416]/60 backdrop-blur-xl border border-gray-200 dark:border-white/5 rounded-2xl p-6 sm:rounded-3xl sm:p-8 
-                hover:border-gray-300 dark:hover:border-white/10 hover:shadow-xl dark:hover:shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)] 
-                transition-all duration-500 hover:-translate-y-1 overflow-hidden
-                ${idx === 2 ? 'md:col-span-2 lg:col-span-1' : ''}
-              `}
-            >
-              {/* Hover Glow */}
-              <div className={`absolute top-0 right-0 w-32 h-32 rounded-full blur-[60px] opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none ${card.bgGlow}`} />
-
-              <div className="relative z-10 flex flex-col h-full items-start">
-                <div className={`w-14 h-14 rounded-2xl bg-gray-50 dark:bg-white/5 border border-gray-100 dark:border-white/10 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
-                  <card.icon className={`w-7 h-7 ${card.color}`} strokeWidth={1.5} />
+        {/* ── Channels grid ── */}
+        <div className="mt-12 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3 lg:gap-5">
+          {channels.map((c, i) => {
+            const Icon = c.icon;
+            return (
+              <motion.a
+                key={c.label}
+                href={c.href}
+                target={c.external ? '_blank' : undefined}
+                rel={c.external ? 'noopener noreferrer' : undefined}
+                initial={reduced ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.2 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: i * 0.05 }}
+                className="group relative overflow-hidden rounded-2xl border border-white/10 bg-[#08060d] p-4 transition-all duration-300 hover:-translate-y-1 hover:border-[#ff3f8d]/45 sm:p-5"
+              >
+                <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-white/85 bg-black text-white sm:h-10 sm:w-10">
+                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" strokeWidth={1.9} />
                 </div>
-                
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">{card.title}</h3>
-                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed font-medium mb-8 flex-1">
-                  {card.value}
+                <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-white/45">
+                  {c.label}
                 </p>
-
-                <a 
-                  href={card.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="w-full py-3.5 px-6 rounded-xl bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/10 text-gray-900 dark:text-white text-sm font-bold tracking-wide transition-all flex items-center justify-center gap-2 group/btn"
-                >
-                  {card.buttonText}
-                  <ExternalLink className="w-3.5 h-3.5 opacity-60 group-hover/btn:opacity-100 transition-opacity" />
-                </a>
-              </div>
-            </div>
-          ))}
+                <p className="mt-1 break-all text-[13px] font-semibold text-white sm:text-[14px]">
+                  {c.value}
+                </p>
+              </motion.a>
+            );
+          })}
         </div>
 
-        {/* 3. Contact Form Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-white dark:bg-[#141416] border border-gray-200 dark:border-white/5 rounded-2xl p-5 relative overflow-hidden shadow-2xl dark:shadow-2xl sm:p-8 md:rounded-[32px] md:p-12">
-            {/* Background Decor */}
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand/50 to-transparent" />
-            <div className="absolute bottom-0 right-0 w-64 h-64 bg-brand/5 rounded-full blur-[80px] pointer-events-none" />
+        {/* ── Form ── */}
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+          className="mt-12 overflow-hidden rounded-3xl border border-white/10 bg-[#08060d]/80 backdrop-blur sm:mt-16"
+        >
+          <div className="grid lg:grid-cols-[1fr_1fr]">
+            {/* Left — pitch */}
+            <div className="border-b border-white/10 p-6 sm:p-8 lg:border-b-0 lg:border-r lg:p-10">
+              <p className="gradient-flow-text text-[10px] font-bold uppercase tracking-[0.22em]">
+                Send a brief
+              </p>
+              <h2 className="mt-4 font-sans text-[1.7rem] font-semibold leading-[1.15] tracking-[-0.015em] text-white sm:text-[2rem]">
+                What gets a written reply.
+              </h2>
+              <p className="mt-3 text-[14px] leading-relaxed text-white/60 sm:text-[15px]">
+                The clearer your brief, the faster we can scope it. Mention:
+              </p>
+              <ul className="mt-5 space-y-3 text-[13.5px] text-white/70 sm:text-sm">
+                {[
+                  'What you’re trying to build or fix',
+                  'Roughly when you’d like it live',
+                  'Any reference apps or sites you like',
+                  'Your budget range (so we don’t waste your time)',
+                ].map((tip) => (
+                  <li key={tip} className="flex items-start gap-2.5">
+                    <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-[#ff3f8d]" strokeWidth={1.8} />
+                    {tip}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-            <div className="relative z-10">
-              <div className="text-center mb-10">
-                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3">Send us a Message</h2>
-                <p className="text-gray-500 dark:text-gray-400 text-sm">Fill out the form below and we’ll get back to you within 24 hours.</p>
-              </div>
-
-              {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider ml-1">Full Name</label>
-                      <input 
-                        required
-                        type="text"
-                        placeholder="John Doe"
-                        className="w-full bg-gray-50 dark:bg-[#0C0C0E] border border-gray-200 dark:border-white/10 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-sm focus:border-brand focus:ring-1 focus:ring-brand/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                        value={formData.name}
-                        onChange={e => setFormData({...formData, name: e.target.value})}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider ml-1">Email Address</label>
-                      <input 
-                        required
-                        type="email"
-                        placeholder="john@example.com"
-                        className="w-full bg-gray-50 dark:bg-[#0C0C0E] border border-gray-200 dark:border-white/10 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-sm focus:border-brand focus:ring-1 focus:ring-brand/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                        value={formData.email}
-                        onChange={e => setFormData({...formData, email: e.target.value})}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider ml-1">Phone Number</label>
-                    <input 
+            {/* Right — form */}
+            <div className="p-6 sm:p-8 lg:p-10">
+              {!submitted ? (
+                <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <Field
+                      label="Name"
+                      type="text"
                       required
+                      value={form.name}
+                      onChange={(v) => setForm({ ...form, name: v })}
+                    />
+                    <Field
+                      label="Phone"
                       type="tel"
-                      placeholder="+91 98765 43210"
-                      className="w-full bg-gray-50 dark:bg-[#0C0C0E] border border-gray-200 dark:border-white/10 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-sm focus:border-brand focus:ring-1 focus:ring-brand/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                      value={formData.phone}
-                      onChange={e => setFormData({...formData, phone: e.target.value})}
+                      value={form.phone}
+                      onChange={(v) => setForm({ ...form, phone: v })}
                     />
                   </div>
+                  <Field
+                    label="Email"
+                    type="email"
+                    required
+                    value={form.email}
+                    onChange={(v) => setForm({ ...form, email: v })}
+                  />
+                  <Field
+                    label="What are you building?"
+                    type="textarea"
+                    required
+                    value={form.message}
+                    onChange={(v) => setForm({ ...form, message: v })}
+                  />
 
-                  <div className="space-y-2">
-                    <label className="text-[11px] font-bold text-gray-500 uppercase tracking-wider ml-1">Message</label>
-                    <textarea 
-                      required
-                      rows={4}
-                      placeholder="Tell us about your project..."
-                      className="w-full bg-gray-50 dark:bg-[#0C0C0E] border border-gray-200 dark:border-white/10 rounded-xl px-5 py-4 text-gray-900 dark:text-white text-sm focus:border-brand focus:ring-1 focus:ring-brand/50 outline-none transition-all placeholder:text-gray-400 dark:placeholder:text-gray-600 resize-none"
-                      value={formData.message}
-                      onChange={e => setFormData({...formData, message: e.target.value})}
-                    />
-                  </div>
+                  <button
+                    type="submit"
+                    className="flex h-12 w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] text-[14px] font-bold text-white shadow-[0_10px_40px_-12px_rgba(255,47,134,0.55)] transition-all hover:scale-[1.01] active:scale-[0.99] sm:h-14 sm:text-[15px]"
+                  >
+                    Send brief
+                    <Send className="h-4 w-4" />
+                  </button>
 
-                  <div className="pt-4">
-                    <button 
-                      type="submit"
-                      className="w-full py-4 rounded-xl bg-gradient-to-r from-brand to-purple-600 hover:from-brand-light hover:to-purple-500 text-white font-bold tracking-wide shadow-lg shadow-brand/25 hover:shadow-brand/40 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
-                    >
-                      <Send className="w-4 h-4" />
-                      Send Message
-                    </button>
-                  </div>
+                  <p className="text-center text-[11px] text-white/40">
+                    Or message us on{' '}
+                    <a href={WHATSAPP_URL} className="text-white/70 underline-offset-2 hover:text-white hover:underline" target="_blank" rel="noopener noreferrer">
+                      WhatsApp
+                    </a>{' '}
+                    for a faster reply.
+                  </p>
                 </form>
               ) : (
-                <div className="py-16 flex flex-col items-center justify-center text-center animate-fade-in">
-                  <div className="w-20 h-20 rounded-full bg-green-500/10 border border-green-500/20 flex items-center justify-center mb-6 shadow-[0_0_30px_rgba(34,197,94,0.2)]">
-                    <CheckCircle className="w-10 h-10 text-green-500" />
+                <div className="flex h-full min-h-[280px] flex-col items-center justify-center text-center">
+                  <div className="mb-5 flex h-14 w-14 items-center justify-center rounded-full border border-[#ff3f8d]/40 bg-[#ff3f8d]/10">
+                    <CheckCircle className="h-7 w-7 text-[#ff3f8d]" strokeWidth={2} />
                   </div>
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Message Sent!</h3>
-                  <p className="text-gray-500 dark:text-gray-400 max-w-md">
-                    Thank you for reaching out. Our team will review your message and get back to you shortly.
+                  <h3 className="font-sans text-xl font-semibold text-white">Brief received.</h3>
+                  <p className="mt-2 max-w-xs text-[14px] text-white/60">
+                    We'll get back to you within 24 hours at the email you provided.
                   </p>
-                  <button 
-                    onClick={() => {
-                      setIsSubmitted(false);
-                      setFormData({ name: '', email: '', phone: '', message: '' });
-                    }}
-                    className="mt-8 text-sm text-brand hover:text-brand-light font-medium underline underline-offset-4"
+                  <a
+                    href={WHATSAPP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-6 inline-flex items-center gap-2 text-[13px] font-semibold text-white/80 hover:text-white"
                   >
-                    Send another message
-                  </button>
+                    Or message us now <ArrowRight className="h-4 w-4" />
+                  </a>
                 </div>
               )}
             </div>
           </div>
-        </div>
-
+        </motion.div>
       </div>
-    </div>
+    </main>
+  );
+};
+
+// ─── Field component ─────────────────────────────────────────────────────────
+
+interface FieldProps {
+  label: string;
+  type: 'text' | 'email' | 'tel' | 'textarea';
+  value: string;
+  onChange: (v: string) => void;
+  required?: boolean;
+}
+
+const Field: React.FC<FieldProps> = ({ label, type, value, onChange, required }) => {
+  const common =
+    'peer w-full rounded-xl border border-white/15 bg-black/40 px-4 pb-2.5 pt-5 text-[14px] text-white placeholder-transparent transition-colors duration-200 focus:border-[#ff3f8d]/60 focus:bg-black/60 focus:outline-none focus:ring-2 focus:ring-[#ff3f8d]/20 sm:text-[15px]';
+
+  return (
+    <label className="relative block">
+      {type === 'textarea' ? (
+        <textarea
+          required={required}
+          placeholder={label}
+          rows={4}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`${common} resize-none`}
+        />
+      ) : (
+        <input
+          type={type}
+          required={required}
+          placeholder={label}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={common}
+        />
+      )}
+      <span className="pointer-events-none absolute left-4 top-1.5 text-[10.5px] font-semibold uppercase tracking-[0.14em] text-white/45">
+        {label}
+        {required && <span className="ml-0.5 text-[#ff3f8d]">*</span>}
+      </span>
+    </label>
   );
 };

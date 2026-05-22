@@ -1,10 +1,10 @@
 
 import React, { Suspense, lazy, useState, useEffect } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
 import { Navbar } from './components/shared/Navbar';
 import { Hero } from './components/sections/Hero';
 import { ViewState } from './types';
 import { ThemeProvider } from './components/ThemeContext';
+import { useDocumentMeta } from './lib/seo';
 
 const Footer = lazy(() =>
   import('./components/Footer').then((module) => ({ default: module.Footer }))
@@ -20,6 +20,12 @@ const Work = lazy(() =>
 );
 const Process = lazy(() =>
   import('./components/sections/Process').then((module) => ({ default: module.Process }))
+);
+const About = lazy(() =>
+  import('./components/sections/About').then((module) => ({ default: module.About }))
+);
+const GoodStuff = lazy(() =>
+  import('./components/sections/GoodStuff').then((module) => ({ default: module.GoodStuff }))
 );
 const FinalCTA = lazy(() =>
   import('./components/sections/FinalCTA').then((module) => ({ default: module.FinalCTA }))
@@ -75,6 +81,12 @@ const AutomationPage = lazy(() =>
 const LegalPage = lazy(() =>
   import('./components/LegalPage').then((module) => ({ default: module.LegalPage }))
 );
+const BlogIndexPage = lazy(() =>
+  import('./components/BlogIndexPage').then((module) => ({ default: module.BlogIndexPage }))
+);
+const BlogPostPage = lazy(() =>
+  import('./components/BlogPostPage').then((module) => ({ default: module.BlogPostPage }))
+);
 
 const PageFallback = () => (
   <div className="min-h-screen bg-black" aria-label="Loading page" />
@@ -94,7 +106,6 @@ type LeadFormView =
 function LazySection({ children }: { children: React.ReactNode }) {
   const [shouldRender, setShouldRender] = useState(false);
   const ref = React.useRef<HTMLDivElement>(null);
-  const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
     if (shouldRender) return;
@@ -112,7 +123,7 @@ function LazySection({ children }: { children: React.ReactNode }) {
           observer.disconnect();
         }
       },
-      { rootMargin: '220px 0px' }
+      { rootMargin: '600px 0px' }
     );
 
     observer.observe(node);
@@ -120,27 +131,30 @@ function LazySection({ children }: { children: React.ReactNode }) {
   }, [shouldRender]);
 
   return (
-    <motion.div
-      ref={ref}
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 36 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.15, margin: '0px 0px -10% 0px' }}
-      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-      style={{ willChange: 'transform, opacity' }}
-    >
+    <div ref={ref}>
       {shouldRender ? (
         <Suspense fallback={<SectionFallback />}>{children}</Suspense>
       ) : (
         <SectionFallback />
       )}
-    </motion.div>
+    </div>
   );
 }
 
 const AppContent: React.FC = () => {
   const [currentView, setCurrentView] = useState<ViewState>('home');
+  const [selectedBlogSlug, setSelectedBlogSlug] = useState<string | null>(null);
+  useDocumentMeta(currentView);
   const viewHistoryRef = React.useRef<ViewState[]>([]);
   const shouldScrollToServicesRef = React.useRef(false);
+
+  const handleOpenBlogPost = (slug: string) => {
+    setSelectedBlogSlug(slug);
+    if (currentView !== 'blog-post') {
+      viewHistoryRef.current = [...viewHistoryRef.current, currentView];
+      setCurrentView('blog-post');
+    }
+  };
   
   // Contact Form State
   const [isContactOpen, setIsContactOpen] = useState(false);
@@ -320,7 +334,11 @@ const AppContent: React.FC = () => {
             <LazySection>
               <Process />
             </LazySection>
-            
+
+            <LazySection>
+              <About />
+            </LazySection>
+
             {/* Continuous gradient flow across Reviews → Google → Map */}
             <div className="relative overflow-hidden bg-black">
               <div
@@ -348,6 +366,10 @@ const AppContent: React.FC = () => {
 
             <LazySection>
               <FinalCTA onOpenContact={handleOpenContact} />
+            </LazySection>
+
+            <LazySection>
+              <GoodStuff onViewChange={navigateTo} onOpenPost={handleOpenBlogPost} />
             </LazySection>
           </>
         )}
@@ -404,6 +426,18 @@ const AppContent: React.FC = () => {
         {(currentView === 'privacy' || currentView === 'terms' || currentView === 'cookies') && (
           <Suspense fallback={<PageFallback />}>
             <LegalPage kind={currentView} onViewChange={navigateTo} />
+          </Suspense>
+        )}
+
+        {currentView === 'blog' && (
+          <Suspense fallback={<PageFallback />}>
+            <BlogIndexPage onViewChange={navigateTo} onOpenPost={handleOpenBlogPost} />
+          </Suspense>
+        )}
+
+        {currentView === 'blog-post' && selectedBlogSlug && (
+          <Suspense fallback={<PageFallback />}>
+            <BlogPostPage slug={selectedBlogSlug} onViewChange={navigateTo} onOpenPost={handleOpenBlogPost} />
           </Suspense>
         )}
 
