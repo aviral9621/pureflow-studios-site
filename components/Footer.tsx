@@ -270,7 +270,7 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
       <div className="relative z-10 pb-7 px-5">
         <p className="mx-auto flex max-w-md items-center justify-center gap-2 text-center text-[12.5px] font-semibold tracking-tight text-white/85 sm:text-[13px]">
           <Coffee className="w-4 h-4 flex-shrink-0 text-[#ff3f8d]" strokeWidth={2} aria-hidden="true" />
-          <span>Designed &amp; built in Lucknow — fuelled by too much chai.</span>
+          <span>Designed &amp; built in Lucknow with too much chai.</span>
         </p>
       </div>
 
