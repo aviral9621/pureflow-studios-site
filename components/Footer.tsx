@@ -48,19 +48,19 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
   return (
     <footer className="relative bg-[var(--color-bg-elevated)] border-t border-white/5">
 
-      {/* Giant watermark wordmark */}
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 pt-20 pb-0 overflow-hidden">
+      {/* Full-width gradient-flow wordmark */}
+      <div className="w-full px-4 sm:px-6 lg:px-10 pt-20 pb-2 overflow-hidden">
         <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
           viewport={{ once: true }}
+          className="w-full text-center"
         >
           <p
-            className="font-display font-bold leading-none tracking-[0.05em] text-white select-none"
-            style={{ fontSize: 'clamp(4rem, 15vw, 15rem)' }}
+            className="footer-wordmark font-display font-black leading-[0.85] tracking-[-0.02em] uppercase whitespace-nowrap select-none"
           >
-            Pure <span className="gradient-text">Flow</span> Studios
+            PURE<span className="gradient-flow-text">FLOW</span> STUDIOS
           </p>
         </motion.div>
       </div>
@@ -69,13 +69,8 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
       <div className="max-w-7xl mx-auto px-6 lg:px-10 py-16">
         <div className="grid grid-cols-1 md:grid-cols-5 gap-12">
 
-          {/* Col 1 — About (col-span-2) */}
+          {/* Col 1 — Socials (col-span-2) */}
           <div className="md:col-span-2 flex flex-col gap-6">
-            <Wordmark className="text-2xl" />
-            <p className="text-sm text-white/50 max-w-sm leading-relaxed">
-              A software and design studio in Lucknow, India. We build CRMs, automations, AI agents,
-              and websites for businesses ready to scale.
-            </p>
             <div className="flex items-center gap-3">
               {socials.map(({ icon: Icon, href, label }) => (
                 <a

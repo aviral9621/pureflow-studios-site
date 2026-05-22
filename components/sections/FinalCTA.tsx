@@ -81,30 +81,26 @@ export function FinalCTA({ onOpenContact }: FinalCTAProps) {
       />
 
       {/* Content */}
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
+      <div className="relative z-10 max-w-4xl mx-auto text-center flex flex-col items-center">
 
-        {/* Headline */}
-        <h2
-          className="font-display font-bold uppercase tracking-normal text-white"
-          style={{ fontSize: 'clamp(3.25rem, 8vw, 7rem)' }}
+        {/* Headline — hero style */}
+        <motion.div
+          className="flex flex-col items-center"
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
-          <span className="flex flex-wrap justify-center gap-x-[0.22em] leading-[0.9]">
-            <Word text="Ready" delay={0.05} prefersReducedMotion={prefersReducedMotion} />
-            <Word text="to" delay={0.12} prefersReducedMotion={prefersReducedMotion} />
+          <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+            Ready to automate
           </span>
-          <span className="mt-2 flex flex-col items-center justify-center gap-y-2 leading-none md:mt-4 md:flex-row md:gap-x-[0.26em]">
-            <Word
-              text="automate"
-              delay={0.2}
-              prefersReducedMotion={prefersReducedMotion}
-              className="font-serif italic font-normal lowercase gradient-text text-[0.78em] leading-[1.12] py-[0.08em]"
-            />
-            <span className="flex flex-wrap justify-center gap-x-[0.18em] leading-[0.9]">
-              <Word text="the" delay={0.28} prefersReducedMotion={prefersReducedMotion} />
-              <Word text="chaos?" delay={0.35} prefersReducedMotion={prefersReducedMotion} />
-            </span>
+          <span
+            className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+            data-text="THE CHAOS?"
+          >
+            THE CHAOS?
           </span>
-        </h2>
+        </motion.div>
 
         {/* Subhead */}
         <motion.p
@@ -113,10 +109,9 @@ export function FinalCTA({ onOpenContact }: FinalCTAProps) {
           initial={prefersReducedMotion ? false : 'hidden'}
           whileInView="visible"
           viewport={{ once: true, margin: '-80px' }}
-          className="mt-5 md:mt-6 text-white/60 text-lg max-w-xl mx-auto leading-relaxed"
+          className="mt-5 text-white/60 text-base max-w-md mx-auto leading-relaxed md:mt-6 md:text-lg md:max-w-xl"
         >
-          Tell us about your project. We'll respond within 24 hours with thoughts,
-          a rough scope, and a real timeline. No sales calls until you want one.
+          Tell us about your project. We reply in 24 hours — no sales theatre.
         </motion.p>
 
         {/* CTA stack */}
@@ -126,26 +121,27 @@ export function FinalCTA({ onOpenContact }: FinalCTAProps) {
           initial={prefersReducedMotion ? false : 'hidden'}
           whileInView="visible"
           viewport={{ once: true, margin: '-80px' }}
-          className="mt-8 flex flex-col sm:flex-row gap-4 justify-center items-center"
+          className="mt-7 flex w-full max-w-[460px] flex-row items-stretch justify-center gap-3 sm:max-w-none sm:gap-4"
         >
-          <div ref={ctaWrapRef} className="inline-flex">
-          <MagneticButton
-            variant="primary"
-            onClick={handleStartProject}
-            className="h-16 text-base px-10 text-white [&_*]:text-white"
-          >
-            Start a project <ArrowRight className="inline-block ml-2 w-4 h-4" />
-          </MagneticButton>
+          <div ref={ctaWrapRef} className="inline-flex flex-1 sm:flex-none">
+            <MagneticButton
+              variant="primary"
+              onClick={handleStartProject}
+              className="flex h-12 w-full items-center justify-center gap-2 text-[13px] px-4 text-white [&_*]:text-white sm:h-16 sm:text-base sm:px-10 sm:w-auto"
+            >
+              <span className="whitespace-nowrap">Start a project</span>
+              <ArrowRight className="inline-block w-3.5 h-3.5 flex-shrink-0 sm:w-4 sm:h-4" />
+            </MagneticButton>
           </div>
 
           <a
             href="https://calendly.com/pureflowstudios"
             target="_blank"
             rel="noopener noreferrer"
-            className="h-16 px-8 rounded-full border border-white/20 text-white/70 hover:text-white hover:border-white/40 flex items-center gap-2 text-sm font-medium tracking-wide uppercase transition-all duration-300"
+            className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full border border-white/20 px-4 text-[12px] font-medium tracking-wide uppercase text-white/70 transition-all duration-300 hover:text-white hover:border-white/40 sm:h-16 sm:flex-none sm:gap-2 sm:px-8 sm:text-sm"
           >
-            <Calendar className="w-4 h-4" />
-            Book a 15-min call
+            <Calendar className="w-3.5 h-3.5 flex-shrink-0 sm:w-4 sm:h-4" />
+            <span className="whitespace-nowrap">Book 15-min</span>
           </a>
         </motion.div>
 
@@ -156,11 +152,11 @@ export function FinalCTA({ onOpenContact }: FinalCTAProps) {
           initial={prefersReducedMotion ? false : 'hidden'}
           whileInView="visible"
           viewport={{ once: true, margin: '-80px' }}
-          className="mt-7 flex flex-wrap items-center justify-center gap-8"
+          className="mt-6 flex flex-wrap items-center justify-center gap-x-5 gap-y-2 sm:mt-7 sm:gap-x-8"
         >
           {trustItems.map((item) => (
-            <span key={item} className="flex items-center gap-2 text-xs text-white/40 uppercase tracking-wide">
-              <Check className="w-3.5 h-3.5 text-fuchsia-500/70 flex-shrink-0" />
+            <span key={item} className="flex items-center gap-1.5 text-[10px] text-white/40 uppercase tracking-wide sm:text-xs sm:gap-2">
+              <Check className="w-3 h-3 text-fuchsia-500/70 flex-shrink-0 sm:w-3.5 sm:h-3.5" />
               {item}
             </span>
           ))}

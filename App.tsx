@@ -318,17 +318,30 @@ const AppContent: React.FC = () => {
               <Process />
             </LazySection>
             
-            <LazySection>
-              <VideoReviews />
-            </LazySection>
+            {/* Continuous gradient flow across Reviews → Google → Map */}
+            <div className="relative overflow-hidden bg-black">
+              <div
+                className="pointer-events-none absolute inset-0"
+                aria-hidden="true"
+                style={{
+                  background:
+                    'linear-gradient(180deg, rgba(164,82,255,0.05) 0%, rgba(255,32,160,0.06) 50%, rgba(164,82,255,0.05) 100%), radial-gradient(ellipse at 50% 0%, rgba(164,82,255,0.18) 0%, transparent 45%), radial-gradient(ellipse at 50% 50%, rgba(255,32,160,0.12) 0%, transparent 50%), radial-gradient(ellipse at 50% 100%, rgba(164,82,255,0.18) 0%, transparent 45%)',
+                }}
+              />
+              <div className="relative z-10">
+                <LazySection>
+                  <VideoReviews />
+                </LazySection>
 
-            <LazySection>
-              <GoogleReviews />
-            </LazySection>
+                <LazySection>
+                  <GoogleReviews />
+                </LazySection>
 
-            <LazySection>
-              <LocationMap />
-            </LazySection>
+                <LazySection>
+                  <LocationMap />
+                </LazySection>
+              </div>
+            </div>
 
             <LazySection>
               <FinalCTA onOpenContact={handleOpenContact} />

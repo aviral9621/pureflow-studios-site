@@ -1,44 +1,8 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowUpRight } from 'lucide-react';
 import { MagneticButton } from '../shared/MagneticButton';
-
-// ─── Word reveal (same wordUp pattern as Hero + Services) ───────────────────
-
-const wordUp = {
-  hidden: { y: '110%', opacity: 0 },
-  visible: (delay: number) => ({
-    y: '0%',
-    opacity: 1,
-    transition: { duration: 0.85, ease: [0.16, 1, 0.3, 1], delay },
-  }),
-};
-
-interface WordProps {
-  text: string;
-  delay: number;
-  className?: string;
-  reduced: boolean | null;
-}
-
-function Word({ text, delay: _delay, className = '', reduced: _reduced }: WordProps) {
-  return (
-    <span className="inline-block overflow-hidden leading-[0.95]">
-      <span className={`inline-block ${className}`}>{text}</span>
-    </span>
-  );
-}
-
-// ─── Staggered content animation ────────────────────────────────────────────
-
-const fadeSlide = {
-  hidden: { opacity: 0, y: 16 },
-  visible: (delay: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay },
-  }),
-};
+import { PROJECTS, type Project } from '../../lib/projects';
 
 // ─── Browser chrome mockup ──────────────────────────────────────────────────
 
@@ -99,223 +63,65 @@ function BrowserMockup({ url, from, to }: MockupProps) {
   );
 }
 
-// ─── Metric ─────────────────────────────────────────────────────────────────
-
-function Metric({ value, label }: { value: string; label: string }) {
-  return (
-    <div>
-      <p className="font-display text-3xl gradient-text leading-none">{value}</p>
-      <p className="text-xs text-white/40 uppercase tracking-wide mt-1">{label}</p>
-    </div>
-  );
-}
-
-// ─── Case study data ─────────────────────────────────────────────────────────
-
-interface CaseData {
-  imageRight: boolean;
-  year: string;
-  category: string;
-  client: string;
-  title: string;
-  description: string;
-  metrics: [{ value: string; label: string }, { value: string; label: string }];
-  tech: string[];
-  url: string;
-  from: string;
-  to: string;
-}
-
-const CASES: CaseData[] = [
-  {
-    imageRight: false,
-    year: '2026',
-    category: 'Custom CRM',
-    client: 'Herbal Vantage · Healthcare MLM · 2026',
-    title: 'A binary MLM system built for scale',
-    description:
-      'A multi-level commission engine for a herbal healthcare company. Custom dashboards, E-Pin generation, KYC workflows, and Razorpay-integrated payouts — all running on Supabase with row-level security.',
-    metrics: [
-      { value: '11 tables', label: '6 build phases' },
-      { value: 'ap-south-1', label: 'Vercel Edge' },
-    ],
-    tech: ['Next.js', 'Supabase', 'Tailwind v4', 'shadcn/ui'],
-    url: 'herbalvantage-crm.vercel.app',
-    from: 'from-emerald-950/70',
-    to: 'to-teal-950/50',
-  },
-  {
-    imageRight: true,
-    year: '2026',
-    category: 'Hotel Tech',
-    client: 'Quick Hotels · Hospitality · 2026',
-    title: 'End-to-end hotel management',
-    description:
-      'A property management system + public booking website connected through a shared Supabase backend. Razorpay full + partial payment flows, GST-inclusive pricing, and Edge Functions for booking tracking.',
-    metrics: [
-      { value: '₹50L+', label: 'Bookings processed' },
-      { value: 'Edge Fn', label: 'Supabase Realtime' },
-    ],
-    tech: ['Next.js', 'React 19', 'Vite', 'Supabase Edge Functions'],
-    url: 'quickhotels.vercel.app',
-    from: 'from-blue-950/70',
-    to: 'to-indigo-950/50',
-  },
-  {
-    imageRight: false,
-    year: '2025',
-    category: 'EdTech',
-    client: 'UnSkills · Education · 2025',
-    title: 'Multi-branch institute management',
-    description:
-      'A red-themed CRM for a NIELIT-authorized computer education institute across 8 branches. Student lifecycle, fee management, branded OTP emails via Resend, and Cloudflare R2 for document storage.',
-    metrics: [
-      { value: '8 branches', label: 'Simultaneous' },
-      { value: '16 phases', label: 'Rollout plan' },
-    ],
-    tech: ['Next.js', 'Supabase', 'Cloudflare R2', 'Resend'],
-    url: 'unskills-crm.vercel.app',
-    from: 'from-red-950/70',
-    to: 'to-rose-950/50',
-  },
-  {
-    imageRight: true,
-    year: '2025',
-    category: 'AgriTech',
-    client: 'Laxmi Agro Agency · Agriculture · 2025',
-    title: 'WhatsApp leads to PDF invoices',
-    description:
-      'Agricultural CRM with BotBee WhatsApp webhook integration, auto round-robin lead distribution, GST-compliant invoicing, PWA push notifications, and a CA-ready GST report generator.',
-    metrics: [
-      { value: '12 modules', label: 'Built to spec' },
-      { value: '15 tables', label: 'Schema depth' },
-    ],
-    tech: ['Next.js', 'Supabase Realtime', 'BotBee', 'Web Push API'],
-    url: 'laxmi-agro-crm.vercel.app',
-    from: 'from-amber-950/70',
-    to: 'to-orange-950/50',
-  },
-];
-
 // ─── CaseStudyCard ────────────────────────────────────────────────────────────
+//
+// NOTE: case study data lives in `lib/projects.ts`. To wire up a CRM (Supabase,
+// Notion, Sanity, etc.), fetch into the same `Project` shape and pass through.
 
-function CaseStudyCard({ c, reduced }: { c: CaseData; reduced: boolean | null }) {
-  const imgOrder = c.imageRight ? 'lg:order-2' : 'lg:order-1';
-  const txtOrder = c.imageRight ? 'lg:order-1' : 'lg:order-2';
-
+function CaseStudyCard({ project, reduced, index }: { project: Project; reduced: boolean | null; index: number }) {
   return (
     <motion.article
-      className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-12 items-center py-10 lg:py-16"
-      initial={reduced ? false : { opacity: 0 }}
-      whileInView={{ opacity: 1 }}
-      viewport={{ once: true, margin: '-150px' }}
-      transition={{ duration: 0.4 }}
+      className="case-card group relative flex h-full w-full flex-col overflow-hidden rounded-xl border border-white/10 bg-[#08060d] transition-all duration-300 hover:-translate-y-1 hover:border-[#ff3f8d]/45 sm:rounded-2xl"
+      initial={reduced ? false : { opacity: 0, y: 28 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1], delay: (index % 2) * 0.08 }}
     >
-      {/* IMAGE BLOCK */}
-      <motion.div
-        className={`col-span-1 lg:col-span-7 order-1 ${imgOrder}`}
-        initial={reduced ? false : { opacity: 0, scale: 0.96 }}
-        whileInView={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        viewport={{ once: true, margin: '-150px' }}
-      >
-        <div className="relative aspect-[16/11] rounded-2xl overflow-hidden border border-white/5 shadow-[inset_0_0_120px_rgba(0,0,0,0.4)] group sm:aspect-[16/10] sm:rounded-3xl">
-          {/* Year/category badge */}
-          <div className="absolute top-4 left-4 z-20 bg-black/60 backdrop-blur-sm text-white/55 text-xs font-mono px-3 py-1 rounded-full border border-white/10">
-            {c.year} · {c.category}
-          </div>
+      {/* Animated gradient halo on hover */}
+      <div className="case-card__halo pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
 
-          <BrowserMockup url={c.url} from={c.from} to={c.to} />
-
-          {/* Hover overlay */}
-          <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center z-10">
-            <span className="text-white text-sm font-medium flex items-center gap-2">
-              View case study <ArrowUpRight className="w-4 h-4" />
-            </span>
-          </div>
+      {/* TOP — Browser mockup */}
+      <div className="relative z-10 aspect-[16/10] w-full overflow-hidden border-b border-white/8">
+        <div className="absolute top-2.5 left-2.5 z-20 rounded-full border border-white/10 bg-black/60 px-2 py-0.5 font-mono text-[9px] text-white/60 backdrop-blur-sm sm:top-3 sm:left-3 sm:px-2.5 sm:text-[10px]">
+          {project.year} · {project.category}
         </div>
-      </motion.div>
+        <BrowserMockup url={project.url} from={project.from} to={project.to} />
+      </div>
 
-      {/* CONTENT BLOCK */}
-      <div className={`col-span-1 lg:col-span-5 order-2 ${txtOrder}`}>
-        {/* Client meta */}
-        <motion.p
-          custom={0.1}
-          variants={fadeSlide}
-          initial={reduced ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
-          className="text-xs uppercase tracking-[0.2em] text-white/40"
-        >
-          {c.client}
-        </motion.p>
+      {/* BOTTOM — Lean text content */}
+      <div className="relative z-10 flex flex-1 flex-col p-4 sm:p-5">
+        <p className="gradient-flow-text text-[9px] font-extrabold uppercase tracking-[0.16em] sm:text-[10px] sm:tracking-[0.2em]">
+          {project.client}
+        </p>
 
-        {/* Title */}
-        <motion.h3
-          custom={0.18}
-          variants={fadeSlide}
-          initial={reduced ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
-          className="font-display text-[2.5rem] lg:text-5xl font-bold tracking-normal leading-[1.08] mt-4 text-white"
-        >
-          {c.title}
-        </motion.h3>
+        <h3 className="mt-2 font-display text-[1.05rem] font-bold leading-[1.2] tracking-tight text-white sm:text-[1.15rem] md:text-[1.2rem]">
+          {project.title}
+        </h3>
 
-        {/* Description */}
-        <motion.p
-          custom={0.26}
-          variants={fadeSlide}
-          initial={reduced ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
-          className="mt-4 text-white/55 text-base leading-relaxed"
-        >
-          {c.description}
-        </motion.p>
+        <p className="mt-1.5 text-[12.5px] leading-relaxed text-white/55 sm:text-[13px]">
+          {project.description}
+        </p>
 
-        {/* Metrics */}
-        <motion.div
-          custom={0.34}
-          variants={fadeSlide}
-          initial={reduced ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
-          className="mt-6 grid grid-cols-2 gap-4"
-        >
-          <Metric {...c.metrics[0]} />
-          <Metric {...c.metrics[1]} />
-        </motion.div>
-
-        {/* Tech chips */}
-        <motion.div
-          custom={0.42}
-          variants={fadeSlide}
-          initial={reduced ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
-          className="mt-6 flex flex-wrap gap-2"
-        >
-          {c.tech.map((t) => (
-            <span key={t} className="bg-white/5 text-white/60 text-xs px-3 py-1 rounded-full border border-white/10">
+        <div className="mt-3 flex flex-wrap gap-1.5">
+          {project.tech.map((t) => (
+            <span
+              key={t}
+              className="rounded-full border border-white/10 bg-white/5 px-2 py-0.5 text-[10px] text-white/60"
+            >
               {t}
             </span>
           ))}
-        </motion.div>
+        </div>
 
-        {/* CTA */}
-        <motion.div
-          custom={0.5}
-          variants={fadeSlide}
-          initial={reduced ? false : 'hidden'}
-          whileInView="visible"
-          viewport={{ once: true, margin: '-150px' }}
+        <a
+          href={`https://${project.url}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-white/55 transition-colors duration-200 hover:text-white sm:text-xs"
         >
-          <button className="mt-8 text-sm text-white/40 hover:text-white flex items-center gap-2 transition-colors duration-200 group/link">
-            Read case study
-            <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
-          </button>
-        </motion.div>
+          View live site
+          <ArrowUpRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-3.5 sm:w-3.5" />
+        </a>
       </div>
     </motion.article>
   );
@@ -345,34 +151,34 @@ export function Work({ onOpenContact }: WorkProps) {
 
       {/* ── Section header ── */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 mb-8 md:mb-10">
-        <p className="font-mono text-xs uppercase tracking-[0.3em] text-pink-400/80">
-          / 02 — Selected work
-        </p>
-        <h2 className="font-display text-[44px] font-bold tracking-normal text-white mt-3 leading-[1.02] sm:text-[clamp(3.25rem,7vw,6.75rem)] sm:leading-[1]">
-          <Word text="Recent" delay={0} reduced={reduced} />{' '}
-          <Word text="projects" delay={0.1} reduced={reduced} />
-          <br />
-          <span className="mt-2 flex flex-wrap items-baseline gap-x-[0.18em] gap-y-1 sm:mt-3 sm:gap-x-[0.22em]">
-            <Word text="we've" delay={0.2} reduced={reduced} />
-            <Word
-              text="shipped."
-              delay={0.3}
-              className="gradient-text font-serif italic font-normal leading-[1.12] py-[0.05em]"
-              reduced={reduced}
-            />
+        <motion.div
+          className="flex flex-col items-center text-center"
+          initial={reduced ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+            Stuff we
           </span>
-        </h2>
+          <span
+            className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+            data-text="SHIPPED."
+          >
+            SHIPPED.
+          </span>
+        </motion.div>
 
         {/* Sub-header row */}
         <motion.div
-          className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mt-5 md:mt-6"
+          className="flex flex-col sm:flex-row sm:justify-between sm:items-end gap-4 mt-6 md:mt-8"
           initial={reduced ? false : { opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+          transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
           viewport={{ once: true }}
         >
           <p className="text-white/55 text-base leading-relaxed max-w-md">
-            Each project is built with the same care we'd give our own product. No templates. No shortcuts.
+            Real products. Real users. No templates, no shortcuts.
           </p>
           <button className="text-sm text-white/40 hover:text-white flex items-center gap-1.5 transition-colors duration-200 group/all whitespace-nowrap">
             View all work
@@ -381,22 +187,14 @@ export function Work({ onOpenContact }: WorkProps) {
         </motion.div>
       </div>
 
-      {/* ── Divider ── */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="border-t border-white/5" />
+      {/* ── Case studies grid ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10 mt-8">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+          {PROJECTS.map((project, i) => (
+            <CaseStudyCard key={project.url} project={project} reduced={reduced} index={i} />
+          ))}
+        </div>
       </div>
-
-      {/* ── Case studies ── */}
-      {CASES.map((c, i) => (
-        <React.Fragment key={i}>
-          <CaseStudyCard c={c} reduced={reduced} />
-          {i < CASES.length - 1 && (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-              <div className="border-t border-white/5" />
-            </div>
-          )}
-        </React.Fragment>
-      ))}
 
       {/* ── Bottom CTA card ── */}
       <motion.div

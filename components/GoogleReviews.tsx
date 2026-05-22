@@ -200,7 +200,7 @@ export const GoogleReviews: React.FC = () => {
   const displayReviews = [...reviews, ...reviews, ...reviews, ...reviews, ...reviews, ...reviews];
 
   return (
-    <section className="relative w-full py-14 md:py-16 bg-[#050508] overflow-hidden border-t border-white/5">
+    <section className="relative w-full py-14 md:py-16 overflow-hidden border-t border-white/5">
       
       {/* Animation Styles */}
       <style>{`
@@ -218,8 +218,7 @@ export const GoogleReviews: React.FC = () => {
         .grab-cursor:active { cursor: grabbing; }
       `}</style>
 
-      {/* Background Ambience */}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#050508] via-purple-900/5 to-[#050508] pointer-events-none" />
+      {/* Background Ambience handled by parent flow wrapper */}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 mb-8 md:mb-10 flex flex-col items-center text-center">
          
@@ -260,10 +259,18 @@ export const GoogleReviews: React.FC = () => {
             </a>
          </div>
 
-         <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight mb-4">
-            What people say <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A452FF] via-[#FF20A0] to-[#A452FF] animate-text-flow inline-block">behind our back.</span>
-         </h2>
-         <p className="text-gray-400 text-sm md:text-lg font-light tracking-wide leading-relaxed max-w-xl mx-auto">
+         <div className="flex flex-col items-center">
+            <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+              What people say
+            </span>
+            <span
+              className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.1rem,4.8vw,4.5rem)]"
+              data-text="BEHIND OUR BACK."
+            >
+              BEHIND OUR BACK.
+            </span>
+         </div>
+         <p className="mt-5 text-gray-400 text-sm md:text-base font-light tracking-wide leading-relaxed max-w-xl mx-auto">
             Don't take our word for it. Trust the internet.
          </p>
       </div>
@@ -272,8 +279,8 @@ export const GoogleReviews: React.FC = () => {
       <div className="relative w-full">
          
          {/* Fade Masks for Edges */}
-         <div className="absolute top-0 left-0 h-full w-12 md:w-32 bg-gradient-to-r from-[#050508] to-transparent z-20 pointer-events-none" />
-         <div className="absolute top-0 right-0 h-full w-12 md:w-32 bg-gradient-to-l from-[#050508] to-transparent z-20 pointer-events-none" />
+         <div className="absolute top-0 left-0 h-full w-12 md:w-32 bg-gradient-to-r from-black/95 to-transparent z-20 pointer-events-none" />
+         <div className="absolute top-0 right-0 h-full w-12 md:w-32 bg-gradient-to-l from-black/95 to-transparent z-20 pointer-events-none" />
 
          <div 
             ref={scrollContainerRef}

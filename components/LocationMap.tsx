@@ -153,7 +153,7 @@ export const LocationMap: React.FC = () => {
 
   return (
     // FULL WIDTH WRAPPER for Continuous Gradient Flow
-    <div className="w-full bg-gradient-to-b from-[#050508] to-black">
+    <div className="w-full">
       <section id="pf-map-section" ref={sectionRef} className="py-14 md:py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full mb-8 relative">
         <style>{`
           @keyframes textFlow {
@@ -201,23 +201,27 @@ export const LocationMap: React.FC = () => {
         {/* Clean Header with Gradient Flow */}
         <div className="text-center mb-8 md:mb-10 flex flex-col items-center">
           
-          {/* Google Maps Badge */}
-          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1A1A1E] border border-white/10 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.4)] hover:scale-105 transition-transform duration-300 mb-4 group cursor-default">
-             <div className="w-5 h-5 flex-shrink-0">
-               <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                  <path fill="#4285F4" d="M18.5 25.5c-2.2-2.5-3.5-5.7-3.5-9.3 0-7.2 5.8-13 13-13 3.8 0 7.3 1.6 9.7 4.1l-10.4 10.4-8.8 7.8z"/>
-                  <path fill="#34A853" d="M47.5 16.2c-2.7-4.6-7-8.1-11.8-10.3l-10.1 10.1 8.8 7.8c1.3-1.5 2.1-3.5 2.1-5.7 0-4.1-3.3-7.4-7.4-7.4-1.8 0-3.4.6-4.7 1.6l-9.4-9.4c3.6-2.1 7.7-3.2 12.1-3.2 12.1 0 22 9.1 23.6 20.9-.8-1.5-1.9-2.9-3.2-4.4z"/>
-                  <path fill="#FBBC04" d="M9.9 16.2c-3.1 5.3-3.1 11.2 0 16.5l9.4-9.4c-1.3-1.5-2.1-3.5-2.1-5.7 0-1.8.6-3.4 1.6-4.7l-8.9-8.9C7.8 8.1 5.6 12 4.9 16.2h5z"/>
-                  <path fill="#EA4335" d="M18.5 25.5l8.8-7.8c1.5 1.3 3.5 2.1 5.7 2.1 4.1 0 7.4-3.3 7.4-7.4 0-1.8-.6-3.4-1.6-4.7l9.4-9.4c2.1 3.6 3.2 7.7 3.2 12.1 0 10.1-6.7 18.7-16 21.6l-9.4-16.5H18.5z"/>
-               </svg>
-             </div>
+          {/* Google Maps Badge — clean pin */}
+          <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-[#1A1A1E] border border-white/10 shadow-[0_4px_20px_-2px_rgba(0,0,0,0.4)] hover:scale-105 transition-transform duration-300 mb-5 group cursor-default">
+             <svg viewBox="0 0 24 24" className="w-5 h-5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M12 2C7.58 2 4 5.58 4 10c0 5.25 7.06 11.55 7.36 11.81a1 1 0 0 0 1.28 0C12.94 21.55 20 15.25 20 10c0-4.42-3.58-8-8-8z" fill="#EA4335"/>
+                <circle cx="12" cy="10" r="3" fill="#ffffff"/>
+             </svg>
              <span className="text-sm font-bold text-white tracking-wide">Google Maps</span>
           </div>
 
-          <h3 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 md:mb-6 tracking-tight">
-              Find Us on the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#A452FF] via-[#FF20A0] to-[#A452FF] animate-text-flow inline-block">Map</span>
-          </h3>
-          <p className="text-gray-400 max-w-2xl mx-auto text-base md:text-lg leading-relaxed font-light px-4">
+          <div className="flex flex-col items-center">
+            <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+              Find us on the
+            </span>
+            <span
+              className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+              data-text="MAP."
+            >
+              MAP.
+            </span>
+          </div>
+          <p className="mt-5 text-gray-400 max-w-2xl mx-auto text-sm md:text-base leading-relaxed font-light px-4">
               Pureflow Studios HQ — Lucknow, Uttar Pradesh.
           </p>
         </div>

@@ -36,8 +36,7 @@ const serviceCards = [
     icon: Code2,
     category: 'Development',
     title: 'Custom Software',
-    description:
-      'Bespoke systems that fit your exact business logic. CRMs, ERPs, dashboards, internal tools - built on Next.js + Supabase. Not templates. Not WordPress. Actual software.',
+    description: 'Built for your business — not a template.',
     metric: '12+ systems shipped',
     view: 'service-software',
   },
@@ -46,9 +45,8 @@ const serviceCards = [
     icon: LayoutDashboard,
     category: 'Product',
     title: 'CRMs & Dashboards',
-    description:
-      'Customer relationship tools, commission engines, KYC portals, report builders - anything that makes your team 3x more efficient by replacing WhatsApp chaos with a real system.',
-    metric: '8 CRMs live in production',
+    description: '14 WhatsApp groups → one clean screen.',
+    metric: '8 CRMs in production',
     view: 'service-crm',
   },
   {
@@ -56,9 +54,8 @@ const serviceCards = [
     icon: Smartphone,
     category: 'Mobile',
     title: 'Mobile Apps',
-    description:
-      'PWA-first when speed is the goal, React Native when native experience matters. We build apps that ship to both Android and iOS without two separate budgets.',
-    metric: 'PWA + native both covered',
+    description: 'iOS + Android, one budget. No drama.',
+    metric: 'PWA + native covered',
     view: 'service-mobile',
   },
   {
@@ -66,8 +63,7 @@ const serviceCards = [
     icon: Globe2,
     category: 'Web',
     title: 'Websites',
-    description:
-      'Marketing sites, booking portals, multi-page agency websites. Fast, SEO-optimized, designed to convert. Built on Next.js 15 with Tailwind. Deployed on Vercel in hours.',
+    description: 'Loads fast. Converts faster. Looks fire.',
     metric: '15+ sites live',
     view: 'service-website',
   },
@@ -76,8 +72,7 @@ const serviceCards = [
     icon: ChartNoAxesCombined,
     category: 'Marketing',
     title: 'Social Media',
-    description:
-      'Content strategy, reel scripts, AI-generated product visuals, carousel design, brand voice development. We handle social for travel, healthcare, and edtech clients across Instagram and Facebook.',
+    description: 'Reels, scripts, AI visuals — handled.',
     metric: '4 brands managed monthly',
     view: 'service-social',
   },
@@ -86,9 +81,8 @@ const serviceCards = [
     icon: Megaphone,
     category: 'Performance',
     title: 'Ads Management',
-    description:
-      "Meta (Facebook + Instagram) ad campaigns. Copy, creative, targeting, A/B testing, budget optimization. We don't just run ads - we optimize toward your actual business goals.",
-    metric: 'Rs 10L+ ad spend managed',
+    description: 'Meta ads that chase ROAS, not vanity.',
+    metric: '₹10L+ ad spend managed',
     view: 'service-ads',
   },
 ] as const;
@@ -133,28 +127,23 @@ export function Services({ onViewChange }: ServicesProps) {
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-10">
-        <div className="mb-7 md:mb-10">
-          <p className="font-mono text-xs uppercase tracking-[0.3em] mb-3 bg-gradient-to-r from-[#FF20A0] to-[#A452FF] bg-clip-text text-transparent">
-            / 01 - Capabilities
-          </p>
-          <h2 className="font-display text-[44px] font-bold leading-[1.02] tracking-normal text-white sm:text-[clamp(3.25rem,7vw,6.75rem)] sm:leading-[1]">
-            <Word text="What" delay={0} reduced={reduced} />{' '}
-            <Word text="do" delay={0.08} reduced={reduced} />{' '}
-            <Word text="you" delay={0.16} reduced={reduced} />{' '}
-            <Word text="want" delay={0.24} reduced={reduced} />{' '}
-            <Word text="to" delay={0.32} reduced={reduced} />
-            <br />
-            <span className="mt-2 flex flex-wrap items-baseline gap-x-[0.18em] gap-y-1 sm:mt-3 sm:gap-x-[0.22em]">
-              <Word
-                text="Automate"
-                delay={0.4}
-                className="gradient-text font-serif italic font-normal leading-[1.12] py-[0.05em]"
-                reduced={reduced}
-              />
-              <Word text="today?" delay={0.5} reduced={reduced} />
-            </span>
-          </h2>
-        </div>
+        <motion.div
+          className="mb-9 flex flex-col items-center text-center md:mb-12"
+          initial={reduced ? false : { opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+            What do you want to
+          </span>
+          <span
+            className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+            data-text="AUTOMATE?"
+          >
+            AUTOMATE?
+          </span>
+        </motion.div>
 
         <motion.div
           className="grid w-full grid-cols-2 gap-2.5 sm:gap-4 lg:grid-cols-3"
@@ -172,11 +161,12 @@ export function Services({ onViewChange }: ServicesProps) {
                 type="button"
                 onClick={() => onViewChange(card.view as ViewState)}
                 variants={reduced ? undefined : cardVariants}
-                className="group relative min-h-[208px] overflow-hidden rounded-lg border border-white/18 bg-[#020306] px-3 pb-3 pt-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#ff3f8d]/65 hover:bg-[#050509] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff3f8d] sm:min-h-[330px] sm:px-5 sm:pb-5 sm:pt-5"
+                className="service-card group relative min-h-[208px] overflow-hidden rounded-2xl border border-white/12 bg-[#08060d] px-3 pb-3 pt-3 text-left shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] transition-all duration-300 hover:-translate-y-1 hover:border-[#ff3f8d]/55 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#ff3f8d] sm:min-h-[330px] sm:px-5 sm:pb-5 sm:pt-5"
                 whileHover={reduced ? undefined : { y: -4, transition: { duration: 0.2 } }}
                 whileTap={reduced ? undefined : { scale: 0.985 }}
               >
-                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(255,47,134,0.16),transparent_34%),linear-gradient(145deg,rgba(255,255,255,0.04),transparent_45%)] opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_12%_0%,rgba(255,47,134,0.18),transparent_34%),linear-gradient(145deg,rgba(168,85,247,0.10),transparent_55%)] opacity-80 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="service-card__glow pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" aria-hidden="true" />
                 <ArrowUpRight
                   className="absolute right-5 top-5 h-4 w-4 text-white/80 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
                   strokeWidth={1.8}
@@ -184,11 +174,11 @@ export function Services({ onViewChange }: ServicesProps) {
                 />
 
                 <div className="relative z-10 flex h-full min-h-[184px] flex-col sm:min-h-[290px]">
-                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-[#ff3f8d]/70 bg-[#08070b] text-[#ff3f8d] shadow-[0_0_24px_-15px_rgba(255,63,141,1)] sm:mb-5 sm:h-12 sm:w-12">
+                  <div className="mb-3 flex h-9 w-9 items-center justify-center rounded-lg border border-white/85 bg-black text-white shadow-[0_0_24px_-12px_rgba(255,255,255,0.4)] sm:mb-5 sm:h-12 sm:w-12">
                     <Icon className="h-4.5 w-4.5 sm:h-6 sm:w-6" strokeWidth={1.9} />
                   </div>
 
-                  <p className="mb-1.5 text-[9px] font-extrabold uppercase tracking-[0.06em] text-[#ff3f8d] sm:mb-2 sm:text-[10px] sm:tracking-[0.09em]">
+                  <p className="gradient-flow-text mb-1.5 text-[9px] font-extrabold uppercase tracking-[0.12em] sm:mb-2 sm:text-[10px] sm:tracking-[0.16em]">
                     {card.category}
                   </p>
                   <h3 className="text-[15px] font-medium leading-tight text-white sm:text-[21px]">

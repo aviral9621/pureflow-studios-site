@@ -60,7 +60,7 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) 
     <section
       ref={sectionRef}
       onMouseMove={handleMouseMove}
-      className="relative flex min-h-screen w-full flex-col items-center justify-start overflow-hidden bg-black px-5 pb-6 pt-28 sm:justify-center sm:pt-24 md:pb-8"
+      className="relative flex min-h-screen w-full flex-col items-center justify-center overflow-hidden bg-black px-5 pb-6 pt-20 sm:pt-24 md:pb-8"
       aria-label="Hero"
     >
       <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
