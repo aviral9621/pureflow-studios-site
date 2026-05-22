@@ -133,7 +133,7 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) 
           <span className="hero-title-line hero-title-line-where relative z-10 flex justify-center">
             <span className="inline-block pr-6 leading-none">
               <motion.span
-                className="relative inline-block font-serif italic text-[4.1rem] font-normal tracking-normal text-white/95 sm:text-[clamp(3.4rem,7.2vw,7.2rem)]"
+                className="relative inline-block font-serif italic text-[3.4rem] font-normal tracking-normal text-white/95 sm:text-[clamp(2.8rem,5.8vw,5.8rem)]"
                 custom={0.4}
                 variants={wordUp}
                 initial={prefersReducedMotion ? false : 'hidden'}
@@ -150,7 +150,7 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) 
 
           <span className="hero-title-line hero-title-line-business relative z-10 inline-block leading-none">
             <motion.span
-              className="hero-business-meets inline-block whitespace-nowrap text-[2.65rem] font-black leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.85)] sm:text-[clamp(2.7rem,6.9vw,6.75rem)]"
+              className="hero-business-meets inline-block whitespace-nowrap text-[2.2rem] font-black leading-none text-white drop-shadow-[0_10px_24px_rgba(0,0,0,0.85)] sm:text-[clamp(2.2rem,5.5vw,5.4rem)]"
               custom={0.55}
               variants={wordUp}
               initial={prefersReducedMotion ? false : 'hidden'}
@@ -162,7 +162,7 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) 
 
           <span className="hero-title-line hero-title-line-automation relative z-10 inline-block w-full leading-none">
             <motion.span
-              className="hero-automation-text inline-block text-[3.75rem] leading-none sm:text-[clamp(3.85rem,10.5vw,10.5rem)]"
+              className="hero-automation-text inline-block text-[3rem] leading-none sm:text-[clamp(3rem,8.4vw,8.4rem)]"
               data-text="AUTOMATION"
               custom={0.8}
               variants={wordUp}
@@ -221,12 +221,12 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) 
           animate="visible"
           className="mt-5 flex w-full flex-col items-center gap-4 md:mt-6"
         >
-          <div className="flex w-full max-w-[520px] flex-wrap items-center justify-center gap-x-6 gap-y-2 opacity-70 sm:max-w-none sm:gap-x-9">
-            <span className="font-serif text-base italic tracking-tight text-white/85 sm:text-lg">Nexora</span>
-            <span className="text-base font-extrabold uppercase tracking-[0.18em] text-white/80 sm:text-[15px]">LUMEN</span>
-            <span className="text-base font-semibold lowercase tracking-tight text-white/80 sm:text-lg">vertix<span className="text-[#ff2f86]">.</span></span>
-            <span className="text-base font-black uppercase tracking-[0.22em] text-white/80 sm:text-[15px]">QUANTA</span>
-            <span className="font-serif text-base tracking-wide text-white/80 sm:text-lg">Aether&amp;Co</span>
+          <div className="flex w-full max-w-[640px] flex-wrap items-center justify-center gap-x-5 gap-y-2 opacity-75 sm:max-w-none sm:gap-x-8">
+            <span className="font-display text-[13px] font-bold uppercase tracking-[0.14em] text-white/85 sm:text-[14px]">Herbal Vantage</span>
+            <span className="font-serif text-[14px] italic tracking-tight text-white/85 sm:text-[16px]">Quick Hotels</span>
+            <span className="font-display text-[13px] font-semibold uppercase tracking-[0.18em] text-white/80 sm:text-[14px]">Spectrum Tour</span>
+            <span className="font-serif text-[14px] tracking-wide text-white/80 sm:text-[16px]">UnSkills</span>
+            <span className="font-display text-[13px] font-black uppercase tracking-[0.16em] text-white/80 sm:text-[14px]">Laxmi Agro</span>
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-6">
