@@ -72,6 +72,9 @@ const GetAdsPage = lazy(() =>
 const AutomationPage = lazy(() =>
   import('./components/AutomationPage').then((module) => ({ default: module.AutomationPage }))
 );
+const LegalPage = lazy(() =>
+  import('./components/LegalPage').then((module) => ({ default: module.LegalPage }))
+);
 
 const PageFallback = () => (
   <div className="min-h-screen bg-black" aria-label="Loading page" />
@@ -395,6 +398,12 @@ const AppContent: React.FC = () => {
         {currentView === 'contact' && (
           <Suspense fallback={<PageFallback />}>
             <ContactPage onViewChange={navigateTo} />
+          </Suspense>
+        )}
+
+        {(currentView === 'privacy' || currentView === 'terms' || currentView === 'cookies') && (
+          <Suspense fallback={<PageFallback />}>
+            <LegalPage kind={currentView} onViewChange={navigateTo} />
           </Suspense>
         )}
 

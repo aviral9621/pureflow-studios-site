@@ -135,7 +135,7 @@ export function FinalCTA({ onOpenContact }: FinalCTAProps) {
           </div>
 
           <a
-            href="https://calendly.com/pureflowstudios"
+            href="https://wa.me/916393640650"
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full border border-white/20 px-4 text-[12px] font-medium tracking-wide uppercase text-white/70 transition-all duration-300 hover:text-white hover:border-white/40 sm:h-16 sm:flex-none sm:gap-2 sm:px-8 sm:text-sm"

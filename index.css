@@ -589,6 +589,14 @@ html:not(.dark) .pf-card:hover .pf-card-inner {
   width: 100%;
   letter-spacing: -0.025em;
   line-height: 0.85;
+  text-shadow: 0 -2px 8px rgba(255,255,255,0.06), 0 8px 40px rgba(164,82,255,0.18);
+}
+
+/* Footer card subtle hover glow — picks up the global purple→pink palette */
+.footer-card__glow {
+  background:
+    radial-gradient(circle at 50% 100%, rgba(255,32,160,0.14), transparent 60%),
+    radial-gradient(circle at 50% 0%, rgba(164,82,255,0.10), transparent 60%);
 }
 
 .hero-title-stack {

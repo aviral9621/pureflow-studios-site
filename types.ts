@@ -17,7 +17,10 @@ export type ViewState =
   | 'get-app-built'
   | 'get-social-media'
   | 'get-ads'
-  | 'automation-video';
+  | 'automation-video'
+  | 'privacy'
+  | 'terms'
+  | 'cookies';
 
 export interface PlanFeature {
   text: string;
