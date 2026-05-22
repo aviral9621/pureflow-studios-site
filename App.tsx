@@ -1,0 +1,406 @@
+
+import React, { Suspense, lazy, useState, useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Navbar } from './components/shared/Navbar';
+import { Hero } from './components/sections/Hero';
+import { ViewState } from './types';
+import { ThemeProvider } from './components/ThemeContext';
+
+const Footer = lazy(() =>
+  import('./components/Footer').then((module) => ({ default: module.Footer }))
+);
+const TrustStrip = lazy(() =>
+  import('./components/sections/TrustStrip').then((module) => ({ default: module.TrustStrip }))
+);
+const Services = lazy(() =>
+  import('./components/sections/Services').then((module) => ({ default: module.Services }))
+);
+const Work = lazy(() =>
+  import('./components/sections/Work').then((module) => ({ default: module.Work }))
+);
+const Process = lazy(() =>
+  import('./components/sections/Process').then((module) => ({ default: module.Process }))
+);
+const FinalCTA = lazy(() =>
+  import('./components/sections/FinalCTA').then((module) => ({ default: module.FinalCTA }))
+);
+const ContactFormPopup = lazy(() =>
+  import('./components/ContactFormPopup').then((module) => ({ default: module.ContactFormPopup }))
+);
+const VideoReviews = lazy(() =>
+  import('./components/VideoReviews').then((module) => ({ default: module.VideoReviews }))
+);
+const GoogleReviews = lazy(() =>
+  import('./components/GoogleReviews').then((module) => ({ default: module.GoogleReviews }))
+);
+const LocationMap = lazy(() =>
+  import('./components/LocationMap').then((module) => ({ default: module.LocationMap }))
+);
+const PricingSection = lazy(() =>
+  import('./components/PricingSection').then((module) => ({ default: module.PricingSection }))
+);
+const CrmDemoPage = lazy(() =>
+  import('./components/CrmDemoPage').then((module) => ({ default: module.CrmDemoPage }))
+);
+const RefundPolicyPage = lazy(() =>
+  import('./components/RefundPolicyPage').then((module) => ({ default: module.RefundPolicyPage }))
+);
+const ContactPage = lazy(() =>
+  import('./components/ContactPage').then((module) => ({ default: module.ContactPage }))
+);
+const ServiceDetailPage = lazy(() =>
+  import('./components/ServiceDetailPage').then((module) => ({ default: module.ServiceDetailPage }))
+);
+const SoftwareCrmPage = lazy(() =>
+  import('./components/SoftwareCrmPage').then((module) => ({ default: module.SoftwareCrmPage }))
+);
+const GetWebsiteBuiltPage = lazy(() =>
+  import('./components/GetWebsiteBuiltPage').then((module) => ({ default: module.GetWebsiteBuiltPage }))
+);
+const GetSoftwareBuiltPage = lazy(() =>
+  import('./components/GetSoftwareBuiltPage').then((module) => ({ default: module.GetSoftwareBuiltPage }))
+);
+const GetAppBuiltPage = lazy(() =>
+  import('./components/GetAppBuiltPage').then((module) => ({ default: module.GetAppBuiltPage }))
+);
+const GetSocialMediaPage = lazy(() =>
+  import('./components/GetSocialMediaPage').then((module) => ({ default: module.GetSocialMediaPage }))
+);
+const GetAdsPage = lazy(() =>
+  import('./components/GetAdsPage').then((module) => ({ default: module.GetAdsPage }))
+);
+const AutomationPage = lazy(() =>
+  import('./components/AutomationPage').then((module) => ({ default: module.AutomationPage }))
+);
+
+const PageFallback = () => (
+  <div className="min-h-screen bg-black" aria-label="Loading page" />
+);
+
+const SectionFallback = () => (
+  <div className="min-h-[220px] bg-black" aria-hidden="true" />
+);
+
+type LeadFormView =
+  | 'get-website-built'
+  | 'get-software-built'
+  | 'get-app-built'
+  | 'get-social-media'
+  | 'get-ads';
+
+function LazySection({ children }: { children: React.ReactNode }) {
+  const [shouldRender, setShouldRender] = useState(false);
+  const ref = React.useRef<HTMLDivElement>(null);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    if (shouldRender) return;
+
+    const node = ref.current;
+    if (!node || !('IntersectionObserver' in window)) {
+      setShouldRender(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShouldRender(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: '220px 0px' }
+    );
+
+    observer.observe(node);
+    return () => observer.disconnect();
+  }, [shouldRender]);
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 36 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.15, margin: '0px 0px -10% 0px' }}
+      transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+      style={{ willChange: 'transform, opacity' }}
+    >
+      {shouldRender ? (
+        <Suspense fallback={<SectionFallback />}>{children}</Suspense>
+      ) : (
+        <SectionFallback />
+      )}
+    </motion.div>
+  );
+}
+
+const AppContent: React.FC = () => {
+  const [currentView, setCurrentView] = useState<ViewState>('home');
+  const viewHistoryRef = React.useRef<ViewState[]>([]);
+  const shouldScrollToServicesRef = React.useRef(false);
+  
+  // Contact Form State
+  const [isContactOpen, setIsContactOpen] = useState(false);
+  const [contactTitle, setContactTitle] = useState("Book Demo");
+  const [contactOrigin, setContactOrigin] = useState<DOMRect | null>(null);
+
+  // Scroll to top on view change
+  useEffect(() => {
+    if (currentView === 'home' && shouldScrollToServicesRef.current) {
+      shouldScrollToServicesRef.current = false;
+      window.setTimeout(() => {
+        document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 120);
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentView]);
+
+  const navigateTo = (view: ViewState) => {
+    if (view === currentView) return;
+
+    viewHistoryRef.current = [...viewHistoryRef.current, currentView];
+    setCurrentView(view);
+  };
+
+  const navigateBack = (fallback: ViewState = 'home') => {
+    const previousView = viewHistoryRef.current.pop() ?? fallback;
+    setCurrentView(previousView);
+  };
+
+  const navigateToServicesSection = () => {
+    shouldScrollToServicesRef.current = true;
+    if (currentView === 'home') {
+      document.getElementById('services')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      shouldScrollToServicesRef.current = false;
+      return;
+    }
+
+    navigateTo('home');
+  };
+
+  const handleOpenContact = (title: string, rect: DOMRect) => {
+    setContactTitle(title);
+    setContactOrigin(rect);
+    setIsContactOpen(true);
+  };
+
+  const renderLeadFormPage = (view: LeadFormView) => {
+    const pages = {
+      'get-website-built': (
+        <GetWebsiteBuiltPage
+          onViewChange={navigateTo}
+          onBack={() => navigateBack('service-website')}
+          breadcrumbLabel="Websites built to convert"
+          onServicesClick={navigateToServicesSection}
+        />
+      ),
+      'get-software-built': (
+        <GetSoftwareBuiltPage
+          onViewChange={navigateTo}
+          onBack={() => navigateBack('service-software')}
+          breadcrumbLabel="CRMs and dashboards"
+          onServicesClick={navigateToServicesSection}
+        />
+      ),
+      'get-app-built': (
+        <GetAppBuiltPage
+          onViewChange={navigateTo}
+          onBack={() => navigateBack('service-mobile')}
+          breadcrumbLabel="Mobile apps designed for real"
+          onServicesClick={navigateToServicesSection}
+        />
+      ),
+      'get-social-media': (
+        <GetSocialMediaPage
+          onViewChange={navigateTo}
+          onBack={() => navigateBack('service-social')}
+          breadcrumbLabel="Social media systems"
+          onServicesClick={navigateToServicesSection}
+        />
+      ),
+      'get-ads': (
+        <GetAdsPage
+          onViewChange={navigateTo}
+          onBack={() => navigateBack('service-ads')}
+          breadcrumbLabel="Ads management focused on"
+          onServicesClick={navigateToServicesSection}
+        />
+      ),
+    };
+
+    return (
+      <main className="min-h-screen w-full relative bg-black text-white selection:bg-brand selection:text-white">
+        <Navbar 
+          currentView={currentView} 
+          onViewChange={navigateTo}
+          onOpenContact={handleOpenContact}
+        />
+
+        {isContactOpen && (
+          <Suspense fallback={null}>
+            <ContactFormPopup 
+              isOpen={isContactOpen}
+              onClose={() => setIsContactOpen(false)}
+              title={contactTitle}
+              originRect={contactOrigin}
+            />
+          </Suspense>
+        )}
+
+        <Suspense fallback={<PageFallback />}>
+          {pages[view]}
+        </Suspense>
+      </main>
+    );
+  };
+
+  if (
+    currentView === 'get-website-built' ||
+    currentView === 'get-software-built' ||
+    currentView === 'get-app-built' ||
+    currentView === 'get-social-media' ||
+    currentView === 'get-ads'
+  ) {
+    return renderLeadFormPage(currentView);
+  }
+
+  if (currentView === 'automation-video') {
+    return (
+      <Suspense fallback={<PageFallback />}>
+        <AutomationPage onViewChange={navigateTo} />
+      </Suspense>
+    );
+  }
+
+  return (
+    <main className="min-h-screen w-full relative bg-black text-white selection:bg-brand selection:text-white">
+      
+      {/* Global Ambient Background - Subtle and Premium */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden -z-10">
+         <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1200px] h-[1000px] bg-brand/5 rounded-full blur-[150px] opacity-40" />
+      </div>
+
+      <Navbar 
+        currentView={currentView} 
+        onViewChange={navigateTo}
+        onOpenContact={handleOpenContact}
+      />
+
+      {isContactOpen && (
+        <Suspense fallback={null}>
+          <ContactFormPopup 
+            isOpen={isContactOpen}
+            onClose={() => setIsContactOpen(false)}
+            title={contactTitle}
+            originRect={contactOrigin}
+          />
+        </Suspense>
+      )}
+
+      <div className="pt-0">
+        {currentView === 'home' && (
+          <>
+            <Hero onViewChange={navigateTo} onOpenContact={handleOpenContact} />
+            <LazySection>
+              <TrustStrip />
+            </LazySection>
+            <div id="services">
+              <LazySection>
+                <Services onViewChange={navigateTo} />
+              </LazySection>
+            </div>
+            <LazySection>
+              <Work onOpenContact={handleOpenContact} />
+            </LazySection>
+            <LazySection>
+              <Process />
+            </LazySection>
+            
+            <LazySection>
+              <VideoReviews />
+            </LazySection>
+
+            <LazySection>
+              <GoogleReviews />
+            </LazySection>
+
+            <LazySection>
+              <LocationMap />
+            </LazySection>
+
+            <LazySection>
+              <FinalCTA onOpenContact={handleOpenContact} />
+            </LazySection>
+          </>
+        )}
+
+        {currentView === 'services' && (
+          <div className="pt-20">
+            <Suspense fallback={<PageFallback />}>
+              <Services onViewChange={navigateTo} />
+            </Suspense>
+          </div>
+        )}
+
+        {(currentView === 'service-software' ||
+          currentView === 'service-crm' ||
+          currentView === 'service-mobile' ||
+          currentView === 'service-website' ||
+          currentView === 'service-social' ||
+          currentView === 'service-ads') && (
+          <Suspense fallback={<PageFallback />}>
+            <ServiceDetailPage service={currentView} onViewChange={navigateTo} onServicesClick={navigateToServicesSection} />
+          </Suspense>
+        )}
+
+        {currentView === 'pricing' && (
+          <div className="pt-20">
+            <Suspense fallback={<PageFallback />}>
+              <PricingSection onViewChange={navigateTo} />
+            </Suspense>
+          </div>
+        )}
+
+        {currentView === 'crm-demo' && (
+           <div className="pt-0">
+            <Suspense fallback={<PageFallback />}>
+              <CrmDemoPage onViewChange={navigateTo} />
+            </Suspense>
+           </div>
+        )}
+
+        {currentView === 'refund-policy' && (
+           <div className="pt-0">
+            <Suspense fallback={<PageFallback />}>
+              <RefundPolicyPage onViewChange={navigateTo} />
+            </Suspense>
+           </div>
+        )}
+
+        {currentView === 'contact' && (
+          <Suspense fallback={<PageFallback />}>
+            <ContactPage onViewChange={navigateTo} />
+          </Suspense>
+        )}
+
+      </div>
+
+      <LazySection>
+        <Footer onViewChange={navigateTo} />
+      </LazySection>
+
+    </main>
+  );
+};
+
+const App: React.FC = () => {
+  return (
+    <ThemeProvider>
+      <AppContent />
+    </ThemeProvider>
+  );
+};
+
+export default App;
