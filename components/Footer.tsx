@@ -176,15 +176,13 @@ export const Footer: React.FC<FooterProps> = ({ onViewChange }) => {
               ))}
             </ul>
 
-            <a
-              href={WHATSAPP_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-white/15 bg-black/30 px-3.5 py-2 text-[12px] font-semibold text-white/85 transition-all duration-300 hover:border-[#25D366]/60 hover:bg-[#25D366]/10 hover:text-white"
+            <button
+              onClick={() => handleNav('book-call' as ViewState)}
+              className="mt-5 inline-flex w-full items-center justify-center gap-2 rounded-full border border-[#ff3f8d]/40 bg-[#ff3f8d]/10 px-3.5 py-2 text-[12px] font-semibold text-white transition-all duration-300 hover:border-[#ff3f8d]/70 hover:bg-[#ff3f8d]/15"
             >
               <CalendarClock className="w-3.5 h-3.5" />
               Schedule a call
-            </a>
+            </button>
           </div>
 
           {/* ── Card 4 — Contact ── */}

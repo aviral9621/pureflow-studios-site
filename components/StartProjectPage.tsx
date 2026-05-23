@@ -129,11 +129,13 @@ export const StartProjectPage: React.FC<StartProjectPageProps> = ({ onViewChange
   const goNext = useCallback(() => {
     setDirection(1);
     setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const goPrev = useCallback(() => {
     setDirection(-1);
     setStep((s) => Math.max(s - 1, 0));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }, []);
 
   const isStepValid = (): boolean => {
@@ -371,7 +373,7 @@ export const StartProjectPage: React.FC<StartProjectPageProps> = ({ onViewChange
 
         {/* Footer — Next / Submit */}
         <div className="sticky bottom-0 mt-8 flex flex-col gap-2.5 bg-gradient-to-t from-black via-black/95 to-transparent pb-2 pt-4 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
-          <p className="text-[11.5px] text-white/40">
+          <p className="hidden text-[11.5px] text-white/40 sm:block">
             Press <kbd className="rounded border border-white/15 bg-white/5 px-1.5 py-0.5 text-[10px] font-semibold text-white/70">Enter</kbd> to continue
           </p>
 

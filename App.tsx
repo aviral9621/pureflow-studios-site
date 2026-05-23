@@ -90,6 +90,9 @@ const BlogPostPage = lazy(() =>
 const StartProjectPage = lazy(() =>
   import('./components/StartProjectPage').then((module) => ({ default: module.StartProjectPage }))
 );
+const BookCallPage = lazy(() =>
+  import('./components/BookCallPage').then((module) => ({ default: module.BookCallPage }))
+);
 
 const PageFallback = () => (
   <div className="min-h-screen bg-black" aria-label="Loading page" />
@@ -210,6 +213,14 @@ const AppContent: React.FC = () => {
     navigateTo('start-project');
   };
 
+  const handleBookCall = () => {
+    navigateTo('book-call');
+  };
+
+  // Form views render a distraction-free shell: minimal navbar (logo only) and
+  // no footer. Keeps the user focused on completing the intake / booking.
+  const isFormView = currentView === 'start-project' || currentView === 'book-call';
+
   const renderLeadFormPage = (view: LeadFormView) => {
     const pages = {
       'get-website-built': (
@@ -306,10 +317,11 @@ const AppContent: React.FC = () => {
          <div className="absolute top-[-10%] left-1/2 -translate-x-1/2 w-[1200px] h-[1000px] bg-brand/5 rounded-full blur-[150px] opacity-40" />
       </div>
 
-      <Navbar 
-        currentView={currentView} 
+      <Navbar
+        currentView={currentView}
         onViewChange={navigateTo}
         onOpenContact={handleOpenContact}
+        minimal={isFormView}
       />
 
       {isContactOpen && (
@@ -326,7 +338,7 @@ const AppContent: React.FC = () => {
       <div className="pt-0">
         {currentView === 'home' && (
           <>
-            <Hero onViewChange={navigateTo} onOpenContact={handleOpenContact} onStartProject={handleStartProject} />
+            <Hero onViewChange={navigateTo} onOpenContact={handleOpenContact} onStartProject={handleStartProject} onBookCall={handleBookCall} />
             <LazySection>
               <TrustStrip />
             </LazySection>
@@ -372,7 +384,7 @@ const AppContent: React.FC = () => {
             </div>
 
             <LazySection>
-              <FinalCTA onOpenContact={handleOpenContact} onStartProject={handleStartProject} />
+              <FinalCTA onOpenContact={handleOpenContact} onStartProject={handleStartProject} onBookCall={handleBookCall} />
             </LazySection>
 
             <LazySection>
@@ -454,11 +466,19 @@ const AppContent: React.FC = () => {
           </Suspense>
         )}
 
+        {currentView === 'book-call' && (
+          <Suspense fallback={<PageFallback />}>
+            <BookCallPage onViewChange={navigateTo} />
+          </Suspense>
+        )}
+
       </div>
 
-      <LazySection>
-        <Footer onViewChange={navigateTo} />
-      </LazySection>
+      {!isFormView && (
+        <LazySection>
+          <Footer onViewChange={navigateTo} />
+        </LazySection>
+      )}
 
     </main>
   );

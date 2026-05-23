@@ -13,6 +13,7 @@ interface HeroProps {
   onViewChange: (view: ViewState) => void;
   onOpenContact: (title: string, rect: DOMRect) => void;
   onStartProject: () => void;
+  onBookCall: () => void;
 }
 
 const wordUp = {
@@ -24,7 +25,7 @@ const wordUp = {
   }),
 };
 
-export function Hero({ onViewChange: _onViewChange, onOpenContact: _onOpenContact, onStartProject }: HeroProps) {
+export function Hero({ onViewChange: _onViewChange, onOpenContact: _onOpenContact, onStartProject, onBookCall }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const startBtnRef = useRef<HTMLButtonElement>(null);
   const [loadVideo, setLoadVideo] = useState(false);
@@ -203,12 +204,10 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact: _onOpenContac
           </button>
 
           <button
-            onClick={() => {
-              document.getElementById('work')?.scrollIntoView({ behavior: 'smooth' });
-            }}
-            className="flex h-12 flex-1 items-center justify-center rounded-full border border-white/35 bg-black/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10 sm:h-auto sm:min-w-[170px] sm:flex-none sm:px-7 sm:py-3.5"
+            onClick={onBookCall}
+            className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full border border-white/35 bg-black/10 px-5 text-sm font-semibold text-white transition-colors hover:bg-white/10 sm:h-auto sm:min-w-[195px] sm:flex-none sm:px-7 sm:py-3.5"
           >
-            See our work
+            Book a 15-min call
           </button>
         </motion.div>
 

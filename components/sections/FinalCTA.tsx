@@ -6,6 +6,7 @@ import { MagneticButton } from '../shared/MagneticButton';
 interface FinalCTAProps {
   onOpenContact: (title: string, rect: DOMRect) => void;
   onStartProject: () => void;
+  onBookCall: () => void;
 }
 
 const wordUp = {
@@ -47,7 +48,7 @@ const trustItems = [
   'GST invoices included',
 ];
 
-export function FinalCTA({ onOpenContact: _onOpenContact, onStartProject }: FinalCTAProps) {
+export function FinalCTA({ onOpenContact: _onOpenContact, onStartProject, onBookCall }: FinalCTAProps) {
   const ctaWrapRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
@@ -134,15 +135,13 @@ export function FinalCTA({ onOpenContact: _onOpenContact, onStartProject }: Fina
             </MagneticButton>
           </div>
 
-          <a
-            href="https://wa.me/916393640650"
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={onBookCall}
             className="flex h-12 flex-1 items-center justify-center gap-1.5 rounded-full border border-white/20 px-4 text-[12px] font-medium tracking-wide uppercase text-white/70 transition-all duration-300 hover:text-white hover:border-white/40 sm:h-16 sm:flex-none sm:gap-2 sm:px-8 sm:text-sm"
           >
             <Calendar className="w-3.5 h-3.5 flex-shrink-0 sm:w-4 sm:h-4" />
             <span className="whitespace-nowrap">Book 15-min</span>
-          </a>
+          </button>
         </motion.div>
 
         {/* Trust micro-row */}

@@ -8,6 +8,7 @@ interface NavbarProps {
   currentView: ViewState;
   onViewChange: (view: ViewState) => void;
   onOpenContact: (title: string, rect: DOMRect) => void;
+  minimal?: boolean;
 }
 
 type NavItem =
@@ -18,11 +19,9 @@ const navItems: NavItem[] = [
   { label: 'Work', section: 'work' },
   { label: 'Services', section: 'services' },
   { label: 'Process', section: 'process' },
-  { label: 'About', section: 'about' },
   { label: 'Good Stuff', view: 'blog' },
+  { label: 'Contact', view: 'contact' },
 ];
-
-const WHATSAPP_URL = 'https://wa.me/916393640650';
 
 const mobileListVariant = {
   hidden: {},
@@ -36,7 +35,7 @@ const mobileItemVariant = {
   exit: { y: 24, opacity: 0, transition: { duration: 0.2 } },
 };
 
-export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContact }: NavbarProps) {
+export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContact, minimal = false }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pendingSection, setPendingSection] = useState<string | null>(null);
@@ -103,41 +102,57 @@ export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContac
             PURE<span className="gradient-flow-text">FLOW</span> STUDIOS
           </button>
 
-          <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[42px] md:flex" aria-label="Primary">
-            {navItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => handleNav(item)}
-                className="group relative pb-4 text-[15px] font-medium leading-none text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:text-white"
+          {!minimal && (
+            <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[42px] md:flex" aria-label="Primary">
+              {navItems.map((item) => (
+                <button
+                  key={item.label}
+                  onClick={() => handleNav(item)}
+                  className="group relative pb-4 text-[15px] font-medium leading-none text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:text-white"
+                >
+                  {item.label}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
+                  />
+                </button>
+              ))}
+            </nav>
+          )}
+
+          {!minimal && (
+            <div className="hidden md:block">
+              <MagneticButton
+                variant="primary"
+                onClick={goToStartProject}
+                className="flex h-[42px] w-[185px] items-center justify-center gap-3 px-0 text-base font-semibold normal-case text-white shadow-[0_0_40px_rgba(255,47,134,0.5)]"
               >
-                {item.label}
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
-                />
-              </button>
-            ))}
-          </nav>
+                Start a project
+                <ArrowUpRight className="h-[21px] w-[21px] flex-shrink-0" />
+              </MagneticButton>
+            </div>
+          )}
 
-          <div className="hidden md:block">
-            <MagneticButton
-              variant="primary"
-              onClick={goToStartProject}
-              className="flex h-[42px] w-[185px] items-center justify-center gap-3 px-0 text-base font-semibold normal-case text-white shadow-[0_0_40px_rgba(255,47,134,0.5)]"
+          {!minimal && (
+            <button
+              className="md:hidden text-white hover:text-[#D946EF] transition-colors p-2 -mr-2 focus-visible:outline-none focus-visible:text-[#D946EF]"
+              onClick={() => setIsOpen(true)}
+              aria-label="Open navigation menu"
+              aria-expanded={isOpen}
             >
-              Start a project
-              <ArrowUpRight className="h-[21px] w-[21px] flex-shrink-0" />
-            </MagneticButton>
-          </div>
+              <Menu size={28} />
+            </button>
+          )}
 
-          <button
-            className="md:hidden text-white hover:text-[#D946EF] transition-colors p-2 -mr-2 focus-visible:outline-none focus-visible:text-[#D946EF]"
-            onClick={() => setIsOpen(true)}
-            aria-label="Open navigation menu"
-            aria-expanded={isOpen}
-          >
-            <Menu size={28} />
-          </button>
+          {minimal && (
+            <button
+              onClick={() => onViewChange('home')}
+              className="text-[12px] font-semibold text-white/55 transition-colors hover:text-white sm:text-[13px]"
+              aria-label="Close form and return home"
+            >
+              ✕ Close
+            </button>
+          )}
         </div>
       </motion.header>
 
@@ -227,16 +242,16 @@ export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContac
                 <ArrowUpRight className="h-5 w-5 flex-shrink-0" strokeWidth={2.5} />
               </button>
 
-              <a
-                href={WHATSAPP_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => setIsOpen(false)}
+              <button
+                onClick={() => {
+                  setIsOpen(false);
+                  onViewChange('book-call');
+                }}
                 className="flex h-[58px] w-full items-center justify-center gap-2.5 rounded-2xl border border-white/30 bg-white/[0.08] px-6 text-[17px] font-bold text-white backdrop-blur-sm transition-all hover:bg-white/[0.14] hover:border-white/50 active:scale-[0.99]"
               >
                 <MessageCircle className="h-5 w-5 flex-shrink-0" strokeWidth={2.2} />
-                Contact us
-              </a>
+                Book a call
+              </button>
             </motion.div>
           </motion.div>
         )}
