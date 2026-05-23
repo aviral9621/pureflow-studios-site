@@ -11,6 +11,7 @@ import {
   MessageCircle,
   Sparkles,
   Target,
+  X,
 } from 'lucide-react';
 import { ViewState } from '../types';
 import {
@@ -21,6 +22,7 @@ import {
   StepShell,
   TextField,
 } from './shared/StepFormParts';
+import { supabase } from '../lib/supabase';
 
 // ─── Config ──────────────────────────────────────────────────────────────────
 
@@ -35,15 +37,19 @@ const MEETING_TYPES: Choice[] = [
   { value: 'discovery_30', label: '30-min discovery call', sub: 'Real project? Let’s scope it.', icon: Target },
 ];
 
-// Mon-Sat 10:00 - 19:00, 30-min slots (IST). Adjust freely.
+// Mon-Sat 11:00 - 19:00, 30-min slots (IST). Adjust freely.
 const BUSINESS_DAYS = [1, 2, 3, 4, 5, 6]; // Mon=1 ... Sat=6 (Sun=0 excluded)
-const SLOT_START_HOUR = 10;
+const SLOT_START_HOUR = 11;
 const SLOT_END_HOUR = 19;
 const SLOT_INTERVAL_MIN = 30;
 const BOOKING_HORIZON_DAYS = 21;
 
-// In production, fetch booked slots from Supabase. Until then, empty.
-const BOOKED_SLOTS: Set<string> = new Set();
+// Booked slots + blocked dates come from Supabase RPCs in the page component
+// (get_booked_slots / get_blocked_dates). The helpers below accept them as
+// parameters so the same logic works whether the lookup tables are empty or
+// hydrated from the server.
+
+const SLOTS_PER_DAY = ((SLOT_END_HOUR - SLOT_START_HOUR) * 60) / SLOT_INTERVAL_MIN;
 
 // ─── Utilities ───────────────────────────────────────────────────────────────
 
@@ -72,19 +78,34 @@ const isWithinHorizon = (d: Date) => {
   return d >= today && d <= end;
 };
 
-const generateSlotsForDay = (date: Date): { iso: string; label: string }[] => {
-  const slots: { iso: string; label: string }[] = [];
+const generateSlotsForDay = (
+  date: Date,
+  bookedSlots: Set<string>
+): { iso: string; label: string; booked: boolean }[] => {
+  const slots: { iso: string; label: string; booked: boolean }[] = [];
   for (let h = SLOT_START_HOUR; h < SLOT_END_HOUR; h++) {
     for (let m = 0; m < 60; m += SLOT_INTERVAL_MIN) {
       const slot = new Date(date);
       slot.setHours(h, m, 0, 0);
       const iso = slot.toISOString();
-      if (BOOKED_SLOTS.has(iso)) continue;
       const label = slot.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-      slots.push({ iso, label });
+      slots.push({ iso, label, booked: bookedSlots.has(iso) });
     }
   }
   return slots;
+};
+
+// A day is "fully booked" only when every slot in it is taken.
+const countBookedSlotsForDay = (date: Date, bookedSlots: Set<string>) => {
+  let booked = 0;
+  for (let h = SLOT_START_HOUR; h < SLOT_END_HOUR; h++) {
+    for (let m = 0; m < 60; m += SLOT_INTERVAL_MIN) {
+      const slot = new Date(date);
+      slot.setHours(h, m, 0, 0);
+      if (bookedSlots.has(slot.toISOString())) booked++;
+    }
+  }
+  return booked;
 };
 
 const detectTimezone = () => {
@@ -185,10 +206,46 @@ export const BookCallPage: React.FC<BookCallPageProps> = ({ onViewChange }) => {
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [bookedSlots, setBookedSlots] = useState<Set<string>>(new Set());
+  const [blockedDates, setBlockedDates] = useState<Set<string>>(new Set());
   const timezone = useMemo(detectTimezone, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);
+  }, []);
+
+  // Hydrate booked slots + blocked dates from Supabase for the booking horizon.
+  useEffect(() => {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const horizonEnd = addDays(today, BOOKING_HORIZON_DAYS + 1);
+
+    (async () => {
+      try {
+        const [{ data: slots }, { data: blocked }] = await Promise.all([
+          supabase.rpc('get_booked_slots', {
+            from_ts: today.toISOString(),
+            to_ts: horizonEnd.toISOString(),
+          }),
+          supabase.rpc('get_blocked_dates', {
+            from_d: formatDateKey(today),
+            to_d: formatDateKey(horizonEnd),
+          }),
+        ]);
+
+        if (slots) {
+          setBookedSlots(
+            new Set((slots as { scheduled_at: string }[]).map((r) => new Date(r.scheduled_at).toISOString()))
+          );
+        }
+        if (blocked) {
+          setBlockedDates(new Set((blocked as { blocked_date: string }[]).map((r) => r.blocked_date)));
+        }
+      } catch (err) {
+        // Non-fatal: page still works, just without live availability.
+        console.warn('[BookCall] availability fetch failed', err);
+      }
+    })();
   }, []);
 
   const goNext = useCallback(() => {
@@ -222,25 +279,37 @@ export const BookCallPage: React.FC<BookCallPageProps> = ({ onViewChange }) => {
     setSubmitting(true);
     setError(null);
     try {
-      // ─────────────────────────────────────────────────────────────────────
-      // CRM webhook — wire to Supabase Edge Function `/api/book` that:
-      //   1. Validates the slot is still free (SELECT FROM bookings WHERE scheduled_at = ...)
-      //   2. INSERTs into the bookings table
-      //   3. (Optional) Sends a Resend confirmation email with the .ics attached
-      //   4. (Optional) Schedules a WhatsApp reminder via Botbee
-      //
-      //   const res = await fetch('/api/book', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ ...form, timezone, durationMin }),
-      //   });
-      //   if (!res.ok) throw new Error('Booking failed');
-      // ─────────────────────────────────────────────────────────────────────
+      const slotDate = new Date(form.selectedSlot);
+      const ics_uid = `${slotDate.getTime()}-${form.name.replace(/\s+/g, '-').toLowerCase() || 'guest'}@pureflowstudios`;
 
-      console.info('[BookCall] payload', { ...form, timezone, durationMin });
-      await new Promise((r) => setTimeout(r, 800));
+      const { error: dbError } = await supabase.from('website_bookings').insert({
+        meeting_type: form.meetingType,
+        scheduled_at: slotDate.toISOString(),
+        duration_min: durationMin,
+        timezone,
+        name: form.name,
+        email: form.email,
+        whatsapp: form.whatsapp || null,
+        notes: form.notes || null,
+        ics_uid,
+      });
+
+      if (dbError) {
+        // UNIQUE constraint on scheduled_at: slot was just taken by someone else.
+        if (dbError.code === '23505') {
+          setBookedSlots((prev) => new Set(prev).add(slotDate.toISOString()));
+          setError('That slot was just taken. Pick another — it’s been marked unavailable.');
+          // Bounce them back to the slot picker so they can choose again.
+          setForm({ ...form, selectedSlot: '' });
+          setStep(2);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          return;
+        }
+        throw dbError;
+      }
       setDone(true);
     } catch (err) {
+      console.error('[BookCall] submit error', err);
       setError('Something glitched. Try again or ping us on WhatsApp.');
     } finally {
       setSubmitting(false);
@@ -352,6 +421,8 @@ export const BookCallPage: React.FC<BookCallPageProps> = ({ onViewChange }) => {
                   month={calendarMonth}
                   onMonthChange={setCalendarMonth}
                   selectedKey={form.selectedDate}
+                  bookedSlots={bookedSlots}
+                  blockedDates={blockedDates}
                   onSelect={(d) => {
                     setForm({ ...form, selectedDate: formatDateKey(d), selectedSlot: '' });
                     setTimeout(goNext, 220);
@@ -372,6 +443,7 @@ export const BookCallPage: React.FC<BookCallPageProps> = ({ onViewChange }) => {
                 <SlotPicker
                   date={new Date(form.selectedDate)}
                   selectedSlot={form.selectedSlot}
+                  bookedSlots={bookedSlots}
                   onSelect={(iso) => {
                     setForm({ ...form, selectedSlot: iso });
                     setTimeout(goNext, 220);
@@ -449,8 +521,10 @@ const CalendarPicker: React.FC<{
   month: Date;
   onMonthChange: (d: Date) => void;
   selectedKey: string;
+  bookedSlots: Set<string>;
+  blockedDates: Set<string>;
   onSelect: (d: Date) => void;
-}> = ({ month, onMonthChange, selectedKey, onSelect }) => {
+}> = ({ month, onMonthChange, selectedKey, bookedSlots, blockedDates, onSelect }) => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -463,49 +537,52 @@ const CalendarPicker: React.FC<{
 
   const monthLabel = month.toLocaleString(undefined, { month: 'long', year: 'numeric' });
 
-  // Limits — don't allow navigating past horizon or before this month
   const minMonth = startOfMonth(today);
   const maxDate = addDays(today, BOOKING_HORIZON_DAYS);
   const maxMonth = startOfMonth(maxDate);
 
   return (
-    <div className="rounded-2xl border border-white/12 bg-white/[0.025] p-4 sm:p-5">
-      {/* Month nav */}
-      <div className="mb-4 flex items-center justify-between">
+    <div className="rounded-xl border border-white/12 bg-white/[0.025] p-3 sm:rounded-2xl sm:p-3.5">
+      {/* Month nav — compact */}
+      <div className="mb-2.5 flex items-center justify-between sm:mb-3">
         <button
           type="button"
           onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() - 1, 1))}
           disabled={month.getTime() <= minMonth.getTime()}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-black/40 text-white/70 transition-colors hover:border-white/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-black/40 text-white/70 transition-colors hover:border-white/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15"
         >
-          <ChevronLeft className="h-4 w-4" />
+          <ChevronLeft className="h-3.5 w-3.5" />
         </button>
-        <p className="font-sans text-[15px] font-semibold text-white sm:text-base">{monthLabel}</p>
+        <p className="font-sans text-[14px] font-semibold text-white">{monthLabel}</p>
         <button
           type="button"
           onClick={() => onMonthChange(new Date(month.getFullYear(), month.getMonth() + 1, 1))}
           disabled={month.getTime() >= maxMonth.getTime()}
-          className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-black/40 text-white/70 transition-colors hover:border-white/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15"
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-white/15 bg-black/40 text-white/70 transition-colors hover:border-white/30 hover:text-white disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:border-white/15"
         >
-          <ChevronRight className="h-4 w-4" />
+          <ChevronRight className="h-3.5 w-3.5" />
         </button>
       </div>
 
       {/* Day-of-week header */}
-      <div className="mb-2 grid grid-cols-7 gap-1 text-center text-[10px] font-semibold uppercase tracking-[0.14em] text-white/40 sm:gap-1.5 sm:text-[11px]">
+      <div className="mb-1.5 grid grid-cols-7 gap-[3px] text-center text-[9.5px] font-semibold uppercase tracking-[0.12em] text-white/35 sm:gap-1 sm:text-[10px]">
         {['S', 'M', 'T', 'W', 'T', 'F', 'S'].map((d, i) => (
           <div key={`${d}-${i}`}>{d}</div>
         ))}
       </div>
 
-      {/* Day cells */}
-      <div className="grid grid-cols-7 gap-1 sm:gap-1.5">
+      {/* Day cells — compact, fixed aspect, no scroll */}
+      <div className="grid grid-cols-7 gap-[3px] sm:gap-1">
         {cells.map((d, i) => {
           if (!d) return <div key={`e-${i}`} />;
           const inHorizon = isWithinHorizon(d);
           const isBiz = isBusinessDay(d);
           const isPast = d < today;
-          const enabled = inHorizon && isBiz && !isPast;
+          const isBlocked = blockedDates.has(formatDateKey(d));
+          const bookedCount = enabled(d, today) ? countBookedSlotsForDay(d, bookedSlots) : 0;
+          const fullyBooked = bookedCount >= SLOTS_PER_DAY;
+          const partiallyBooked = bookedCount > 0 && !fullyBooked;
+          const enabledDay = inHorizon && isBiz && !isPast && !fullyBooked && !isBlocked;
           const selected = formatDateKey(d) === selectedKey;
           const isToday = isSameDay(d, today);
 
@@ -513,42 +590,89 @@ const CalendarPicker: React.FC<{
             <button
               key={d.toISOString()}
               type="button"
-              onClick={() => enabled && onSelect(d)}
-              disabled={!enabled}
-              className={`relative aspect-square rounded-lg text-[13px] font-medium transition-all sm:text-[14px] ${
+              onClick={() => enabledDay && onSelect(d)}
+              disabled={!enabledDay}
+              aria-label={`${d.toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' })}${
+                isBlocked ? ' — blocked' : fullyBooked ? ' — fully booked' : !enabledDay ? ' — unavailable' : ''
+              }`}
+              className={`relative aspect-square overflow-hidden rounded-md text-[12px] font-semibold transition-all sm:text-[13px] ${
                 selected
-                  ? 'bg-gradient-to-br from-[#ff2f86] to-[#a855f7] text-white shadow-[0_0_20px_-4px_rgba(255,47,134,0.6)]'
-                  : enabled
-                    ? 'bg-white/[0.04] text-white hover:bg-white/[0.10] hover:scale-105'
-                    : 'cursor-not-allowed text-white/15'
+                  ? 'bg-gradient-to-br from-[#ff2f86] to-[#a855f7] text-white shadow-[0_0_18px_-4px_rgba(255,47,134,0.6)]'
+                  : isBlocked
+                    ? 'cursor-not-allowed bg-amber-500/10 text-amber-300/55 line-through'
+                    : fullyBooked
+                      ? 'cursor-not-allowed bg-rose-500/10 text-rose-400/60 line-through'
+                      : enabledDay
+                        ? 'bg-white/[0.04] text-white hover:bg-white/[0.10] hover:scale-[1.04]'
+                        : 'cursor-not-allowed text-white/15'
               }`}
             >
               {d.getDate()}
-              {isToday && !selected && (
-                <span className="absolute bottom-1 left-1/2 h-1 w-1 -translate-x-1/2 rounded-full bg-[#ff3f8d]" />
+              {/* Today dot (only when not selected and not fully booked) */}
+              {isToday && !selected && !fullyBooked && !isBlocked && (
+                <span className="absolute bottom-0.5 left-1/2 h-[3px] w-[3px] -translate-x-1/2 rounded-full bg-[#ff3f8d]" />
+              )}
+              {/* Partially booked indicator */}
+              {partiallyBooked && !selected && !isBlocked && (
+                <span className="absolute top-0.5 right-0.5 h-1 w-1 rounded-full bg-amber-400/80" />
+              )}
+              {/* Fully booked X overlay */}
+              {fullyBooked && !isBlocked && (
+                <X className="absolute inset-0 m-auto h-3 w-3 text-rose-400/60" strokeWidth={2.5} />
               )}
             </button>
           );
         })}
       </div>
 
-      <p className="mt-4 text-[11.5px] text-white/40">
-        Mon–Sat available. Sundays off.
-      </p>
+      {/* Legend */}
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1.5 border-t border-white/8 pt-3 text-[10.5px] text-white/55 sm:gap-x-4 sm:text-[11px]">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-sm bg-white/[0.12]" />
+          Available
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="relative h-2.5 w-2.5 rounded-sm bg-white/[0.06]">
+            <span className="absolute top-[-1px] right-[-1px] h-1 w-1 rounded-full bg-amber-400" />
+          </span>
+          Partially booked
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="relative h-2.5 w-2.5 rounded-sm bg-rose-500/15">
+            <X className="absolute inset-0 m-auto h-2 w-2 text-rose-400" strokeWidth={3} />
+          </span>
+          Fully booked
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-sm bg-amber-500/15" />
+          Blocked
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2.5 w-2.5 rounded-sm bg-gradient-to-br from-[#ff2f86] to-[#a855f7]" />
+          Selected
+        </span>
+      </div>
     </div>
   );
 };
+
+// Helper used inside CalendarPicker to compute booked counts only for enabled cells.
+function enabled(d: Date, today: Date) {
+  return isWithinHorizon(d) && isBusinessDay(d) && d >= today;
+}
 
 // ─── Slot picker ─────────────────────────────────────────────────────────────
 
 const SlotPicker: React.FC<{
   date: Date;
   selectedSlot: string;
+  bookedSlots: Set<string>;
   onSelect: (iso: string) => void;
-}> = ({ date, selectedSlot, onSelect }) => {
-  const slots = useMemo(() => generateSlotsForDay(date), [date]);
+}> = ({ date, selectedSlot, bookedSlots, onSelect }) => {
+  const slots = useMemo(() => generateSlotsForDay(date, bookedSlots), [date, bookedSlots]);
+  const availableCount = slots.filter((s) => !s.booked).length;
 
-  if (slots.length === 0) {
+  if (availableCount === 0) {
     return (
       <div className="rounded-2xl border border-white/12 bg-white/[0.025] p-6 text-center">
         <Clock className="mx-auto mb-3 h-6 w-6 text-white/40" strokeWidth={1.5} />
@@ -559,25 +683,44 @@ const SlotPicker: React.FC<{
   }
 
   return (
-    <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-2.5">
-      {slots.map((s) => {
-        const selected = selectedSlot === s.iso;
-        return (
-          <button
-            key={s.iso}
-            type="button"
-            onClick={() => onSelect(s.iso)}
-            className={`flex h-12 items-center justify-center rounded-xl border text-[13.5px] font-semibold transition-all sm:h-14 sm:text-[14.5px] ${
-              selected
-                ? 'border-[#ff3f8d]/70 bg-gradient-to-br from-[#ff3f8d]/20 to-[#a855f7]/15 text-white shadow-[0_0_20px_-8px_rgba(255,47,134,0.6)]'
-                : 'border-white/12 bg-white/[0.025] text-white hover:border-white/30 hover:bg-white/[0.05]'
-            }`}
-          >
-            {s.label}
-          </button>
-        );
-      })}
-    </div>
+    <>
+      <div className="grid grid-cols-3 gap-2 sm:grid-cols-4 sm:gap-2.5">
+        {slots.map((s) => {
+          const selected = selectedSlot === s.iso;
+          const isBooked = s.booked;
+          return (
+            <button
+              key={s.iso}
+              type="button"
+              onClick={() => !isBooked && onSelect(s.iso)}
+              disabled={isBooked}
+              aria-label={isBooked ? `${s.label} — booked` : s.label}
+              className={`flex h-11 items-center justify-center gap-1.5 rounded-xl border text-[13px] font-semibold transition-all sm:h-12 sm:text-[14px] ${
+                selected
+                  ? 'border-[#ff3f8d]/70 bg-gradient-to-br from-[#ff3f8d]/20 to-[#a855f7]/15 text-white shadow-[0_0_20px_-8px_rgba(255,47,134,0.6)]'
+                  : isBooked
+                    ? 'cursor-not-allowed border-white/8 bg-rose-500/[0.05] text-rose-300/45 line-through'
+                    : 'border-white/12 bg-white/[0.025] text-white hover:border-white/30 hover:bg-white/[0.05]'
+              }`}
+            >
+              {s.label}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Slot legend */}
+      <div className="mt-3 flex flex-wrap items-center justify-center gap-x-3 gap-y-1 border-t border-white/8 pt-3 text-[10.5px] text-white/55 sm:text-[11px]">
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-3 rounded-sm border border-white/15 bg-white/[0.04]" />
+          Available
+        </span>
+        <span className="inline-flex items-center gap-1.5">
+          <span className="h-2 w-3 rounded-sm border border-white/8 bg-rose-500/10" />
+          Booked
+        </span>
+      </div>
+    </>
   );
 };
 

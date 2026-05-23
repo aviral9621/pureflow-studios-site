@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import { ViewState } from '../types';
 import { ChipGrid, Choice, QuestionScreen, TextField } from './shared/StepFormParts';
+import { supabase } from '../lib/supabase';
 
 interface ContactPageProps {
   onViewChange: (view: ViewState) => void;
@@ -88,12 +89,17 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onViewChange }) => {
     setSubmitting(true);
     setError(null);
     try {
-      // CRM webhook — same shape as start-project, with kind = 'contact'.
-      // Wire to Supabase Edge Function later.
-      console.info('[Contact] payload', { ...form, kind: 'contact' });
-      await new Promise((r) => setTimeout(r, 700));
+      const { error: dbError } = await supabase.from('website_contact_submissions').insert({
+        reason: form.reason,
+        message: form.message,
+        name: form.name,
+        contact: form.contact,
+        kind: 'contact',
+      });
+      if (dbError) throw dbError;
       setDone(true);
     } catch (err) {
+      console.error('[Contact] submit error', err);
       setError('Something glitched. Try again or ping us on WhatsApp.');
     } finally {
       setSubmitting(false);

@@ -22,6 +22,7 @@ import {
   MessageCircle,
 } from 'lucide-react';
 import { ViewState } from '../types';
+import { supabase } from '../lib/supabase';
 
 interface StartProjectPageProps {
   onViewChange: (view: ViewState) => void;
@@ -154,31 +155,27 @@ export const StartProjectPage: React.FC<StartProjectPageProps> = ({ onViewChange
     setSubmitting(true);
     setError(null);
     try {
-      // ─────────────────────────────────────────────────────────────────────
-      // CRM webhook — replace with your Supabase Edge Function URL or any
-      // webhook (Zoho, HubSpot, n8n, Notion). The submission shape is the
-      // FormState object plus the derived priority score below.
-      //
-      //   const res = await fetch('/api/start-project', {
-      //     method: 'POST',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({ ...form, priority }),
-      //   });
-      //   if (!res.ok) throw new Error('Submission failed');
-      // ─────────────────────────────────────────────────────────────────────
-
       const priority =
         (form.urgency === 'yesterday' ? 4 : form.urgency === 'soon' ? 3 : form.urgency === 'quarter' ? 2 : 1) +
         (form.budget === '15l+' ? 4 : form.budget === '5-15l' ? 3 : form.budget === '1-5l' ? 2 : 1);
 
-      // Local fallback: log payload so it's visible in dev tools.
-      // Swap for a real webhook above when CRM is connected.
-      console.info('[StartProject] payload', { ...form, priority });
+      const { error: dbError } = await supabase.from('website_project_leads').insert({
+        service: form.service,
+        stage: form.stage,
+        pain: form.pain,
+        urgency: form.urgency,
+        budget: form.budget,
+        name: form.name,
+        contact: form.contact,
+        company: form.company || null,
+        extras: form.extras || null,
+        priority,
+      });
+      if (dbError) throw dbError;
 
-      // Simulate latency
-      await new Promise((r) => setTimeout(r, 800));
       setDone(true);
     } catch (err) {
+      console.error('[StartProject] submit error', err);
       setError('Something glitched. Try again or message us on WhatsApp.');
     } finally {
       setSubmitting(false);
