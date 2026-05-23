@@ -5,6 +5,7 @@ import { MagneticButton } from '../shared/MagneticButton';
 
 interface FinalCTAProps {
   onOpenContact: (title: string, rect: DOMRect) => void;
+  onStartProject: () => void;
 }
 
 const wordUp = {
@@ -46,13 +47,12 @@ const trustItems = [
   'GST invoices included',
 ];
 
-export function FinalCTA({ onOpenContact }: FinalCTAProps) {
+export function FinalCTA({ onOpenContact: _onOpenContact, onStartProject }: FinalCTAProps) {
   const ctaWrapRef = useRef<HTMLDivElement>(null);
   const prefersReducedMotion = useReducedMotion();
 
   function handleStartProject() {
-    const rect = ctaWrapRef.current?.getBoundingClientRect() ?? new DOMRect();
-    onOpenContact('Start a Project', rect);
+    onStartProject();
   }
 
   return (

@@ -22,7 +22,8 @@ export type ViewState =
   | 'terms'
   | 'cookies'
   | 'blog'
-  | 'blog-post';
+  | 'blog-post'
+  | 'start-project';
 
 export interface PlanFeature {
   text: string;

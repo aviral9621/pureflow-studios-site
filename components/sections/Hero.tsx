@@ -12,6 +12,7 @@ import { ViewState } from '../../types';
 interface HeroProps {
   onViewChange: (view: ViewState) => void;
   onOpenContact: (title: string, rect: DOMRect) => void;
+  onStartProject: () => void;
 }
 
 const wordUp = {
@@ -23,7 +24,7 @@ const wordUp = {
   }),
 };
 
-export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) {
+export function Hero({ onViewChange: _onViewChange, onOpenContact: _onOpenContact, onStartProject }: HeroProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const startBtnRef = useRef<HTMLButtonElement>(null);
   const [loadVideo, setLoadVideo] = useState(false);
@@ -194,10 +195,7 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact }: HeroProps) 
         >
           <button
             ref={startBtnRef}
-            onClick={() => {
-              const rect = startBtnRef.current?.getBoundingClientRect();
-              if (rect) onOpenContact('Start a project', rect);
-            }}
+            onClick={onStartProject}
             className="flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-5 text-sm font-semibold text-white shadow-[0_0_30px_rgba(255,47,134,0.28)] transition-all hover:scale-105 hover:shadow-[0_0_28px_rgba(255,47,134,0.5)] sm:h-auto sm:min-w-[205px] sm:flex-none sm:px-7 sm:py-3.5"
           >
             Start a project

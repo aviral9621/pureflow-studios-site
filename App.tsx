@@ -87,6 +87,9 @@ const BlogIndexPage = lazy(() =>
 const BlogPostPage = lazy(() =>
   import('./components/BlogPostPage').then((module) => ({ default: module.BlogPostPage }))
 );
+const StartProjectPage = lazy(() =>
+  import('./components/StartProjectPage').then((module) => ({ default: module.StartProjectPage }))
+);
 
 const PageFallback = () => (
   <div className="min-h-screen bg-black" aria-label="Loading page" />
@@ -201,6 +204,10 @@ const AppContent: React.FC = () => {
     setContactTitle(title);
     setContactOrigin(rect);
     setIsContactOpen(true);
+  };
+
+  const handleStartProject = () => {
+    navigateTo('start-project');
   };
 
   const renderLeadFormPage = (view: LeadFormView) => {
@@ -319,7 +326,7 @@ const AppContent: React.FC = () => {
       <div className="pt-0">
         {currentView === 'home' && (
           <>
-            <Hero onViewChange={navigateTo} onOpenContact={handleOpenContact} />
+            <Hero onViewChange={navigateTo} onOpenContact={handleOpenContact} onStartProject={handleStartProject} />
             <LazySection>
               <TrustStrip />
             </LazySection>
@@ -329,7 +336,7 @@ const AppContent: React.FC = () => {
               </LazySection>
             </div>
             <LazySection>
-              <Work onOpenContact={handleOpenContact} />
+              <Work onStartProject={handleStartProject} />
             </LazySection>
             <LazySection>
               <Process />
@@ -365,7 +372,7 @@ const AppContent: React.FC = () => {
             </div>
 
             <LazySection>
-              <FinalCTA onOpenContact={handleOpenContact} />
+              <FinalCTA onOpenContact={handleOpenContact} onStartProject={handleStartProject} />
             </LazySection>
 
             <LazySection>
@@ -438,6 +445,12 @@ const AppContent: React.FC = () => {
         {currentView === 'blog-post' && selectedBlogSlug && (
           <Suspense fallback={<PageFallback />}>
             <BlogPostPage slug={selectedBlogSlug} onViewChange={navigateTo} onOpenPost={handleOpenBlogPost} />
+          </Suspense>
+        )}
+
+        {currentView === 'start-project' && (
+          <Suspense fallback={<PageFallback />}>
+            <StartProjectPage onViewChange={navigateTo} />
           </Suspense>
         )}
 

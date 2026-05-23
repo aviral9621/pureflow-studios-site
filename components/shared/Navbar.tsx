@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, RefObject } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { MagneticButton } from './MagneticButton';
@@ -36,12 +36,11 @@ const mobileItemVariant = {
   exit: { y: 24, opacity: 0, transition: { duration: 0.2 } },
 };
 
-export function Navbar({ currentView, onViewChange, onOpenContact }: NavbarProps) {
+export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContact }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [pendingSection, setPendingSection] = useState<string | null>(null);
   const prefersReducedMotion = useReducedMotion();
-  const desktopCtaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -78,9 +77,9 @@ export function Navbar({ currentView, onViewChange, onOpenContact }: NavbarProps
     setIsOpen(false);
   };
 
-  const openContact = (ref: RefObject<HTMLDivElement | null>) => {
-    const rect = ref.current?.getBoundingClientRect();
-    if (rect) onOpenContact('Start a project', rect);
+  const goToStartProject = () => {
+    setIsOpen(false);
+    onViewChange('start-project');
   };
 
   return (
@@ -120,10 +119,10 @@ export function Navbar({ currentView, onViewChange, onOpenContact }: NavbarProps
             ))}
           </nav>
 
-          <div ref={desktopCtaRef} className="hidden md:block">
+          <div className="hidden md:block">
             <MagneticButton
               variant="primary"
-              onClick={() => openContact(desktopCtaRef)}
+              onClick={goToStartProject}
               className="flex h-[42px] w-[185px] items-center justify-center gap-3 px-0 text-base font-semibold normal-case text-white shadow-[0_0_40px_rgba(255,47,134,0.5)]"
             >
               Start a project
@@ -221,10 +220,7 @@ export function Navbar({ currentView, onViewChange, onOpenContact }: NavbarProps
               className="relative z-10 flex flex-col gap-3 border-t border-white/8 p-5"
             >
               <button
-                onClick={() => {
-                  setIsOpen(false);
-                  setTimeout(() => openContact(desktopCtaRef), 300);
-                }}
+                onClick={goToStartProject}
                 className="flex h-[58px] w-full items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-6 text-[17px] font-bold text-white shadow-[0_10px_40px_-8px_rgba(255,47,134,0.55)] transition-all hover:scale-[1.01] active:scale-[0.99]"
               >
                 Start a project

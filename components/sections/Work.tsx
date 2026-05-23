@@ -130,16 +130,15 @@ function CaseStudyCard({ project, reduced, index }: { project: Project; reduced:
 // ─── Main section ─────────────────────────────────────────────────────────────
 
 interface WorkProps {
-  onOpenContact: (title: string, rect: DOMRect) => void;
+  onStartProject: () => void;
 }
 
-export function Work({ onOpenContact }: WorkProps) {
+export function Work({ onStartProject }: WorkProps) {
   const reduced = useReducedMotion();
   const ctaBtnRef = useRef<HTMLDivElement>(null);
 
   const handleStartProject = () => {
-    const rect = ctaBtnRef.current?.getBoundingClientRect() ?? new DOMRect();
-    onOpenContact('Start a project', rect);
+    onStartProject();
   };
 
   return (
