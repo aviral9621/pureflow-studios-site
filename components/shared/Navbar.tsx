@@ -16,7 +16,7 @@ type NavItem =
   | { label: string; section: string };
 
 const navItems: NavItem[] = [
-  { label: 'Work', section: 'work' },
+  { label: 'Work', view: 'work' },
   { label: 'Services', section: 'services' },
   { label: 'Process', section: 'process' },
   { label: 'Good Stuff', view: 'blog' },

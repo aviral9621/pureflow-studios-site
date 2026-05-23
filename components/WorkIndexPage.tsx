@@ -1,0 +1,79 @@
+import React, { useEffect } from 'react';
+import { motion, useReducedMotion } from 'framer-motion';
+import { ArrowLeft, Loader2 } from 'lucide-react';
+import { ViewState } from '../types';
+import { useAllProjects } from '../hooks/useProjects';
+import { CaseStudyCard } from './sections/Work';
+
+interface Props {
+  onViewChange: (view: ViewState) => void;
+  onOpenProject: (slug: string) => void;
+}
+
+export const WorkIndexPage: React.FC<Props> = ({ onViewChange, onOpenProject }) => {
+  const reduced = useReducedMotion();
+  const { projects, loading } = useAllProjects();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  return (
+    <main className="relative min-h-screen overflow-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] bg-brand/[0.06] rounded-full blur-[140px]" />
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-20 sm:px-6 sm:pt-28 lg:px-10 lg:pt-32">
+        <button
+          onClick={() => onViewChange('home')}
+          className="group mb-8 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white sm:mb-10"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to home
+        </button>
+
+        {/* Hero */}
+        <motion.div
+          initial={reduced ? false : { opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+          className="mb-10 flex flex-col items-center text-center md:mb-14"
+        >
+          <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
+            Everything we've
+          </span>
+          <span
+            className="hero-automation-text mt-1 inline-block leading-none text-[clamp(2.5rem,5.6vw,5rem)]"
+            data-text="SHIPPED."
+          >
+            SHIPPED.
+          </span>
+          <p className="mt-5 max-w-md text-[14px] leading-relaxed text-white/55 sm:text-base">
+            Every case study. Click any card to see the full story.
+          </p>
+        </motion.div>
+
+        {loading && projects.length === 0 ? (
+          <div className="flex justify-center py-20">
+            <Loader2 className="h-6 w-6 animate-spin text-white/60" />
+          </div>
+        ) : projects.length === 0 ? (
+          <p className="py-20 text-center text-sm text-white/50">No case studies yet.</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-3 lg:gap-6">
+            {projects.map((project, i) => (
+              <CaseStudyCard
+                key={project.id}
+                project={project}
+                reduced={reduced}
+                index={i}
+                onOpen={onOpenProject}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+    </main>
+  );
+};

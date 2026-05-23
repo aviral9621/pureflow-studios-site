@@ -93,6 +93,12 @@ const StartProjectPage = lazy(() =>
 const BookCallPage = lazy(() =>
   import('./components/BookCallPage').then((module) => ({ default: module.BookCallPage }))
 );
+const WorkIndexPage = lazy(() =>
+  import('./components/WorkIndexPage').then((module) => ({ default: module.WorkIndexPage }))
+);
+const WorkPostPage = lazy(() =>
+  import('./components/WorkPostPage').then((module) => ({ default: module.WorkPostPage }))
+);
 
 const PageFallback = () => (
   <div className="min-h-screen bg-black" aria-label="Loading page" />
@@ -159,6 +165,15 @@ const AppContent: React.FC = () => {
     if (currentView !== 'blog-post') {
       viewHistoryRef.current = [...viewHistoryRef.current, currentView];
       setCurrentView('blog-post');
+    }
+  };
+
+  const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(null);
+  const handleOpenProject = (slug: string) => {
+    setSelectedProjectSlug(slug);
+    if (currentView !== 'work-post') {
+      viewHistoryRef.current = [...viewHistoryRef.current, currentView];
+      setCurrentView('work-post');
     }
   };
   
@@ -348,7 +363,11 @@ const AppContent: React.FC = () => {
               </LazySection>
             </div>
             <LazySection>
-              <Work onStartProject={handleStartProject} />
+              <Work
+                onStartProject={handleStartProject}
+                onOpenProject={handleOpenProject}
+                onViewAll={() => navigateTo('work')}
+              />
             </LazySection>
             <LazySection>
               <Process />
@@ -469,6 +488,22 @@ const AppContent: React.FC = () => {
         {currentView === 'book-call' && (
           <Suspense fallback={<PageFallback />}>
             <BookCallPage onViewChange={navigateTo} />
+          </Suspense>
+        )}
+
+        {currentView === 'work' && (
+          <Suspense fallback={<PageFallback />}>
+            <WorkIndexPage onViewChange={navigateTo} onOpenProject={handleOpenProject} />
+          </Suspense>
+        )}
+
+        {currentView === 'work-post' && selectedProjectSlug && (
+          <Suspense fallback={<PageFallback />}>
+            <WorkPostPage
+              slug={selectedProjectSlug}
+              onViewChange={navigateTo}
+              onOpenProject={handleOpenProject}
+            />
           </Suspense>
         )}
 

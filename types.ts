@@ -24,7 +24,9 @@ export type ViewState =
   | 'blog'
   | 'blog-post'
   | 'start-project'
-  | 'book-call';
+  | 'book-call'
+  | 'work'
+  | 'work-post';
 
 export interface PlanFeature {
   text: string;

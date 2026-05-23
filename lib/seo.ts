@@ -129,6 +129,16 @@ export const META: Record<ViewState, Meta> = {
     description:
       'Pick a date and time for a free 15- or 30-minute call with the Pureflow Studios team. Calendar invite sent instantly.',
   },
+  work: {
+    title: `Our Work — Case Studies | ${SITE}`,
+    description:
+      'Every case study Pureflow Studios has shipped — custom CRMs, hotel tech, edtech, agritech, and more.',
+  },
+  'work-post': {
+    title: `Case Study — ${SITE}`,
+    description:
+      'A detailed look at one of the products Pureflow Studios designed, built, and shipped to production.',
+  },
 };
 
 function setMeta(name: string, value: string, attr: 'name' | 'property' = 'name') {
