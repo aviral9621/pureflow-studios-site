@@ -8,6 +8,9 @@ interface Props {
   /** Auto-advance interval, ms. 0 disables auto-advance. */
   intervalMs?: number;
   className?: string;
+  /** object-fit. 'cover' (default) for card thumbs that need to fill;
+   *  'contain' for detail-page screenshots that must never crop. */
+  fit?: 'cover' | 'contain';
 }
 
 // Auto-scrolling image carousel for project cards + detail hero.
@@ -15,7 +18,7 @@ interface Props {
 // - prev/next chevrons (md+)
 // - dot indicators
 // - pauses on hover and while user is touching
-export function ProjectImageCarousel({ images, intervalMs = 4000, className }: Props) {
+export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit = 'cover' }: Props) {
   const reduced = useReducedMotion();
   const [[index, direction], setIdx] = useState<[number, number]>([0, 1]);
   const [paused, setPaused] = useState(false);
@@ -80,7 +83,7 @@ export function ProjectImageCarousel({ images, intervalMs = 4000, className }: P
           animate="center"
           exit="exit"
           transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 h-full w-full object-cover"
+          className={`absolute inset-0 h-full w-full ${fit === 'contain' ? 'object-contain' : 'object-cover'}`}
           draggable={false}
         />
       </AnimatePresence>

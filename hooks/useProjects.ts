@@ -9,9 +9,18 @@ import { PROJECTS as FALLBACK, type Project as LegacyProject } from '../lib/proj
 // ─────────────────────────────────────────────────────────────────────────────
 
 export interface BodyBlock {
-  type: 'heading' | 'paragraph' | 'list' | 'quote' | 'code';
+  type: 'heading' | 'paragraph' | 'list' | 'quote' | 'code' | 'image' | 'image-grid' | 'stats' | 'divider';
   text?: string;
   items?: string[];
+  /** Single image block: image_url + optional caption (text). */
+  image_url?: string;
+  alt_text?: string;
+  caption?: string;
+  /** image-grid: array of {url, alt, caption}. cols defaults to 2; mobile always 1. */
+  images?: Array<{ url: string; alt?: string; caption?: string }>;
+  cols?: 2 | 3;
+  /** stats block: array of {value, label}. */
+  stats?: Array<{ value: string; label: string }>;
 }
 
 export interface ProjectImage {

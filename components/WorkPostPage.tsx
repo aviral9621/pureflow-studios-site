@@ -62,10 +62,11 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] bg-brand/[0.05] rounded-full blur-[140px]" />
       </div>
 
-      <article className="relative z-10 mx-auto max-w-3xl px-5 pt-24 pb-16 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32">
+      {/* Full-width hero band (escapes the article max-width) */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-3 pt-20 sm:px-5 sm:pt-24 lg:px-8 lg:pt-28">
         <button
           onClick={() => onViewChange('work')}
-          className="group mb-8 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white sm:mb-10"
+          className="group mb-6 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white sm:mb-8"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to all work
@@ -76,6 +77,7 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
           initial={reduced ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto max-w-3xl px-2 sm:px-0"
         >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ff3f8d]/25 bg-[#ff3f8d]/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-[#ff7eb2]">
             {project.year} · {project.category}
@@ -83,23 +85,24 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
           <h1 className="font-sans text-[1.85rem] font-bold leading-[1.1] tracking-[-0.02em] text-white sm:text-[2.4rem] md:text-[2.8rem]">
             {project.title}
           </h1>
-          <p className="mt-3 text-[14px] uppercase tracking-[0.16em] text-white/45 sm:text-[15px]">
+          <p className="mt-3 text-[13px] uppercase tracking-[0.16em] text-white/45 sm:text-[14px]">
             {project.client}
           </p>
-          <p className="mt-5 max-w-2xl text-[15.5px] leading-[1.65] text-white/70 sm:text-[16.5px]">
+          <p className="mt-5 text-[15.5px] leading-[1.65] text-white/70 sm:text-[16.5px]">
             {project.description}
           </p>
         </motion.div>
 
-        {/* Hero — carousel or gradient mockup */}
+        {/* Hero — carousel (16:10 letterbox so screenshots never crop) */}
         <motion.div
           initial={reduced ? false : { opacity: 0, scale: 0.97 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="relative mt-8 aspect-[16/10] w-full overflow-hidden rounded-2xl border border-white/10 sm:mt-10 sm:rounded-3xl"
+          className="relative mt-7 w-full overflow-hidden rounded-2xl border border-white/10 bg-black sm:mt-9 sm:rounded-3xl"
+          style={{ aspectRatio: '16 / 10' }}
         >
           {project.images.length > 0 ? (
-            <ProjectImageCarousel images={project.images} intervalMs={4000} />
+            <ProjectImageCarousel images={project.images} intervalMs={4500} fit="contain" />
           ) : (
             <div
               className={`absolute inset-0 flex items-center justify-center bg-gradient-to-br ${project.from} ${project.to}`}
@@ -113,7 +116,7 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
 
         {/* Tech chips */}
         {project.tech.length > 0 && (
-          <div className="mt-7 flex flex-wrap gap-1.5">
+          <div className="mx-auto mt-7 flex max-w-3xl flex-wrap gap-1.5 px-2 sm:px-0">
             {project.tech.map((t) => (
               <span
                 key={t}
@@ -124,72 +127,144 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
             ))}
           </div>
         )}
+      </div>
 
-        {/* Body blocks */}
+      {/* Body blocks — image blocks span max-w-5xl; text blocks span max-w-3xl */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl px-3 pb-12 sm:px-5 lg:px-8">
         {project.body_blocks.length > 0 && (
           <motion.div
             initial={reduced ? false : { opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
-            className="mt-10 space-y-6 sm:mt-12"
+            className="mt-10 sm:mt-14"
           >
             {project.body_blocks.map((block, i) => {
-              if (block.type === 'heading') {
-                return (
-                  <h2
-                    key={i}
-                    className="mt-6 font-sans text-[1.4rem] font-bold leading-tight tracking-[-0.015em] text-white sm:text-[1.6rem]"
-                  >
-                    {block.text}
-                  </h2>
-                );
+              switch (block.type) {
+                case 'heading':
+                  return (
+                    <h2
+                      key={i}
+                      className="mx-auto mb-3 mt-10 max-w-3xl px-2 font-sans text-[1.45rem] font-bold leading-tight tracking-[-0.015em] text-white first:mt-0 sm:text-[1.75rem] sm:px-0"
+                    >
+                      {block.text}
+                    </h2>
+                  );
+                case 'paragraph':
+                  return (
+                    <p
+                      key={i}
+                      className="mx-auto mb-5 max-w-3xl px-2 text-[15.5px] leading-[1.75] text-white/75 sm:px-0 sm:text-base sm:leading-[1.8]"
+                    >
+                      {block.text}
+                    </p>
+                  );
+                case 'list':
+                  return (
+                    <ul key={i} className="mx-auto mb-5 max-w-3xl space-y-2.5 px-2 sm:px-0">
+                      {block.items?.map((item, j) => (
+                        <li
+                          key={j}
+                          className="relative pl-6 text-[15px] leading-[1.7] text-white/70 sm:text-[15.5px]"
+                        >
+                          <span className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-gradient-to-br from-[#ff2f86] to-[#a855f7]" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  );
+                case 'quote':
+                  return (
+                    <blockquote
+                      key={i}
+                      className="mx-auto my-7 max-w-3xl border-l-2 border-[#ff3f8d] bg-white/[0.02] px-5 py-4 text-[15.5px] italic leading-[1.7] text-white/85 sm:text-[17px]"
+                    >
+                      {block.text}
+                    </blockquote>
+                  );
+                case 'code':
+                  return (
+                    <pre
+                      key={i}
+                      className="mx-auto mb-5 max-w-3xl overflow-x-auto rounded-xl border border-white/10 bg-[#08060d] p-4 text-[12.5px] leading-[1.6] text-white/80"
+                    >
+                      <code>{block.text}</code>
+                    </pre>
+                  );
+                case 'divider':
+                  return (
+                    <div key={i} className="mx-auto my-10 max-w-3xl px-2">
+                      <div className="h-px bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                    </div>
+                  );
+                case 'image':
+                  if (!block.image_url) return null;
+                  return (
+                    <figure key={i} className="mx-auto my-7 max-w-5xl px-2 sm:px-0">
+                      <div className="overflow-hidden rounded-xl border border-white/10 bg-black sm:rounded-2xl">
+                        <img
+                          src={block.image_url}
+                          alt={block.alt_text ?? block.caption ?? ''}
+                          loading="lazy"
+                          className="block w-full h-auto"
+                        />
+                      </div>
+                      {block.caption && (
+                        <figcaption className="mt-2 text-center text-[12px] italic text-white/45 sm:text-[12.5px]">
+                          {block.caption}
+                        </figcaption>
+                      )}
+                    </figure>
+                  );
+                case 'image-grid':
+                  if (!block.images || block.images.length === 0) return null;
+                  const cols = block.cols ?? 2;
+                  const gridCls = cols === 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2';
+                  return (
+                    <div key={i} className={`mx-auto my-7 grid max-w-5xl grid-cols-1 gap-3 px-2 ${gridCls} sm:gap-4 sm:px-0`}>
+                      {block.images.map((img, j) => (
+                        <figure key={j} className="m-0">
+                          <div className="overflow-hidden rounded-xl border border-white/10 bg-black">
+                            <img
+                              src={img.url}
+                              alt={img.alt ?? img.caption ?? ''}
+                              loading="lazy"
+                              className="block w-full h-auto"
+                            />
+                          </div>
+                          {img.caption && (
+                            <figcaption className="mt-1.5 px-1 text-[12px] text-white/55">
+                              {img.caption}
+                            </figcaption>
+                          )}
+                        </figure>
+                      ))}
+                    </div>
+                  );
+                case 'stats':
+                  if (!block.stats || block.stats.length === 0) return null;
+                  return (
+                    <div
+                      key={i}
+                      className="mx-auto my-7 grid max-w-5xl grid-cols-2 gap-2 px-2 sm:grid-cols-4 sm:gap-3 sm:px-0"
+                    >
+                      {block.stats.map((s, j) => (
+                        <div
+                          key={j}
+                          className="rounded-xl border border-white/10 bg-white/[0.02] p-3 text-center sm:p-4"
+                        >
+                          <p className="font-sans text-[1.4rem] font-bold leading-none tracking-tight text-white sm:text-[1.7rem]">
+                            {s.value}
+                          </p>
+                          <p className="mt-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] text-white/45 sm:text-[11px]">
+                            {s.label}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  );
+                default:
+                  return null;
               }
-              if (block.type === 'paragraph') {
-                return (
-                  <p
-                    key={i}
-                    className="text-[15.5px] leading-[1.75] text-white/75 sm:text-base sm:leading-[1.8]"
-                  >
-                    {block.text}
-                  </p>
-                );
-              }
-              if (block.type === 'list') {
-                return (
-                  <ul key={i} className="space-y-2.5 pl-1">
-                    {block.items?.map((item, j) => (
-                      <li
-                        key={j}
-                        className="relative pl-6 text-[15px] leading-[1.7] text-white/70 sm:text-[15.5px]"
-                      >
-                        <span className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-gradient-to-br from-[#ff2f86] to-[#a855f7]" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                );
-              }
-              if (block.type === 'quote') {
-                return (
-                  <blockquote
-                    key={i}
-                    className="relative border-l-2 border-[#ff3f8d] bg-white/[0.02] px-5 py-4 text-[15.5px] italic leading-[1.7] text-white/85 sm:text-[17px]"
-                  >
-                    {block.text}
-                  </blockquote>
-                );
-              }
-              if (block.type === 'code') {
-                return (
-                  <pre
-                    key={i}
-                    className="overflow-x-auto rounded-xl border border-white/10 bg-[#08060d] p-4 text-[12.5px] leading-[1.6] text-white/80"
-                  >
-                    <code>{block.text}</code>
-                  </pre>
-                );
-              }
-              return null;
             })}
           </motion.div>
         )}
@@ -200,7 +275,7 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative mt-14 overflow-hidden rounded-3xl border border-white/10 bg-[#08060d] p-6 text-center sm:p-9"
+          className="relative mx-auto mt-14 max-w-3xl overflow-hidden rounded-3xl border border-white/10 bg-[#08060d] p-6 text-center sm:p-9"
         >
           <div
             className="pointer-events-none absolute inset-0"
@@ -236,7 +311,7 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
             )}
           </div>
         </motion.div>
-      </article>
+      </div>
 
       {/* Related */}
       {related.length > 0 && (
