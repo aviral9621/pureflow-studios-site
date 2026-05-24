@@ -26,6 +26,11 @@ import { supabase } from '../lib/supabase';
 
 interface StartProjectPageProps {
   onViewChange: (view: ViewState) => void;
+  /** Optional service tier to pre-select in step 1. When set, the flow opens
+   *  on step 2 ("Your stage") with the chip already locked in. */
+  prefillService?: string | null;
+  /** Called once the prefill has been consumed so the parent can clear it. */
+  onPrefillConsumed?: () => void;
 }
 
 // ─── Step config ─────────────────────────────────────────────────────────────
@@ -107,15 +112,31 @@ const STEP_TITLES = [
 
 // ─── Page component ──────────────────────────────────────────────────────────
 
-export const StartProjectPage: React.FC<StartProjectPageProps> = ({ onViewChange }) => {
+export const StartProjectPage: React.FC<StartProjectPageProps> = ({
+  onViewChange,
+  prefillService = null,
+  onPrefillConsumed,
+}) => {
   const reduced = useReducedMotion();
-  const [step, setStep] = useState(0);
+  // If we arrive from a service page with a pre-selected tier, jump straight to
+  // step 2 ("Your stage") with the service chip already locked in. Otherwise
+  // the flow starts on step 0 as usual.
+  const initialServiceMatch = prefillService
+    ? SERVICE_CHOICES.find((c) => c.value === prefillService)?.value ?? ''
+    : '';
+  const [step, setStep] = useState(initialServiceMatch ? 1 : 0);
   const [direction, setDirection] = useState(1);
-  const [form, setForm] = useState<FormState>(EMPTY_FORM);
+  const [form, setForm] = useState<FormState>({ ...EMPTY_FORM, service: initialServiceMatch });
   const [submitting, setSubmitting] = useState(false);
   const [done, setDone] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const liveRegionRef = useRef<HTMLDivElement>(null);
+
+  // Consume the prefill exactly once so the parent can clear its state.
+  useEffect(() => {
+    if (initialServiceMatch && onPrefillConsumed) onPrefillConsumed();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     window.scrollTo(0, 0);

@@ -224,7 +224,18 @@ const AppContent: React.FC = () => {
     setIsContactOpen(true);
   };
 
+  // Pre-fill the Start-a-Project flow's first step ("What we wire up?") when the
+  // user lands there from a service page. Consumed once by StartProjectPage on
+  // mount, then cleared.
+  const [prefillService, setPrefillService] = useState<string | null>(null);
+
   const handleStartProject = () => {
+    setPrefillService(null);
+    navigateTo('start-project');
+  };
+
+  const handleStartProjectWithService = (service: string) => {
+    setPrefillService(service);
     navigateTo('start-project');
   };
 
@@ -235,6 +246,20 @@ const AppContent: React.FC = () => {
   // Form views render a distraction-free shell: minimal navbar (logo only) and
   // no footer. Keeps the user focused on completing the intake / booking.
   const isFormView = currentView === 'start-project' || currentView === 'book-call';
+
+  // Footer is also hidden on the deep "detail" pages that have their own bottom
+  // CTA (service detail, work post, blog post) — avoids a redundant second
+  // footer-style block right after the page's own CTA card.
+  const hideFooter =
+    isFormView ||
+    currentView === 'service-software' ||
+    currentView === 'service-crm' ||
+    currentView === 'service-mobile' ||
+    currentView === 'service-website' ||
+    currentView === 'service-social' ||
+    currentView === 'service-ads' ||
+    currentView === 'work-post' ||
+    currentView === 'blog-post';
 
   const renderLeadFormPage = (view: LeadFormView) => {
     const pages = {
@@ -427,7 +452,12 @@ const AppContent: React.FC = () => {
           currentView === 'service-social' ||
           currentView === 'service-ads') && (
           <Suspense fallback={<PageFallback />}>
-            <ServiceDetailPage service={currentView} onViewChange={navigateTo} onServicesClick={navigateToServicesSection} />
+            <ServiceDetailPage
+              service={currentView}
+              onViewChange={navigateTo}
+              onServicesClick={navigateToServicesSection}
+              onStartProjectWithService={handleStartProjectWithService}
+            />
           </Suspense>
         )}
 
@@ -481,7 +511,11 @@ const AppContent: React.FC = () => {
 
         {currentView === 'start-project' && (
           <Suspense fallback={<PageFallback />}>
-            <StartProjectPage onViewChange={navigateTo} />
+            <StartProjectPage
+              onViewChange={navigateTo}
+              prefillService={prefillService}
+              onPrefillConsumed={() => setPrefillService(null)}
+            />
           </Suspense>
         )}
 
@@ -509,7 +543,7 @@ const AppContent: React.FC = () => {
 
       </div>
 
-      {!isFormView && (
+      {!hideFooter && (
         <LazySection>
           <Footer onViewChange={navigateTo} />
         </LazySection>

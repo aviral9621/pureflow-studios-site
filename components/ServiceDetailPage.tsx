@@ -19,14 +19,29 @@ import {
 } from 'lucide-react';
 import { ViewState } from '../types';
 
+type ServiceKey = Extract<
+  ViewState,
+  'service-software' | 'service-crm' | 'service-mobile' | 'service-website' | 'service-social' | 'service-ads'
+>;
+
 interface ServiceDetailPageProps {
-  service: Extract<
-    ViewState,
-    'service-software' | 'service-crm' | 'service-mobile' | 'service-website' | 'service-social' | 'service-ads'
-  >;
+  service: ServiceKey;
   onViewChange: (view: ViewState) => void;
   onServicesClick: () => void;
+  /** Open the multi-step Start-a-Project flow with this service pre-selected. */
+  onStartProjectWithService: (service: string) => void;
 }
+
+// Map each service page to the matching ServiceTier value used by the
+// StartProjectPage's step-1 "What we wire up?" chip grid.
+const SERVICE_PREFILL: Record<ServiceKey, string> = {
+  'service-software': 'software',
+  'service-crm':      'software',
+  'service-mobile':   'mobile',
+  'service-website':  'website',
+  'service-social':   'not-sure',
+  'service-ads':      'not-sure',
+};
 
 interface ServiceData {
   eyebrow: string;
@@ -143,9 +158,15 @@ const SERVICES: Record<ServiceDetailPageProps['service'], ServiceData> = {
   },
 };
 
-export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, onViewChange, onServicesClick }) => {
+export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({
+  service,
+  onViewChange,
+  onServicesClick,
+  onStartProjectWithService,
+}) => {
   const reduced = useReducedMotion();
   const detail = SERVICES[service];
+  const startProject = () => onStartProjectWithService(SERVICE_PREFILL[service]);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
@@ -205,7 +226,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
 
           <button
             type="button"
-            onClick={() => onViewChange(detail.leadView)}
+            onClick={startProject}
             className="mt-9 inline-flex h-12 items-center justify-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_10px_40px_-12px_rgba(255,47,134,0.55)] transition-all hover:scale-[1.02] active:scale-[0.99] sm:h-14 sm:px-9 sm:text-[15px]"
           >
             Start this project
@@ -290,7 +311,7 @@ export const ServiceDetailPage: React.FC<ServiceDetailPageProps> = ({ service, o
             Send a 2-line brief, get a fixed-price proposal in 48 hours.
           </p>
           <button
-            onClick={() => onViewChange(detail.leadView)}
+            onClick={startProject}
             className="relative mt-6 inline-flex h-12 items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_10px_40px_-12px_rgba(255,47,134,0.55)] transition-all hover:scale-[1.02] sm:h-14 sm:px-9 sm:text-[15px]"
           >
             Start this project
