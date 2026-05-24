@@ -1,24 +1,43 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import type { ProjectImage } from '../../hooks/useProjects';
+
+// Accepts both the DB `ProjectImage` shape AND plain `{url, alt, caption}` (used by
+// body-block image sliders). Normalised internally to one shape.
+export interface CarouselImage {
+  id?: string;
+  url?: string;
+  image_url?: string;
+  alt?: string | null;
+  alt_text?: string | null;
+  caption?: string | null;
+}
 
 interface Props {
-  images: ProjectImage[];
+  images: CarouselImage[];
   /** Auto-advance interval, ms. 0 disables auto-advance. */
   intervalMs?: number;
   className?: string;
   /** object-fit. 'cover' (default) for card thumbs that need to fill;
    *  'contain' for detail-page screenshots that must never crop. */
   fit?: 'cover' | 'contain';
+  /** When true, renders a caption strip overlay at the bottom that updates
+   *  per-slide (used by body image-slider blocks). */
+  showCaptions?: boolean;
 }
 
-// Auto-scrolling image carousel for project cards + detail hero.
-// - swipe left/right (touch)
-// - prev/next chevrons (md+)
-// - dot indicators
-// - pauses on hover and while user is touching
-export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit = 'cover' }: Props) {
+const getUrl = (i: CarouselImage) => i.url ?? i.image_url ?? '';
+const getAlt = (i: CarouselImage) => i.alt ?? i.alt_text ?? i.caption ?? '';
+const keyFor = (i: CarouselImage, idx: number) => i.id ?? getUrl(i) ?? String(idx);
+
+// Auto-scrolling image carousel — works for hero cards and body image-sliders.
+export function ProjectImageCarousel({
+  images,
+  intervalMs = 4000,
+  className,
+  fit = 'cover',
+  showCaptions = false,
+}: Props) {
   const reduced = useReducedMotion();
   const [[index, direction], setIdx] = useState<[number, number]>([0, 1]);
   const [paused, setPaused] = useState(false);
@@ -51,12 +70,12 @@ export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit
     const dx = e.changedTouches[0].clientX - touchStart;
     if (Math.abs(dx) > 50) goTo(index + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
     setTouchStart(null);
-    // resume after a moment
     setTimeout(() => setPaused(false), 600);
   };
 
   if (len === 0) return null;
   const img = images[index];
+  const activeCaption = img.caption ?? '';
 
   const variants = {
     enter: (dir: number) => ({ x: dir > 0 ? '100%' : '-100%', opacity: 0 }),
@@ -74,9 +93,9 @@ export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit
     >
       <AnimatePresence custom={direction} initial={false} mode="popLayout">
         <motion.img
-          key={img.id}
-          src={img.image_url}
-          alt={img.alt_text ?? ''}
+          key={keyFor(img, index)}
+          src={getUrl(img)}
+          alt={getAlt(img)}
           custom={direction}
           variants={variants}
           initial="enter"
@@ -88,7 +107,31 @@ export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit
         />
       </AnimatePresence>
 
-      {/* Chevrons (md+) */}
+      {/* Caption overlay (image-slider mode) */}
+      {showCaptions && activeCaption && (
+        <div
+          className="pointer-events-none absolute inset-x-0 bottom-0 z-10 flex items-end pb-9 pt-12 px-4 sm:pb-11 sm:px-6"
+          style={{
+            background:
+              'linear-gradient(to top, rgba(0,0,0,0.78) 0%, rgba(0,0,0,0.45) 55%, rgba(0,0,0,0) 100%)',
+          }}
+        >
+          <AnimatePresence mode="wait">
+            <motion.p
+              key={`cap-${index}`}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -4 }}
+              transition={{ duration: 0.35, ease: 'easeOut' }}
+              className="text-[12.5px] font-medium leading-snug text-white sm:text-[14px]"
+            >
+              {activeCaption}
+            </motion.p>
+          </AnimatePresence>
+        </div>
+      )}
+
+      {/* Chevrons */}
       {len > 1 && (
         <>
           <button
@@ -98,9 +141,9 @@ export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit
               goTo(index - 1, -1);
             }}
             aria-label="Previous image"
-            className="absolute left-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white/85 backdrop-blur transition hover:bg-black/60 md:flex"
+            className="absolute left-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white/85 backdrop-blur transition hover:bg-black/60 sm:left-3 sm:h-10 sm:w-10"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
           <button
             type="button"
@@ -109,9 +152,9 @@ export function ProjectImageCarousel({ images, intervalMs = 4000, className, fit
               goTo(index + 1, 1);
             }}
             aria-label="Next image"
-            className="absolute right-2 top-1/2 z-20 hidden h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white/85 backdrop-blur transition hover:bg-black/60 md:flex"
+            className="absolute right-2 top-1/2 z-20 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-black/40 text-white/85 backdrop-blur transition hover:bg-black/60 sm:right-3 sm:h-10 sm:w-10"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
           </button>
         </>
       )}

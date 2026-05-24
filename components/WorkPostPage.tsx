@@ -240,6 +240,29 @@ export const WorkPostPage: React.FC<Props> = ({ slug, onViewChange, onOpenProjec
                       ))}
                     </div>
                   );
+                case 'image-slider':
+                  if (!block.images || block.images.length === 0) return null;
+                  return (
+                    <div
+                      key={i}
+                      className="mx-auto my-7 w-full max-w-5xl px-2 sm:my-9 sm:px-0"
+                    >
+                      <div
+                        className="relative w-full overflow-hidden rounded-xl border border-white/10 bg-black sm:rounded-2xl"
+                        style={{ aspectRatio: '16 / 10' }}
+                      >
+                        <ProjectImageCarousel
+                          images={block.images}
+                          intervalMs={5000}
+                          fit="contain"
+                          showCaptions
+                        />
+                      </div>
+                      <p className="mt-2 text-center text-[11px] uppercase tracking-[0.16em] text-white/35">
+                        {block.images.length} screens · swipe or use the arrows
+                      </p>
+                    </div>
+                  );
                 case 'stats':
                   if (!block.stats || block.stats.length === 0) return null;
                   return (
