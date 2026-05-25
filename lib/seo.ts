@@ -139,6 +139,11 @@ export const META: Record<ViewState, Meta> = {
     description:
       'A detailed look at one of the products Pureflow Studios designed, built, and shipped to production.',
   },
+  about: {
+    title: `About — A small studio, built to ship | ${SITE}`,
+    description:
+      'Pureflow Studios is a Gen-Z software studio founded by Aviral Singh — 10 people, 100+ products shipped, built on referrals.',
+  },
 };
 
 function setMeta(name: string, value: string, attr: 'name' | 'property' = 'name') {

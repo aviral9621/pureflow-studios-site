@@ -18,7 +18,7 @@ type NavItem =
 const navItems: NavItem[] = [
   { label: 'Work', view: 'work' },
   { label: 'Services', section: 'services' },
-  { label: 'Process', section: 'process' },
+  { label: 'About', view: 'about' },
   { label: 'Good Stuff', view: 'blog' },
   { label: 'Contact', view: 'contact' },
 ];

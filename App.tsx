@@ -99,6 +99,9 @@ const WorkIndexPage = lazy(() =>
 const WorkPostPage = lazy(() =>
   import('./components/WorkPostPage').then((module) => ({ default: module.WorkPostPage }))
 );
+const AboutPage = lazy(() =>
+  import('./components/AboutPage').then((module) => ({ default: module.AboutPage }))
+);
 
 const PageFallback = () => (
   <div className="min-h-screen bg-black" aria-label="Loading page" />
@@ -538,6 +541,12 @@ const AppContent: React.FC = () => {
               onViewChange={navigateTo}
               onOpenProject={handleOpenProject}
             />
+          </Suspense>
+        )}
+
+        {currentView === 'about' && (
+          <Suspense fallback={<PageFallback />}>
+            <AboutPage onViewChange={navigateTo} onStartProject={handleStartProject} />
           </Suspense>
         )}
 
