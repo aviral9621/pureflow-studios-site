@@ -137,7 +137,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onViewChange, onStartProje
                 <p className="text-[10px] font-semibold uppercase tracking-[0.22em] text-[#ff7eb2]">
                   Founder · CEO
                 </p>
-                <p className="mt-1 font-display text-[1.35rem] font-bold leading-tight tracking-tight text-white sm:text-[1.55rem]">
+                <p className="mt-1 font-sans text-[1.3rem] font-semibold leading-tight tracking-[-0.015em] text-white sm:text-[1.5rem]">
                   Aviral Singh
                 </p>
                 <p className="text-[12px] text-white/60">Pureflow Studios · Est. 2022 · Lucknow, India</p>
@@ -172,9 +172,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onViewChange, onStartProje
               <p className="flex items-start gap-3 text-[14px] leading-relaxed text-white/80 sm:text-[15px]">
                 <Heart className="mt-1 h-4 w-4 flex-shrink-0 text-[#ff7eb2]" strokeWidth={2} />
                 <span>
-                  Three years ago we hired <strong className="text-white">Taiba</strong> — our first
-                  tech teammate. She’s still here today, leading engineering. Most agencies churn.
-                  We don’t.
+                  Three years ago we hired <strong className="text-white">Tayyaba</strong> — our
+                  first tech teammate. She’s still here today, leading engineering. Most agencies
+                  churn. We don’t.
                 </span>
               </p>
             </div>
