@@ -26,6 +26,12 @@ interface LiveDeviceEmbedProps {
    * screens to save bandwidth. Defaults to true.
    */
   eager?: boolean;
+  /**
+   * Static preview mode: the real site still loads (live), but it is fully
+   * non-interactive — no clicks, no hover, no internal scroll, no "click to
+   * interact" guard. Only the first section is visible. Used for the hero.
+   */
+  nonInteractive?: boolean;
 }
 
 const LOGICAL = {
@@ -41,8 +47,11 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
   label,
   siteName,
   eager = true,
+  nonInteractive = false,
 }) => {
   const logical = LOGICAL[device];
+  // `interactive` here means "load the live iframe at all" (eager + live).
+  // `nonInteractive` separately disables all pointer interaction on it.
   const interactive = showcase.type === 'live' && eager;
 
   const fit = useFitScale(logical.w);
@@ -75,13 +84,16 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
           sandbox="allow-scripts allow-same-origin allow-popups allow-forms"
           className="absolute left-0 top-0 border-0 bg-white"
           style={{
-            width: `${logical.w}px`,
+            // In static mode, widen slightly so the site's own vertical
+            // scrollbar is cropped out of the screen for a clean preview.
+            width: `${nonInteractive ? logical.w + 18 : logical.w}px`,
             height: `${logical.h}px`,
             transform: `scale(${fit.scale})`,
             transformOrigin: 'top left',
-            pointerEvents: interacting ? 'auto' : 'none',
+            pointerEvents: nonInteractive ? 'none' : interacting ? 'auto' : 'none',
             opacity: fit.scale > 0 ? 1 : 0,
           }}
+          scrolling={nonInteractive ? 'no' : 'auto'}
         />
       )}
 
@@ -138,7 +150,7 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
       )}
 
       {/* Scroll-trap guard — click to enable interaction inside the embed */}
-      {interactive && loaded && !interacting && (
+      {!nonInteractive && interactive && loaded && !interacting && (
         <button
           type="button"
           onClick={startInteract}
@@ -149,6 +161,18 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
             <MousePointerClick className="h-3.5 w-3.5" /> Click to interact
           </span>
         </button>
+      )}
+
+      {/* Static preview: subtle cinematic vignette, blocks all interaction */}
+      {nonInteractive && (
+        <div
+          className="pointer-events-none absolute inset-0 z-10"
+          aria-hidden="true"
+          style={{
+            boxShadow: 'inset 0 0 90px 8px rgba(0,0,0,0.32)',
+            background: 'linear-gradient(to bottom, rgba(0,0,0,0) 55%, rgba(0,0,0,0.18) 100%)',
+          }}
+        />
       )}
     </div>
   );
@@ -189,9 +213,9 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
           /* Browser window — for the hero (real site, desktop layout) */
           <div className="mx-auto w-full overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b12] shadow-[0_40px_100px_-40px_rgba(164,82,255,0.5)]">
             <div className="flex h-9 items-center gap-2 border-b border-white/[0.08] bg-black/50 px-4">
-              <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
-              <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#4f8cff] shadow-[0_0_6px_rgba(79,140,255,0.6)]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-[#b06bff] shadow-[0_0_6px_rgba(176,107,255,0.6)]" />
+              <span className="h-2.5 w-2.5 rounded-full bg-white/90" />
               <div className="mx-auto flex h-5 w-1/2 max-w-xs items-center justify-center rounded-md bg-white/[0.06] px-3">
                 <span className="truncate font-mono text-[10px] text-white/45">{host}</span>
               </div>
@@ -203,22 +227,24 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
         )}
       </div>
 
-      {/* Caption + always-present live link */}
-      <div className="mt-4 flex items-center gap-3">
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">{label}</span>
-        <span className="h-3 w-px bg-white/15" />
-        <a
-          href={liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1 text-[12px] font-medium text-white/65 transition-colors hover:text-white"
-        >
-          Open live site <ExternalLink className="h-3 w-3" />
-        </a>
-      </div>
+      {/* Caption + always-present live link (hidden in static hero mode) */}
+      {!nonInteractive && (
+        <div className="mt-4 flex items-center gap-3">
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">{label}</span>
+          <span className="h-3 w-px bg-white/15" />
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1 text-[12px] font-medium text-white/65 transition-colors hover:text-white"
+          >
+            Open live site <ExternalLink className="h-3 w-3" />
+          </a>
+        </div>
+      )}
 
       {/* Soft fallback hint if a live frame stalls (e.g. framing blocked) */}
-      {interactive && stalled && !loaded && (
+      {!nonInteractive && interactive && stalled && !loaded && (
         <p className="mt-2 max-w-[260px] text-center text-[11px] leading-snug text-white/40">
           Preview is taking a moment — you can always open the live site above.
         </p>

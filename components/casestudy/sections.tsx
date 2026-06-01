@@ -51,7 +51,7 @@ const scrollToDetails = () =>
   document.getElementById('case-study-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
 export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => (
-  <section className={`${SECTION} pt-28 pb-12 sm:pt-32 md:pb-16`}>
+  <section className={`${SECTION} pt-3 pb-10 md:pt-4 md:pb-14`}>
     {/* Ambient purple glow + subtle grid */}
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
       <div className="absolute -top-24 left-[6%] h-[560px] w-[560px] rounded-full bg-[#a452ff]/12 blur-[150px]" />
@@ -106,6 +106,7 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
           liveUrl={cs.liveUrl}
           label="Live site"
           siteName={cs.name}
+          nonInteractive
         />
       </motion.div>
     </div>

@@ -36,7 +36,7 @@ export const CaseStudyPage: React.FC<Props> = ({ caseStudy, onViewChange }) => {
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
       {/* Back to all work */}
-      <div className="relative z-10 mx-auto max-w-7xl px-5 pt-24 sm:px-6 lg:px-10">
+      <div className="relative z-10 mx-auto max-w-7xl px-5 pt-20 sm:px-6 lg:px-10">
         <button
           onClick={() => onViewChange('work')}
           className="group flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white"
