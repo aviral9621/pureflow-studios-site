@@ -13,7 +13,7 @@ import { useDeviceEmbedState } from '../../hooks/useDeviceEmbedState';
 // ─────────────────────────────────────────────────────────────────────────────
 
 interface LiveDeviceEmbedProps {
-  device: 'laptop' | 'phone';
+  device: 'laptop' | 'phone' | 'browser';
   showcase: DeviceShowcase;
   /** "Open live site ↗" target (full URL). */
   liveUrl: string;
@@ -31,6 +31,7 @@ interface LiveDeviceEmbedProps {
 const LOGICAL = {
   laptop: { w: 1440, h: 900 },
   phone: { w: 390, h: 845 },
+  browser: { w: 1440, h: 900 },
 } as const;
 
 export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
@@ -174,7 +175,7 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
               <div className="absolute left-1/2 top-0 h-[5px] w-[16%] -translate-x-1/2 rounded-b-[6px] bg-black/70" />
             </div>
           </div>
-        ) : (
+        ) : device === 'phone' ? (
           <div className="mx-auto w-full max-w-[270px]">
             <div className="relative rounded-[2.1rem] border border-white/14 bg-[#0b0b10] p-[8px] shadow-[0_30px_70px_-28px_rgba(164,82,255,0.5)]">
               {/* Notch */}
@@ -182,6 +183,21 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
               <div className="relative aspect-[390/845] w-full overflow-hidden rounded-[1.6rem] border border-black/60">
                 {screen}
               </div>
+            </div>
+          </div>
+        ) : (
+          /* Browser window — for the hero (real site, desktop layout) */
+          <div className="mx-auto w-full overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b12] shadow-[0_40px_100px_-40px_rgba(164,82,255,0.5)]">
+            <div className="flex h-9 items-center gap-2 border-b border-white/[0.08] bg-black/50 px-4">
+              <span className="h-2.5 w-2.5 rounded-full bg-red-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-yellow-400/70" />
+              <span className="h-2.5 w-2.5 rounded-full bg-green-400/70" />
+              <div className="mx-auto flex h-5 w-1/2 max-w-xs items-center justify-center rounded-md bg-white/[0.06] px-3">
+                <span className="truncate font-mono text-[10px] text-white/45">{host}</span>
+              </div>
+            </div>
+            <div className="relative aspect-[16/10] w-full overflow-hidden">
+              {screen}
             </div>
           </div>
         )}

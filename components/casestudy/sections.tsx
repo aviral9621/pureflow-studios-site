@@ -13,7 +13,6 @@ import {
   LayoutDashboard,
   Layers,
   Quote,
-  Search,
   FileText,
 } from 'lucide-react';
 import type { CaseStudy } from '../../lib/caseStudies';
@@ -47,16 +46,6 @@ const Marker: React.FC<{ value: string }> = ({ value }) => (
 );
 
 // ── 1. Hero ───────────────────────────────────────────────────────────────────
-
-// Decorative destination thumbnails for the hero booking card (real travel
-// photos via Unsplash CDN; each <img> falls back to a gradient on error).
-const HERO_DESTINATIONS = [
-  { city: 'Goa', stays: '1200+ Stays', img: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&q=70&auto=format&fit=crop' },
-  { city: 'Manali', stays: '800+ Stays', img: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600&q=70&auto=format&fit=crop' },
-  { city: 'Udaipur', stays: '950+ Stays', img: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?w=600&q=70&auto=format&fit=crop' },
-  { city: 'Jaipur', stays: '1100+ Stays', img: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=600&q=70&auto=format&fit=crop' },
-  { city: 'Rishikesh', stays: '700+ Stays', img: 'https://images.unsplash.com/photo-1609920658906-8223bd289001?w=600&q=70&auto=format&fit=crop' },
-];
 
 const scrollToDetails = () =>
   document.getElementById('case-study-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -109,89 +98,18 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
         </div>
       </motion.div>
 
-      {/* Right — premium booking-UI card (decorative) */}
+      {/* Right — the real Quick Hotels site, live in a browser frame */}
       <motion.div {...reveal(reduced, 0.12)} className="relative">
-        <HeroBookingCard name={cs.name} />
+        <LiveDeviceEmbed
+          device="browser"
+          showcase={cs.showcase.desktop}
+          liveUrl={cs.liveUrl}
+          label="Live site"
+          siteName={cs.name}
+        />
       </motion.div>
     </div>
   </section>
-);
-
-// A polished, static replica of the Quick Hotels booking UI (decorative — the
-// real interactive site lives in the Visual Showcase section below).
-const HeroBookingCard: React.FC<{ name: string }> = ({ name }) => (
-  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(165deg,#0d0b15,#070609)] p-5 shadow-[0_40px_100px_-40px_rgba(164,82,255,0.5)] sm:p-6">
-    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_72%_-10%,rgba(217,70,239,0.14),transparent_55%)]" />
-
-    {/* top bar */}
-    <div className="relative flex items-center justify-between">
-      <span className="font-display text-[15px] tracking-wide text-white/90">{name.toUpperCase()}</span>
-      <div className="flex gap-4 text-[11px] text-white/45">
-        <span>Stays</span>
-        <span>Cities</span>
-        <span>Offers</span>
-      </div>
-    </div>
-
-    {/* headline */}
-    <h3 className="relative mt-6 font-display text-[clamp(1.5rem,3vw,2.1rem)] uppercase leading-[1.02] text-white">
-      Where budget meets comfort
-    </h3>
-    <p className="relative mt-2 text-[12.5px] text-white/50">Handpicked stays across India · all-inclusive pricing</p>
-
-    {/* search bar */}
-    <div className="relative mt-5 flex items-stretch gap-2 rounded-xl border border-white/10 bg-black/40 p-2 backdrop-blur-sm">
-      {[
-        { l: 'Destination', v: 'Where are you going?' },
-        { l: 'Check-in', v: 'Add dates' },
-        { l: 'Check-out', v: 'Add dates' },
-        { l: 'Guests', v: '2 Guests, 1 Room' },
-      ].map((f) => (
-        <div key={f.l} className="min-w-0 flex-1 rounded-lg bg-white/[0.04] px-3 py-2">
-          <span className="block text-[9px] uppercase tracking-wide text-white/40">{f.l}</span>
-          <span className="mt-0.5 block truncate text-[11px] text-white/70">{f.v}</span>
-        </div>
-      ))}
-      <button
-        type="button"
-        aria-label="Search stays"
-        className="flex shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-[#ff2f86] to-[#a855f7] px-4"
-      >
-        <Search className="h-4 w-4 text-white" />
-      </button>
-    </div>
-
-    {/* popular destinations */}
-    <div className="relative mt-6 flex items-center justify-between">
-      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/55">Popular Destinations</span>
-      <span className="text-[11px] text-[#f0abfc]">View all</span>
-    </div>
-
-    <div className="relative mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      {HERO_DESTINATIONS.map((d) => (
-        <div
-          key={d.city}
-          className="relative aspect-[3/4] w-[30%] shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(160deg,#1a1326,#0a0710)] lg:w-auto lg:flex-1"
-        >
-          <img
-            src={d.img}
-            alt={d.city}
-            loading="lazy"
-            referrerPolicy="no-referrer"
-            onError={(e) => {
-              e.currentTarget.style.display = 'none';
-            }}
-            className="absolute inset-0 h-full w-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 p-2.5">
-            <p className="text-[12px] font-semibold leading-tight text-white">{d.city}</p>
-            <p className="text-[9.5px] text-white/60">{d.stays}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
 );
 
 // ── 2. Snapshot strip ───────────────────────────────────────────────────────────
