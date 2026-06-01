@@ -5,6 +5,7 @@ import { Hero } from './components/sections/Hero';
 import { ViewState } from './types';
 import { ThemeProvider } from './components/ThemeContext';
 import { useDocumentMeta } from './lib/seo';
+import { getCaseStudyBySlug } from './lib/caseStudies';
 
 const Footer = lazy(() =>
   import('./components/Footer').then((module) => ({ default: module.Footer }))
@@ -98,6 +99,9 @@ const WorkIndexPage = lazy(() =>
 );
 const WorkPostPage = lazy(() =>
   import('./components/WorkPostPage').then((module) => ({ default: module.WorkPostPage }))
+);
+const CaseStudyPage = lazy(() =>
+  import('./components/casestudy/CaseStudyPage').then((module) => ({ default: module.CaseStudyPage }))
 );
 const AboutPage = lazy(() =>
   import('./components/AboutPage').then((module) => ({ default: module.AboutPage }))
@@ -536,11 +540,19 @@ const AppContent: React.FC = () => {
 
         {currentView === 'work-post' && selectedProjectSlug && (
           <Suspense fallback={<PageFallback />}>
-            <WorkPostPage
-              slug={selectedProjectSlug}
-              onViewChange={navigateTo}
-              onOpenProject={handleOpenProject}
-            />
+            {getCaseStudyBySlug(selectedProjectSlug) ? (
+              <CaseStudyPage
+                caseStudy={getCaseStudyBySlug(selectedProjectSlug)!}
+                onViewChange={navigateTo}
+                onOpenProject={handleOpenProject}
+              />
+            ) : (
+              <WorkPostPage
+                slug={selectedProjectSlug}
+                onViewChange={navigateTo}
+                onOpenProject={handleOpenProject}
+              />
+            )}
           </Suspense>
         )}
 

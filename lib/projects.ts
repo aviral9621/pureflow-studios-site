@@ -37,17 +37,8 @@ export const PROJECTS: Project[] = [
     from: 'from-emerald-950/70',
     to: 'to-teal-950/50',
   },
-  {
-    year: '2026',
-    category: 'Hotel Tech',
-    client: 'Quick Hotels · Hospitality',
-    title: 'End-to-end hotel management',
-    description: 'Bookings, payments, GST — one PMS, zero spreadsheet chaos.',
-    tech: ['Next.js', 'React 19', 'Vite', 'Supabase Edge Functions'],
-    url: 'quickhotels.vercel.app',
-    from: 'from-blue-950/70',
-    to: 'to-indigo-950/50',
-  },
+  // NOTE: Quick Hotels now lives in `lib/caseStudies.ts` (structured case-study
+  // template) and is merged into this listing by `hooks/useProjects.ts`.
   {
     year: '2025',
     category: 'EdTech',

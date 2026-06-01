@@ -38,6 +38,7 @@
   --font-body: 'Inter', sans-serif;
   --font-sans: 'Inter', sans-serif;
   --font-anton: 'Anton', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SFMono-Regular', 'Menlo', monospace;
 
   /* ── Animations ── */
   --animate-float: float 8s ease-in-out infinite;

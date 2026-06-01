@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { PROJECTS as FALLBACK, type Project as LegacyProject } from '../lib/projects';
+import { CASE_STUDIES, type CaseStudy } from '../lib/caseStudies';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Live "Stuff we shipped" projects, fetched from Supabase. Falls back to the
@@ -83,6 +84,35 @@ const fromLegacy = (p: LegacyProject, idx: number): Project => ({
   published: true,
 });
 
+// Map a structured CaseStudy to a listing card. These render the new premium
+// detail page (see App.tsx work-post branch) when their slug is opened.
+const fromCaseStudy = (cs: CaseStudy, idx: number): Project => ({
+  id: `cs-${cs.slug}`,
+  slug: cs.slug,
+  year: cs.card?.year ?? '2026',
+  category: cs.category,
+  client: `${cs.snapshot.client} · ${cs.snapshot.industry}`,
+  title: cs.card?.title ?? cs.name,
+  description: cs.card?.description ?? cs.tagline,
+  tech: cs.techStack.map((t) => t.name),
+  url: cs.liveUrl.replace(/^https?:\/\//, ''),
+  from: cs.card?.from ?? 'from-fuchsia-950/70',
+  to: cs.card?.to ?? 'to-purple-950/50',
+  body_blocks: [],
+  images: [],
+  display_order: idx - 1000, // sort structured case studies first
+  published: true,
+});
+
+// Structured case studies always appear in the listing (DB-independent) and take
+// precedence over any DB/legacy row sharing their slug.
+const CASE_STUDY_CARDS = CASE_STUDIES.map(fromCaseStudy);
+const CASE_STUDY_SLUGS = new Set(CASE_STUDIES.map((cs) => cs.slug));
+const mergeCaseStudies = (list: Project[]): Project[] => [
+  ...CASE_STUDY_CARDS,
+  ...list.filter((p) => !CASE_STUDY_SLUGS.has(p.slug)),
+];
+
 // Shared cache so multiple hook callers don't refetch on every mount
 let cache: { projects: Project[]; ts: number } | null = null;
 const STALE_MS = 60_000; // 60s soft refresh
@@ -149,7 +179,7 @@ interface UseProjectsState {
 /** All published projects, ordered for the public site. Live (60s soft-refresh). */
 export function useAllProjects(): UseProjectsState {
   const [state, setState] = useState<UseProjectsState>({
-    projects: cache?.projects ?? FALLBACK.map(fromLegacy),
+    projects: cache?.projects ?? mergeCaseStudies(FALLBACK.map(fromLegacy)),
     loading: !cache,
     error: null,
   });
@@ -164,13 +194,10 @@ export function useAllProjects(): UseProjectsState {
       }
       try {
         const fresh = await fetchProjects();
-        cache = { projects: fresh, ts: Date.now() };
+        const merged = mergeCaseStudies(fresh.length > 0 ? fresh : FALLBACK.map(fromLegacy));
+        cache = { projects: merged, ts: Date.now() };
         if (alive) {
-          setState({
-            projects: fresh.length > 0 ? fresh : FALLBACK.map(fromLegacy),
-            loading: false,
-            error: null,
-          });
+          setState({ projects: merged, loading: false, error: null });
         }
       } catch (err) {
         if (alive) {
