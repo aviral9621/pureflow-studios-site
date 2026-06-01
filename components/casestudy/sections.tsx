@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -320,27 +320,7 @@ export const TechStack: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = (
 
 // ── 6. Visual Showcase (live embeds) ────────────────────────────────────────────
 
-function useIsDesktop(query = '(min-width: 1024px)') {
-  const [match, setMatch] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia(query);
-    const update = () => setMatch(mq.matches);
-    update();
-    // matchMedia 'change' is primary; window resize is a fallback for webviews
-    // that throttle media-query change events.
-    mq.addEventListener('change', update);
-    window.addEventListener('resize', update);
-    return () => {
-      mq.removeEventListener('change', update);
-      window.removeEventListener('resize', update);
-    };
-  }, [query]);
-  return match;
-}
-
 export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => {
-  const isDesktop = useIsDesktop();
-
   return (
     <section className={`${SECTION} py-16 md:py-24`}>
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
@@ -361,7 +341,7 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
           {...reveal(reduced, 0.1)}
           className="mt-12 flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-center lg:gap-10"
         >
-          {/* Laptop — desktop layout (poster-only on small screens) */}
+          {/* Laptop — real site in desktop layout, live at every width */}
           <div className="order-2 w-full lg:order-1 lg:w-[60%]">
             <LiveDeviceEmbed
               device="laptop"
@@ -369,7 +349,6 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
               liveUrl={cs.liveUrl}
               label="Desktop"
               siteName={cs.name}
-              eager={isDesktop}
             />
           </div>
 
