@@ -58,6 +58,8 @@ export interface Project {
   images: ProjectImage[];
   display_order: number;
   published: boolean;
+  /** Optional live URL to embed as the card thumbnail (structured case studies). */
+  previewUrl?: string;
 }
 
 // Map a fallback LegacyProject to the new shape (no images, no slug → derived)
@@ -102,6 +104,7 @@ const fromCaseStudy = (cs: CaseStudy, idx: number): Project => ({
   images: [],
   display_order: idx - 1000, // sort structured case studies first
   published: true,
+  previewUrl: cs.showcase?.desktop?.type === 'live' ? cs.showcase.desktop.src : undefined,
 });
 
 // Structured case studies always appear in the listing (DB-independent) and take
