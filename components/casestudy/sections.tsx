@@ -14,6 +14,7 @@ import {
   Layers,
   Quote,
   Search,
+  FileText,
 } from 'lucide-react';
 import type { CaseStudy } from '../../lib/caseStudies';
 import { LiveDeviceEmbed } from './LiveDeviceEmbed';
@@ -47,87 +48,148 @@ const Marker: React.FC<{ value: string }> = ({ value }) => (
 
 // ── 1. Hero ───────────────────────────────────────────────────────────────────
 
+// Decorative destination thumbnails for the hero booking card (real travel
+// photos via Unsplash CDN; each <img> falls back to a gradient on error).
+const HERO_DESTINATIONS = [
+  { city: 'Goa', stays: '1200+ Stays', img: 'https://images.unsplash.com/photo-1512343879784-a960bf40e7f2?w=600&q=70&auto=format&fit=crop' },
+  { city: 'Manali', stays: '800+ Stays', img: 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?w=600&q=70&auto=format&fit=crop' },
+  { city: 'Udaipur', stays: '950+ Stays', img: 'https://images.unsplash.com/photo-1615836245337-f5b9b2303f10?w=600&q=70&auto=format&fit=crop' },
+  { city: 'Jaipur', stays: '1100+ Stays', img: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?w=600&q=70&auto=format&fit=crop' },
+  { city: 'Rishikesh', stays: '700+ Stays', img: 'https://images.unsplash.com/photo-1609920658906-8223bd289001?w=600&q=70&auto=format&fit=crop' },
+];
+
+const scrollToDetails = () =>
+  document.getElementById('case-study-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
 export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => (
   <section className={`${SECTION} pt-28 pb-12 sm:pt-32 md:pb-16`}>
-    {/* Ambient purple glow, off to one side */}
+    {/* Ambient purple glow + subtle grid */}
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute -top-24 left-[8%] h-[560px] w-[560px] rounded-full bg-[#a452ff]/12 blur-[150px]" />
-      <div className="absolute top-10 right-[2%] h-[420px] w-[420px] rounded-full bg-[#ff20a0]/10 blur-[150px]" />
+      <div className="absolute -top-24 left-[6%] h-[560px] w-[560px] rounded-full bg-[#a452ff]/12 blur-[150px]" />
+      <div className="absolute top-10 right-[2%] h-[440px] w-[440px] rounded-full bg-[#ff20a0]/10 blur-[150px]" />
+      <div
+        className="absolute inset-0 opacity-[0.35]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
+          backgroundSize: '56px 56px',
+          maskImage: 'radial-gradient(ellipse at 50% 28%, black, transparent 75%)',
+          WebkitMaskImage: 'radial-gradient(ellipse at 50% 28%, black, transparent 75%)',
+        }}
+      />
     </div>
 
-    <div className={`${SHELL} relative grid items-center gap-10 lg:grid-cols-[0.9fr_1.1fr] lg:gap-12`}>
+    <div className={`${SHELL} relative grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12`}>
       {/* Left — copy */}
       <motion.div {...reveal(reduced)}>
         <span className="inline-flex items-center rounded-full border border-[#d946ef]/30 bg-[#d946ef]/10 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#f0abfc]">
           {cs.category}
         </span>
-        <h1 className="mt-6 font-display uppercase leading-[0.92] tracking-[0.005em] text-white" style={{ fontSize: 'clamp(3.2rem, 8vw, 7rem)' }}>
+        <h1 className="mt-6 font-display uppercase leading-[0.9] tracking-[0.005em] text-white" style={{ fontSize: 'clamp(3.2rem, 8vw, 7rem)' }}>
           {cs.name}
         </h1>
         <p className="mt-5 max-w-md text-[15px] leading-relaxed text-white/60 sm:text-base">{cs.tagline}</p>
-        <a
-          href={cs.liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group mt-8 inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]"
-        >
-          View Live Site
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-        </a>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <a
+            href={cs.liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]"
+          >
+            View Live Site
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </a>
+          <button
+            onClick={scrollToDetails}
+            className="inline-flex h-12 items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-7 text-[14px] font-semibold text-white/90 transition-colors hover:border-white/30 hover:bg-white/[0.08]"
+          >
+            Case Study
+            <FileText className="h-4 w-4" />
+          </button>
+        </div>
       </motion.div>
 
-      {/* Right — decorative laptop with a branded poster (NOT a live embed) */}
+      {/* Right — premium booking-UI card (decorative) */}
       <motion.div {...reveal(reduced, 0.12)} className="relative">
-        <HeroLaptop name={cs.name} />
+        <HeroBookingCard name={cs.name} />
       </motion.div>
     </div>
   </section>
 );
 
-// A decorative laptop showing a faux booking-hero poster (no iframe).
-const HeroLaptop: React.FC<{ name: string }> = ({ name }) => (
-  <div className="mx-auto w-full max-w-[620px]">
-    <div className="relative rounded-[14px] border border-white/12 bg-[#0b0b10] p-[10px] shadow-[0_40px_90px_-30px_rgba(164,82,255,0.5)]">
-      <div className="absolute left-1/2 top-[5px] h-1 w-1 -translate-x-1/2 rounded-full bg-white/25" />
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-[4px] border border-black/60 bg-[linear-gradient(160deg,#140d1f,#0a0710)]">
-        {/* faux dot grid */}
-        <div
-          className="absolute inset-0 opacity-50"
-          style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)', backgroundSize: '24px 24px' }}
-        />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_-10%,rgba(217,70,239,0.22),transparent_55%)]" />
-        {/* faux nav */}
-        <div className="relative flex items-center justify-between px-5 pt-4">
-          <span className="font-display text-[13px] tracking-wide text-white/85">{name.toUpperCase()}</span>
-          <div className="hidden gap-4 sm:flex">
-            {['Stays', 'Cities', 'Offers'].map((i) => (
-              <span key={i} className="text-[9px] text-white/40">{i}</span>
-            ))}
-          </div>
-        </div>
-        {/* faux hero */}
-        <div className="relative mt-[6%] px-5">
-          <p className="font-display text-[clamp(1.1rem,3.3vw,1.9rem)] leading-tight text-white/90">
-            Where budget meets comfort
-          </p>
-          <p className="mt-1 text-[9px] text-white/45 sm:text-[10px]">Handpicked stays across India · all-inclusive pricing</p>
-          {/* faux search bar */}
-          <div className="mt-3 flex items-center gap-1.5 rounded-lg border border-white/10 bg-black/40 p-1.5 backdrop-blur-sm sm:gap-2 sm:p-2">
-            {['Destination', 'Check-in', 'Guests'].map((f) => (
-              <div key={f} className="flex-1 rounded-md bg-white/[0.05] px-2 py-1.5">
-                <span className="text-[7px] text-white/35 sm:text-[8px]">{f}</span>
-                <div className="mt-1 h-1 w-3/4 rounded bg-white/15" />
-              </div>
-            ))}
-            <div className="flex items-center gap-1 rounded-md bg-gradient-to-r from-[#ff2f86] to-[#a855f7] px-2.5 py-2">
-              <Search className="h-3 w-3 text-white" />
-            </div>
-          </div>
-        </div>
+// A polished, static replica of the Quick Hotels booking UI (decorative — the
+// real interactive site lives in the Visual Showcase section below).
+const HeroBookingCard: React.FC<{ name: string }> = ({ name }) => (
+  <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[linear-gradient(165deg,#0d0b15,#070609)] p-5 shadow-[0_40px_100px_-40px_rgba(164,82,255,0.5)] sm:p-6">
+    <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_72%_-10%,rgba(217,70,239,0.14),transparent_55%)]" />
+
+    {/* top bar */}
+    <div className="relative flex items-center justify-between">
+      <span className="font-display text-[15px] tracking-wide text-white/90">{name.toUpperCase()}</span>
+      <div className="flex gap-4 text-[11px] text-white/45">
+        <span>Stays</span>
+        <span>Cities</span>
+        <span>Offers</span>
       </div>
     </div>
-    <div className="relative mx-auto h-[14px] w-[112%] -translate-x-[5.4%] rounded-b-[12px] rounded-t-[3px] border border-t-0 border-white/10 bg-gradient-to-b from-[#17171d] to-[#0b0b0f]">
-      <div className="absolute left-1/2 top-0 h-[5px] w-[16%] -translate-x-1/2 rounded-b-[6px] bg-black/70" />
+
+    {/* headline */}
+    <h3 className="relative mt-6 font-display text-[clamp(1.5rem,3vw,2.1rem)] uppercase leading-[1.02] text-white">
+      Where budget meets comfort
+    </h3>
+    <p className="relative mt-2 text-[12.5px] text-white/50">Handpicked stays across India · all-inclusive pricing</p>
+
+    {/* search bar */}
+    <div className="relative mt-5 flex items-stretch gap-2 rounded-xl border border-white/10 bg-black/40 p-2 backdrop-blur-sm">
+      {[
+        { l: 'Destination', v: 'Where are you going?' },
+        { l: 'Check-in', v: 'Add dates' },
+        { l: 'Check-out', v: 'Add dates' },
+        { l: 'Guests', v: '2 Guests, 1 Room' },
+      ].map((f) => (
+        <div key={f.l} className="min-w-0 flex-1 rounded-lg bg-white/[0.04] px-3 py-2">
+          <span className="block text-[9px] uppercase tracking-wide text-white/40">{f.l}</span>
+          <span className="mt-0.5 block truncate text-[11px] text-white/70">{f.v}</span>
+        </div>
+      ))}
+      <button
+        type="button"
+        aria-label="Search stays"
+        className="flex shrink-0 items-center justify-center rounded-lg bg-gradient-to-r from-[#ff2f86] to-[#a855f7] px-4"
+      >
+        <Search className="h-4 w-4 text-white" />
+      </button>
+    </div>
+
+    {/* popular destinations */}
+    <div className="relative mt-6 flex items-center justify-between">
+      <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/55">Popular Destinations</span>
+      <span className="text-[11px] text-[#f0abfc]">View all</span>
+    </div>
+
+    <div className="relative mt-3 flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      {HERO_DESTINATIONS.map((d) => (
+        <div
+          key={d.city}
+          className="relative aspect-[3/4] w-[30%] shrink-0 overflow-hidden rounded-xl border border-white/10 bg-[linear-gradient(160deg,#1a1326,#0a0710)] lg:w-auto lg:flex-1"
+        >
+          <img
+            src={d.img}
+            alt={d.city}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={(e) => {
+              e.currentTarget.style.display = 'none';
+            }}
+            className="absolute inset-0 h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 p-2.5">
+            <p className="text-[12px] font-semibold leading-tight text-white">{d.city}</p>
+            <p className="text-[9.5px] text-white/60">{d.stays}</p>
+          </div>
+        </div>
+      ))}
     </div>
   </div>
 );
@@ -168,7 +230,7 @@ export const SnapshotStrip: React.FC<{ cs: CaseStudy; reduced: boolean | null }>
 // ── 3. The Challenge ────────────────────────────────────────────────────────────
 
 export const Challenge: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => (
-  <section className={`${SECTION} py-16 md:py-24`}>
+  <section id="case-study-details" className={`${SECTION} py-16 md:py-24`}>
     <div className={`${SHELL} max-w-5xl`}>
       <motion.div {...reveal(reduced)} className="flex flex-col gap-1 sm:flex-row sm:items-start sm:gap-8">
         <div className="shrink-0">
