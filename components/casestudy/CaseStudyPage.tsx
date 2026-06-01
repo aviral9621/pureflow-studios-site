@@ -35,6 +35,18 @@ export const CaseStudyPage: React.FC<Props> = ({ caseStudy, onViewChange }) => {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-black text-white">
+      {/* Seamless top ambient glow — originates above the viewport and fades
+          down, so the nav, back-link and hero blend with no black/gradient seam. */}
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-[900px]" aria-hidden="true">
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(135% 95% at 50% -18%, rgba(164,82,255,0.22) 0%, rgba(217,70,239,0.08) 40%, transparent 72%)',
+          }}
+        />
+      </div>
+
       {/* Back to all work */}
       <div className="relative z-10 mx-auto max-w-7xl px-5 pt-20 sm:px-6 lg:px-10">
         <button

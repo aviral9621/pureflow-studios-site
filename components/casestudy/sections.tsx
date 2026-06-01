@@ -52,12 +52,11 @@ const scrollToDetails = () =>
 
 export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => (
   <section className={`${SECTION} pt-3 pb-10 md:pt-4 md:pb-14`}>
-    {/* Ambient purple glow + subtle grid */}
+    {/* Subtle grid texture only — the purple ambient glow is rendered at the
+        page level so it flows seamlessly from the nav down (no hard seam). */}
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
-      <div className="absolute -top-24 left-[6%] h-[560px] w-[560px] rounded-full bg-[#a452ff]/12 blur-[150px]" />
-      <div className="absolute top-10 right-[2%] h-[440px] w-[440px] rounded-full bg-[#ff20a0]/10 blur-[150px]" />
       <div
-        className="absolute inset-0 opacity-[0.35]"
+        className="absolute inset-0 opacity-[0.3]"
         style={{
           backgroundImage:
             'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
@@ -68,9 +67,9 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
       />
     </div>
 
-    <div className={`${SHELL} relative grid items-center gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12`}>
-      {/* Left — copy */}
-      <motion.div {...reveal(reduced)}>
+    <div className={`${SHELL} relative grid items-center gap-8 sm:gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-12`}>
+      {/* Left — copy (below the preview on mobile, left on desktop) */}
+      <motion.div {...reveal(reduced)} className="order-2 lg:order-1">
         <span className="inline-flex items-center rounded-full border border-[#d946ef]/30 bg-[#d946ef]/10 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#f0abfc]">
           {cs.category}
         </span>
@@ -98,8 +97,9 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
         </div>
       </motion.div>
 
-      {/* Right — the real Quick Hotels site, live in a browser frame */}
-      <motion.div {...reveal(reduced, 0.12)} className="relative">
+      {/* Right — the real Quick Hotels site, live in a browser frame
+          (on top on mobile, right column on desktop) */}
+      <motion.div {...reveal(reduced, 0.12)} className="relative order-1 lg:order-2">
         <LiveDeviceEmbed
           device="browser"
           showcase={cs.showcase.desktop}
