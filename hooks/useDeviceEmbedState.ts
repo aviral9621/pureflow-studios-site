@@ -13,16 +13,31 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 //   interacting → user clicked the guard; iframe pointer-events:auto
 // ─────────────────────────────────────────────────────────────────────────────
 
-// Stagger the START of each embed's load by GAP ms so concurrent external-site
-// loads don't contend for bandwidth (keeps the page responsive).
-const GAP_MS = 550;
-let lastGrantAt = 0;
+// Stagger the START of a *simultaneous burst* of embeds (e.g. 3 cards on the
+// Work listing) so they don't all fetch external sites at once. Uses a live
+// pending counter — the first embed in view loads immediately, and the counter
+// drains as loads start, so a lone embed (e.g. a detail-page hero) is never
+// delayed and the stagger never accumulates across page navigations.
+const GAP_MS = 400;
+let pending = 0;
 function scheduleGrant(grant: () => void): () => void {
-  const now = Date.now();
-  const at = Math.max(now, lastGrantAt + GAP_MS);
-  lastGrantAt = at;
-  const id = window.setTimeout(grant, Math.max(0, at - now));
-  return () => window.clearTimeout(id);
+  const delay = pending * GAP_MS;
+  pending += 1;
+  let settled = false;
+  const settle = () => {
+    if (!settled) {
+      settled = true;
+      pending = Math.max(0, pending - 1);
+    }
+  };
+  const id = window.setTimeout(() => {
+    settle();
+    grant();
+  }, delay);
+  return () => {
+    window.clearTimeout(id);
+    settle();
+  };
 }
 
 interface Options {
