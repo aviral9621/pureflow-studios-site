@@ -22,6 +22,8 @@ interface LiveDeviceEmbedProps {
   label: string;
   /** Site name shown on the poster, e.g. "Quick Hotels". */
   siteName: string;
+  /** Optional host shown in the browser-frame address bar (overrides liveUrl). */
+  urlHost?: string;
   /**
    * When false the laptop renders poster-only (no iframe) — used on small
    * screens to save bandwidth. Defaults to true.
@@ -49,6 +51,7 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
   siteName,
   eager = true,
   nonInteractive = false,
+  urlHost,
 }) => {
   const logical = LOGICAL[device];
   // `interactive` here means "load the live iframe at all" (eager + live).
@@ -59,13 +62,15 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
   const { containerRef, shouldLoad, loaded, interacting, stalled, onLoad, startInteract, endInteract } =
     useDeviceEmbedState({ enabled: interactive });
 
-  const host = (() => {
-    try {
-      return new URL(liveUrl).host;
-    } catch {
-      return liveUrl.replace(/^https?:\/\//, '');
-    }
-  })();
+  const host =
+    urlHost ||
+    (() => {
+      try {
+        return new URL(liveUrl).host;
+      } catch {
+        return liveUrl.replace(/^https?:\/\//, '');
+      }
+    })();
 
   // The scaled iframe (or static fallback) that lives inside a device "screen".
   const screen = (

@@ -138,7 +138,7 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
       <motion.div {...reveal(reduced, 0.12)} className="relative order-1 lg:order-2">
         <LiveDeviceEmbed
           device="browser"
-          showcase={cs.showcase.desktop}
+          showcase={cs.hero?.image ? { type: 'image' as const, src: cs.hero.image } : cs.showcase.desktop}
           liveUrl={cs.liveUrl || cs.showcase.desktop.src}
           label="Live site"
           siteName={cs.name}

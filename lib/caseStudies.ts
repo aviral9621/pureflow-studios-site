@@ -34,9 +34,9 @@ export interface CaseStudy {
   category: string;          // hero pill + Work filter tag, e.g. "Hospitality"
   liveUrl: string;           // full URL incl. https://
 
-  /** Optional hero extras: feature bullets + a custom CTA label (e.g. a product
-   *  like UnSkills CRM that shows a feature list and a "Request a Demo" button). */
-  hero?: { poster?: string; bullets?: string[]; ctaLabel?: string };
+  /** Optional hero extras: a static image to show in the hero browser frame
+   *  (instead of the live/mockup showcase), feature bullets + a custom CTA. */
+  hero?: { poster?: string; image?: string; bullets?: string[]; ctaLabel?: string };
 
   /** How this project appears as a card in the Work listing / homepage. */
   card?: {
@@ -315,6 +315,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     liveUrl: '',
 
     hero: {
+      image: '/unskill%20crm%20dash.png',
       bullets: [
         'Centralized Lead & Enquiry Management',
         'Admission & Student Management',
