@@ -244,15 +244,19 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
       {!nonInteractive && (
         <div className="mt-4 flex items-center gap-3">
           <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/45">{label}</span>
-          <span className="h-3 w-px bg-white/15" />
-          <a
-            href={liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-[12px] font-medium text-white/65 transition-colors hover:text-white"
-          >
-            Open live site <ExternalLink className="h-3 w-3" />
-          </a>
+          {liveUrl && (
+            <>
+              <span className="h-3 w-px bg-white/15" />
+              <a
+                href={liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1 text-[12px] font-medium text-white/65 transition-colors hover:text-white"
+              >
+                Open live site <ExternalLink className="h-3 w-3" />
+              </a>
+            </>
+          )}
         </div>
       )}
 

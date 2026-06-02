@@ -347,8 +347,10 @@ export const TechStack: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = (
 // ── 6. Visual Showcase (live embeds) ────────────────────────────────────────────
 
 export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => {
-  // The live laptop/phone showcase only applies to projects with a live site.
-  if (cs.showcase.desktop.type !== 'live') return null;
+  const kind = cs.showcase.desktop.type;
+  // Show the laptop+phone showcase for live sites and designed mockups.
+  if (kind !== 'live' && kind !== 'mockup') return null;
+  const isLive = kind === 'live';
 
   return (
     <section className={`${SECTION} py-16 md:py-24`}>
@@ -362,7 +364,9 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
             Visual Showcase
           </h2>
           <p className="mx-auto mt-3 max-w-md text-[14px] text-white/55">
-            The real {cs.name} site — live inside the frames. Click in to scroll and explore.
+            {isLive
+              ? `The real ${cs.name} site — live inside the frames. Click in to scroll and explore.`
+              : `A look at the ${cs.name} — on desktop and mobile.`}
           </p>
         </motion.div>
 
