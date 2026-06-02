@@ -78,20 +78,26 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
         </h1>
         <p className="mt-5 max-w-md text-[15px] leading-relaxed text-white/60 sm:text-base">{cs.tagline}</p>
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          <a
-            href={cs.liveUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]"
-          >
-            View Live Site
-            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </a>
+          {cs.liveUrl && (
+            <a
+              href={cs.liveUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]"
+            >
+              View Live Site
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </a>
+          )}
           <button
             onClick={scrollToDetails}
-            className="inline-flex h-12 items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-7 text-[14px] font-semibold text-white/90 transition-colors hover:border-white/30 hover:bg-white/[0.08]"
+            className={
+              cs.liveUrl
+                ? 'inline-flex h-12 items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-7 text-[14px] font-semibold text-white/90 transition-colors hover:border-white/30 hover:bg-white/[0.08]'
+                : 'group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]'
+            }
           >
-            Case Study
+            {cs.liveUrl ? 'Case Study' : 'Explore Case Study'}
             <FileText className="h-4 w-4" />
           </button>
         </div>
@@ -103,7 +109,7 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
         <LiveDeviceEmbed
           device="browser"
           showcase={cs.showcase.desktop}
-          liveUrl={cs.liveUrl}
+          liveUrl={cs.liveUrl || cs.showcase.desktop.src}
           label="Live site"
           siteName={cs.name}
           nonInteractive
@@ -302,6 +308,9 @@ export const TechStack: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = (
 // ── 6. Visual Showcase (live embeds) ────────────────────────────────────────────
 
 export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => {
+  // The live laptop/phone showcase only applies to projects with a live site.
+  if (cs.showcase.desktop.type !== 'live') return null;
+
   return (
     <section className={`${SECTION} py-16 md:py-24`}>
       <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">

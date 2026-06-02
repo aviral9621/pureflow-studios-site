@@ -5,6 +5,7 @@ import { MagneticButton } from '../shared/MagneticButton';
 import { useFeaturedProjects, type Project } from '../../hooks/useProjects';
 import { ProjectImageCarousel } from './ProjectImageCarousel';
 import { LiveCardPreview } from './LiveCardPreview';
+import { AiDashboardMockup } from '../casestudy/AiDashboardMockup';
 
 // ─── Browser chrome mockup ──────────────────────────────────────────────────
 
@@ -102,6 +103,8 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
         </div>
         {project.images.length > 0 ? (
           <ProjectImageCarousel images={project.images} intervalMs={4500} />
+        ) : project.cardMockup === 'ai-dashboard' ? (
+          <AiDashboardMockup />
         ) : project.previewUrl ? (
           <LiveCardPreview url={project.previewUrl} siteName={project.client.split('·')[0].trim()} />
         ) : (

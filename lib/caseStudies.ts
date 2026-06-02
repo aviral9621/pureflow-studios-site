@@ -11,12 +11,18 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type DeviceShowcase = {
-  /** 'live' embeds the real site in an iframe; 'video'/'image' are fallbacks. */
-  type: 'live' | 'video' | 'image';
-  /** Live URL, video file, or image path. */
+  /**
+   * 'live' embeds the real site in an iframe; 'video'/'image' are fallbacks;
+   * 'mockup' renders a designed in-app UI component (for products with no
+   * public live URL).
+   */
+  type: 'live' | 'video' | 'image' | 'mockup';
+  /** Live URL, video file, image path, or (for mockup) a display URL. */
   src: string;
   /** Optional poster screenshot shown before a live/video embed loads. */
   poster?: string;
+  /** For type 'mockup': which designed mockup component to render. */
+  mockup?: 'ai-dashboard';
 };
 
 export interface CaseStudy {
@@ -39,6 +45,8 @@ export interface CaseStudy {
     /** Tailwind gradient classes for the placeholder card mockup. */
     from?: string;
     to?: string;
+    /** Render a designed mockup as the card preview (no live URL needed). */
+    mockup?: 'ai-dashboard';
   };
 
   snapshot: {
@@ -146,6 +154,152 @@ export const CASE_STUDIES: CaseStudy[] = [
     outcome:
       'A single connected platform that runs bookings and operations — with zero pricing surprises.',
     outcomeHighlight: 'surprises',
+
+    metrics: [],
+    testimonial: null,
+  },
+
+  // ── Herbal Vantage — premium herbal e-commerce (live) ──────────────────────
+  {
+    slug: 'herbal-vantage',
+    name: 'Herbal Vantage',
+    tagline: 'A premium herbal store experience — luxury wellness commerce, end to end.',
+    category: 'Herbal & Wellness',
+    liveUrl: 'https://herbal-vantage-website.vercel.app/products',
+
+    card: {
+      title: 'Premium Herbal Store Experience',
+      description:
+        'Modern herbal e-commerce with a luxury product showcase, smooth shopping flow, clean UI and a conversion-focused design system.',
+      year: '2026',
+      from: 'from-emerald-950/70',
+      to: 'to-purple-950/50',
+    },
+
+    snapshot: {
+      client: 'Herbal Vantage',
+      industry: 'Herbal & Wellness',
+      services: 'Product Design · Web Dev · E-commerce',
+      platforms: 'E-commerce Website',
+      timeline: '5 weeks',
+      stack: 'Next.js · Tailwind · Vercel',
+    },
+
+    challenge:
+      'Herbal Vantage sells premium wellness and herbal products that live or die on how trustworthy and premium the storefront feels. They needed an online store that looked as refined as the products themselves — a luxury showcase with a fast, frictionless path from browsing to checkout — without the clutter and template feel of typical e-commerce builds.',
+
+    whatWeBuilt: [
+      {
+        title: 'Luxury Storefront',
+        icon: 'globe',
+        items: [
+          'Editorial product showcase with rich imagery and clean typography',
+          'Fast, mobile-first browsing across the full catalogue',
+          'Clear product detail pages built to build trust and intent',
+          'A cohesive, premium design system applied end to end',
+        ],
+      },
+      {
+        title: 'Conversion & Commerce',
+        icon: 'dashboard',
+        items: [
+          'A streamlined, low-friction add-to-cart and checkout flow',
+          'Considered layout and CTAs to guide buyers to purchase',
+          'Reusable components for quick catalogue and campaign updates',
+          'Optimised, globally delivered front end for speed',
+        ],
+      },
+    ],
+
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'React', logo: 'react' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+      { name: 'Vercel', logo: 'vercel' },
+    ],
+
+    showcase: {
+      desktop: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/products' },
+      mobile: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/products' },
+    },
+
+    outcome:
+      'A storefront that feels as premium as the products — turning browsers into confident buyers.',
+    outcomeHighlight: 'confident buyers',
+
+    metrics: [],
+    testimonial: null,
+  },
+
+  // ── AI Workflow System — AI automation product (designed mockup) ───────────
+  {
+    slug: 'ai-workflow-system',
+    name: 'AI Workflow System',
+    tagline: 'An AI automation platform that turns busywork into self-running workflows.',
+    category: 'AI Automation',
+    liveUrl: '',
+
+    card: {
+      title: 'AI Workflow Management System',
+      description:
+        'Advanced automation platform with smart analytics, AI workflow tracking, team collaboration tools and a real-time insights dashboard.',
+      year: '2026',
+      from: 'from-indigo-950/70',
+      to: 'to-fuchsia-950/50',
+      mockup: 'ai-dashboard',
+    },
+
+    snapshot: {
+      client: 'PureFlow Labs',
+      industry: 'AI Automation',
+      services: 'Product Design · Web Dev · AI',
+      platforms: 'Web App',
+      timeline: '8 weeks',
+      stack: 'Next.js · Supabase · AI',
+    },
+
+    challenge:
+      'Operations teams lose hours to repetitive, manual steps scattered across tools — and have no single view of what is actually running. The goal was an automation platform where workflows run themselves, progress is tracked in real time, and the whole team works from one clear, intelligent dashboard.',
+
+    whatWeBuilt: [
+      {
+        title: 'Automation Engine',
+        icon: 'dashboard',
+        items: [
+          'Visual, node-based workflow builder for automating multi-step tasks',
+          'AI-assisted steps that classify, summarise and route work',
+          'Live workflow tracking with status across every run',
+          'Triggers and schedules so processes run without babysitting',
+        ],
+      },
+      {
+        title: 'Insights & Collaboration',
+        icon: 'globe',
+        items: [
+          'Real-time analytics dashboard with smart, glanceable metrics',
+          'Team collaboration, roles and shared workspaces',
+          'Trend and performance charts to spot bottlenecks fast',
+          'A clean dark glassmorphism interface built for focus',
+        ],
+      },
+    ],
+
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'React', logo: 'react' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+      { name: 'Vercel', logo: 'vercel' },
+    ],
+
+    showcase: {
+      desktop: { type: 'mockup', src: 'https://app.pureflow.studio', mockup: 'ai-dashboard' },
+      mobile: { type: 'mockup', src: 'https://app.pureflow.studio', mockup: 'ai-dashboard' },
+    },
+
+    outcome:
+      'Repetitive work runs itself — with one intelligent dashboard keeping the whole team in flow.',
+    outcomeHighlight: 'in flow',
 
     metrics: [],
     testimonial: null,

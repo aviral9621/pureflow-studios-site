@@ -60,6 +60,8 @@ export interface Project {
   published: boolean;
   /** Optional live URL to embed as the card thumbnail (structured case studies). */
   previewUrl?: string;
+  /** Optional designed mockup to render as the card thumbnail. */
+  cardMockup?: 'ai-dashboard';
 }
 
 // Map a fallback LegacyProject to the new shape (no images, no slug → derived)
@@ -105,6 +107,7 @@ const fromCaseStudy = (cs: CaseStudy, idx: number): Project => ({
   display_order: idx - 1000, // sort structured case studies first
   published: true,
   previewUrl: cs.showcase?.desktop?.type === 'live' ? cs.showcase.desktop.src : undefined,
+  cardMockup: cs.card?.mockup,
 });
 
 // Structured case studies always appear in the listing (DB-independent) and take
