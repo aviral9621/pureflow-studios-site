@@ -61,11 +61,7 @@ export interface Project {
   /** Optional live URL to embed as the card thumbnail (structured case studies). */
   previewUrl?: string;
   /** Optional designed mockup to render as the card thumbnail. */
-  cardMockup?: 'ai-dashboard' | 'herbal-crm';
-  /** Optional secondary badge on the card preview (e.g. "MLM Platform"). */
-  badge2?: string;
-  /** Render the card's "View case study" CTA in gold. */
-  ctaGold?: boolean;
+  cardMockup?: 'ai-dashboard';
 }
 
 // Map a fallback LegacyProject to the new shape (no images, no slug → derived)
@@ -112,8 +108,6 @@ const fromCaseStudy = (cs: CaseStudy, idx: number): Project => ({
   published: true,
   previewUrl: cs.showcase?.desktop?.type === 'live' ? cs.showcase.desktop.src : undefined,
   cardMockup: cs.card?.mockup,
-  badge2: cs.card?.badge2,
-  ctaGold: cs.card?.ctaGold,
 });
 
 // Structured case studies always appear in the listing (DB-independent) and take

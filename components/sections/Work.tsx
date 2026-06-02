@@ -5,7 +5,7 @@ import { MagneticButton } from '../shared/MagneticButton';
 import { useFeaturedProjects, type Project } from '../../hooks/useProjects';
 import { ProjectImageCarousel } from './ProjectImageCarousel';
 import { LiveCardPreview } from './LiveCardPreview';
-import { Mockup } from '../casestudy/Mockup';
+import { AiDashboardMockup } from '../casestudy/AiDashboardMockup';
 
 // ─── Browser chrome mockup ──────────────────────────────────────────────────
 
@@ -101,15 +101,10 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
         <div className="absolute top-2.5 left-2.5 z-20 rounded-full border border-white/10 bg-black/60 px-2 py-0.5 font-mono text-[9px] text-white/60 backdrop-blur-sm sm:top-3 sm:left-3 sm:px-2.5 sm:text-[10px]">
           {project.year} · {project.category}
         </div>
-        {project.badge2 && (
-          <div className="absolute top-2.5 right-2.5 z-20 rounded-full border border-[#86bf54]/30 bg-[#0c0f0a]/70 px-2 py-0.5 font-mono text-[9px] text-[#bfe39a] backdrop-blur-sm sm:top-3 sm:right-3 sm:px-2.5 sm:text-[10px]">
-            {project.badge2}
-          </div>
-        )}
         {project.images.length > 0 ? (
           <ProjectImageCarousel images={project.images} intervalMs={4500} />
-        ) : project.cardMockup ? (
-          <Mockup kind={project.cardMockup} />
+        ) : project.cardMockup === 'ai-dashboard' ? (
+          <AiDashboardMockup />
         ) : project.previewUrl ? (
           <LiveCardPreview url={project.previewUrl} siteName={project.client.split('·')[0].trim()} />
         ) : (
@@ -142,11 +137,7 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
           ))}
         </div>
 
-        <span
-          className={`mt-4 inline-flex items-center gap-1.5 self-start text-[11px] font-medium transition-colors duration-200 sm:text-xs ${
-            project.ctaGold ? 'text-[#d4a843] group-hover:text-[#e9c476]' : 'text-white/55 group-hover:text-white'
-          }`}
-        >
+        <span className="mt-4 inline-flex items-center gap-1.5 self-start text-[11px] font-medium text-white/55 transition-colors duration-200 group-hover:text-white sm:text-xs">
           View case study
           <ArrowUpRight className="h-3 w-3 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 sm:h-3.5 sm:w-3.5" />
         </span>

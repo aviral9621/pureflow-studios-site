@@ -3,7 +3,7 @@ import { ExternalLink, MousePointerClick, Loader2, Wifi } from 'lucide-react';
 import type { DeviceShowcase } from '../../lib/caseStudies';
 import { useFitScale } from '../../hooks/useFitScale';
 import { useDeviceEmbedState } from '../../hooks/useDeviceEmbedState';
-import { Mockup } from './Mockup';
+import { AiDashboardMockup } from './AiDashboardMockup';
 
 // ─────────────────────────────────────────────────────────────────────────────
 // LiveDeviceEmbed — renders a real, interactive embed of a site inside a laptop
@@ -104,7 +104,7 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
       )}
 
       {/* Designed mockup (type: 'mockup') */}
-      {showcase.type === 'mockup' && showcase.mockup && <Mockup kind={showcase.mockup} />}
+      {showcase.type === 'mockup' && showcase.mockup === 'ai-dashboard' && <AiDashboardMockup />}
 
       {/* Video fallback (type: 'video') */}
       {showcase.type === 'video' && (
