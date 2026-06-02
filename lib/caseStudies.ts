@@ -231,75 +231,74 @@ export const CASE_STUDIES: CaseStudy[] = [
     testimonial: null,
   },
 
-  // ── AI Workflow System — AI automation product (designed mockup) ───────────
+  // ── Spectrum Tour & Travels — travel booking website (live) ────────────────
   {
-    slug: 'ai-workflow-system',
-    name: 'AI Workflow System',
-    tagline: 'An AI automation platform that turns busywork into self-running workflows.',
-    category: 'AI Automation',
-    liveUrl: '',
+    slug: 'spectrum-tour-travels',
+    matchSlugs: ['ai-workflow-system'],
+    name: 'Spectrum Tour & Travels',
+    tagline: 'A complete travel and tour booking experience — packages, enquiries and trips online.',
+    category: 'Travel & Tourism',
+    liveUrl: 'https://spectrumtourtravels.com/',
 
     card: {
-      title: 'AI Workflow Management System',
+      title: 'Travel & Tour Booking Website',
       description:
-        'Advanced automation platform with smart analytics, AI workflow tracking, team collaboration tools and a real-time insights dashboard.',
+        'A modern travel website with curated tour packages, destination showcases, a smooth enquiry-to-booking flow and a clean, trust-building design.',
       year: '2026',
-      from: 'from-indigo-950/70',
-      to: 'to-fuchsia-950/50',
-      mockup: 'ai-dashboard',
+      from: 'from-sky-950/70',
+      to: 'to-indigo-950/50',
     },
 
     snapshot: {
-      client: 'PureFlow Labs',
-      industry: 'AI Automation',
-      services: 'Product Design · Web Dev · AI',
-      platforms: 'Web App',
-      timeline: '8 weeks',
-      stack: 'Next.js · Supabase · AI',
+      client: 'Spectrum Tour & Travels',
+      industry: 'Travel & Tourism',
+      services: 'Product Design · Web Dev · SEO',
+      platforms: 'Website',
+      timeline: '4 weeks',
+      stack: 'Responsive Web · SEO',
     },
 
     challenge:
-      'Operations teams lose hours to repetitive, manual steps scattered across tools — and have no single view of what is actually running. The goal was an automation platform where workflows run themselves, progress is tracked in real time, and the whole team works from one clear, intelligent dashboard.',
+      'Spectrum Tour & Travels needed an online presence that turns browsers into enquiries — a fast, trustworthy website that showcases destinations and tour packages clearly and makes it effortless for travellers to reach out and book.',
 
     whatWeBuilt: [
       {
-        title: 'Automation Engine',
-        icon: 'dashboard',
+        title: 'Travel Storefront',
+        icon: 'globe',
         items: [
-          'Visual, node-based workflow builder for automating multi-step tasks',
-          'AI-assisted steps that classify, summarise and route work',
-          'Live workflow tracking with status across every run',
-          'Triggers and schedules so processes run without babysitting',
+          'Destination and tour-package showcase with rich imagery',
+          'Clear package detail pages built to inspire and inform',
+          'Fast, mobile-first browsing across every trip',
+          'A clean, trust-building design with strong calls to action',
         ],
       },
       {
-        title: 'Insights & Collaboration',
-        icon: 'globe',
+        title: 'Enquiries & Reach',
+        icon: 'dashboard',
         items: [
-          'Real-time analytics dashboard with smart, glanceable metrics',
-          'Team collaboration, roles and shared workspaces',
-          'Trend and performance charts to spot bottlenecks fast',
-          'A clean dark glassmorphism interface built for focus',
+          'A smooth enquiry-to-booking flow for travellers',
+          'Quick contact and WhatsApp paths to convert interest fast',
+          'SEO-ready structure to get found by the right travellers',
+          'Reusable sections for easy package and offer updates',
         ],
       },
     ],
 
     techStack: [
-      { name: 'Next.js', logo: 'nextjs' },
-      { name: 'React', logo: 'react' },
-      { name: 'Supabase', logo: 'supabase' },
-      { name: 'Tailwind CSS', logo: 'tailwind' },
-      { name: 'Vercel', logo: 'vercel' },
+      { name: 'Responsive Web', logo: '' },
+      { name: 'SEO', logo: '' },
+      { name: 'Tour Packages', logo: '' },
+      { name: 'Booking Enquiry', logo: '' },
     ],
 
     showcase: {
-      desktop: { type: 'mockup', src: 'https://app.pureflow.studio', mockup: 'ai-dashboard' },
-      mobile: { type: 'mockup', src: 'https://app.pureflow.studio', mockup: 'ai-dashboard' },
+      desktop: { type: 'live', src: 'https://spectrumtourtravels.com/' },
+      mobile: { type: 'live', src: 'https://spectrumtourtravels.com/' },
     },
 
     outcome:
-      'Repetitive work runs itself — with one intelligent dashboard keeping the whole team in flow.',
-    outcomeHighlight: 'in flow',
+      'A travel site that turns curious visitors into booked trips — clear, fast and trustworthy.',
+    outcomeHighlight: 'booked trips',
 
     metrics: [],
     testimonial: null,
