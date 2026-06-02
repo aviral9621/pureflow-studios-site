@@ -130,13 +130,13 @@ body {
 }
 
 .gradient-flow-text {
+  /* Static gradient (was an infinite animation that repainted on every card's
+     client name — costly when many cards are on screen). */
   background: linear-gradient(90deg, #A452FF 0%, #FF20A0 50%, #A452FF 100%);
-  background-size: 200% auto;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  animation: flowGradient 3s linear infinite;
 }
 
 /* ── Grain texture overlay ── */
@@ -237,23 +237,12 @@ body {
   background: rgba(38, 29, 24, 0.12) !important;
 }
 
-/* ── Smooth theme transitions ── */
-html, body, div, span, applet, object, iframe,
-h1, h2, h3, h4, h5, h6, p, blockquote, pre,
-a, abbr, acronym, address, big, cite, code,
-del, dfn, em, img, ins, kbd, q, s, samp,
-small, strike, strong, sub, sup, tt, var,
-b, u, i, center,
-dl, dt, dd, ol, ul, li,
-fieldset, form, label, legend,
-table, caption, tbody, tfoot, thead, tr, th, td,
-article, aside, canvas, details, embed,
-figure, figcaption, footer, header, hgroup,
-menu, nav, output, ruby, section, summary,
-time, mark, audio, video, button, input, textarea {
-  transition-property: background-color, border-color, color, fill, stroke, box-shadow;
-  transition-duration: 300ms;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+/* ── Smooth theme transitions ──
+   Previously applied a 300ms transition to nearly every element, which caused
+   layout/paint thrash on any change. Scoped to root surfaces only; component
+   hover transitions come from Tailwind `transition-*` utilities. */
+body {
+  transition: background-color 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ── Glass card ── */

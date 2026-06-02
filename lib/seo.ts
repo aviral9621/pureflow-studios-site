@@ -1,5 +1,8 @@
 import { useEffect } from 'react';
 import { ViewState } from '../types';
+import { viewToPath } from './router';
+import { getCaseStudyBySlug } from './caseStudies';
+import { findPost } from './blog';
 
 interface Meta {
   title: string;
@@ -7,6 +10,9 @@ interface Meta {
 }
 
 const SITE = 'Pureflow Studios';
+/** Canonical production domain (the custom domain to be connected on Vercel). */
+export const BASE_URL = 'https://pureflowdesigns.com';
+const DEFAULT_OG = `${BASE_URL}/logo/pureflow-favicon-512.png`;
 
 export const META: Record<ViewState, Meta> = {
   home: {
@@ -156,17 +162,100 @@ function setMeta(name: string, value: string, attr: 'name' | 'property' = 'name'
   el.setAttribute('content', value);
 }
 
-/** Updates <title>, description, OG, and Twitter meta tags when the view changes. */
-export function useDocumentMeta(view: ViewState) {
+function setCanonical(href: string) {
+  let el = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+  if (!el) {
+    el = document.createElement('link');
+    el.setAttribute('rel', 'canonical');
+    document.head.appendChild(el);
+  }
+  el.setAttribute('href', href);
+}
+
+function setRouteJsonLd(json: unknown) {
+  let el = document.getElementById('ld-route') as HTMLScriptElement | null;
+  if (!el) {
+    el = document.createElement('script');
+    el.type = 'application/ld+json';
+    el.id = 'ld-route';
+    document.head.appendChild(el);
+  }
+  el.textContent = JSON.stringify(json);
+}
+
+/**
+ * Resolve the final SEO fields for a route (view + optional slug). Shared shape
+ * so the build-time prerender script can mirror this logic.
+ */
+export function resolveMeta(view: ViewState, slug?: string | null) {
+  let m = META[view] ?? META.home;
+  let ogImage = DEFAULT_OG;
+  let extraJsonLd: Record<string, unknown> | null = null;
+
+  if (view === 'work-post' && slug) {
+    const cs = getCaseStudyBySlug(slug);
+    if (cs) {
+      m = { title: `${cs.name} — ${cs.category} Case Study | ${SITE}`, description: cs.tagline };
+      extraJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'CreativeWork',
+        name: cs.name,
+        about: cs.category,
+        description: cs.tagline,
+        url: `${BASE_URL}${viewToPath(view, slug)}`,
+        creator: { '@type': 'Organization', name: SITE },
+      };
+    }
+  } else if (view === 'blog-post' && slug) {
+    const p = findPost(slug);
+    if (p) {
+      m = { title: `${p.title} | ${SITE}`, description: p.excerpt };
+      ogImage = p.image || DEFAULT_OG;
+      extraJsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'BlogPosting',
+        headline: p.title,
+        description: p.excerpt,
+        image: p.image,
+        datePublished: p.date,
+        author: { '@type': 'Person', name: p.author },
+        publisher: { '@type': 'Organization', name: SITE },
+        url: `${BASE_URL}${viewToPath(view, slug)}`,
+        articleSection: p.category,
+      };
+    }
+  }
+
+  const url = `${BASE_URL}${viewToPath(view, slug)}`;
+  return { title: m.title, description: m.description, url, ogImage, extraJsonLd };
+}
+
+/** Updates <title>, description, canonical, OG/Twitter + JSON-LD when the route changes. */
+export function useDocumentMeta(view: ViewState, slug?: string | null) {
   useEffect(() => {
-    const m = META[view] ?? META.home;
-    document.title = m.title;
-    setMeta('description', m.description);
+    const { title, description, url, ogImage, extraJsonLd } = resolveMeta(view, slug);
 
-    setMeta('og:title', m.title, 'property');
-    setMeta('og:description', m.description, 'property');
+    document.title = title;
+    setMeta('description', description);
+    setCanonical(url);
 
-    setMeta('twitter:title', m.title);
-    setMeta('twitter:description', m.description);
-  }, [view]);
+    setMeta('og:title', title, 'property');
+    setMeta('og:description', description, 'property');
+    setMeta('og:url', url, 'property');
+    setMeta('og:image', ogImage, 'property');
+
+    setMeta('twitter:title', title);
+    setMeta('twitter:description', description);
+    setMeta('twitter:image', ogImage);
+
+    const breadcrumb = {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Home', item: BASE_URL },
+        { '@type': 'ListItem', position: 2, name: title.split(' — ')[0].split(' | ')[0], item: url },
+      ],
+    };
+    setRouteJsonLd(extraJsonLd ? [breadcrumb, extraJsonLd] : breadcrumb);
+  }, [view, slug]);
 }

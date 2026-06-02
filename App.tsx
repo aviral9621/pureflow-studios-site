@@ -6,6 +6,7 @@ import { ViewState } from './types';
 import { ThemeProvider } from './components/ThemeContext';
 import { useDocumentMeta } from './lib/seo';
 import { getCaseStudyBySlug } from './lib/caseStudies';
+import { pathToState, viewToPath } from './lib/router';
 
 const Footer = lazy(() =>
   import('./components/Footer').then((module) => ({ default: module.Footer }))
@@ -161,9 +162,18 @@ function LazySection({ children }: { children: React.ReactNode }) {
 }
 
 const AppContent: React.FC = () => {
-  const [currentView, setCurrentView] = useState<ViewState>('home');
-  const [selectedBlogSlug, setSelectedBlogSlug] = useState<string | null>(null);
-  useDocumentMeta(currentView);
+  const initialRoute = React.useMemo(
+    () =>
+      typeof window !== 'undefined'
+        ? pathToState(window.location.pathname)
+        : { view: 'home' as ViewState, slug: null },
+    []
+  );
+  const [currentView, setCurrentView] = useState<ViewState>(initialRoute.view);
+  const [selectedBlogSlug, setSelectedBlogSlug] = useState<string | null>(
+    initialRoute.view === 'blog-post' ? initialRoute.slug : null
+  );
+  const isPoppingRef = React.useRef(false);
   const viewHistoryRef = React.useRef<ViewState[]>([]);
   const shouldScrollToServicesRef = React.useRef(false);
 
@@ -175,7 +185,20 @@ const AppContent: React.FC = () => {
     }
   };
 
-  const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(null);
+  const [selectedProjectSlug, setSelectedProjectSlug] = useState<string | null>(
+    initialRoute.view === 'work-post' ? initialRoute.slug : null
+  );
+
+  // Per-page SEO meta (title/description/canonical/OG/JSON-LD), slug-aware.
+  useDocumentMeta(
+    currentView,
+    currentView === 'work-post'
+      ? selectedProjectSlug
+      : currentView === 'blog-post'
+        ? selectedBlogSlug
+        : null
+  );
+
   const handleOpenProject = (slug: string) => {
     setSelectedProjectSlug(slug);
     if (currentView !== 'work-post') {
@@ -201,6 +224,38 @@ const AppContent: React.FC = () => {
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView]);
+
+  // Keep the URL in sync with the current view/slug (History API). Skips the
+  // push when the change originated from a browser back/forward (popstate).
+  useEffect(() => {
+    if (isPoppingRef.current) {
+      isPoppingRef.current = false;
+      return;
+    }
+    const slug =
+      currentView === 'work-post'
+        ? selectedProjectSlug
+        : currentView === 'blog-post'
+          ? selectedBlogSlug
+          : null;
+    const path = viewToPath(currentView, slug);
+    if (window.location.pathname !== path) {
+      window.history.pushState({}, '', path);
+    }
+  }, [currentView, selectedProjectSlug, selectedBlogSlug]);
+
+  // Browser back/forward → derive the view/slug from the URL.
+  useEffect(() => {
+    const onPop = () => {
+      const s = pathToState(window.location.pathname);
+      isPoppingRef.current = true;
+      setSelectedProjectSlug(s.view === 'work-post' ? s.slug : null);
+      setSelectedBlogSlug(s.view === 'blog-post' ? s.slug : null);
+      setCurrentView(s.view);
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
 
   const navigateTo = (view: ViewState) => {
     if (view === currentView) return;

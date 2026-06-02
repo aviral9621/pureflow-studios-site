@@ -48,6 +48,13 @@ export function Hero({ onViewChange: _onViewChange, onOpenContact: _onOpenContac
   useEffect(() => {
     if (prefersReducedMotion) return;
 
+    // Skip the heavy background video on small screens, data-saver, or slow
+    // connections — the gradient/particle overlays already carry the hero.
+    const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const slowConnection = !!conn && (conn.saveData === true || /(^|-)(2g|slow-2g)$/.test(conn.effectiveType || ''));
+    const smallScreen = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
+    if (slowConnection || smallScreen) return;
+
     const load = () => setLoadVideo(true);
     const idleCallback = window.requestIdleCallback?.(load, { timeout: 1800 });
     const timeout = window.setTimeout(load, 2200);

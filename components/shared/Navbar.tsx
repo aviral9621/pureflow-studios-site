@@ -3,6 +3,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { Menu, X, ArrowUpRight, MessageCircle } from 'lucide-react';
 import { MagneticButton } from './MagneticButton';
 import { ViewState } from '../../types';
+import { viewToPath } from '../../lib/router';
 
 interface NavbarProps {
   currentView: ViewState;
@@ -76,6 +77,9 @@ export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContac
     setIsOpen(false);
   };
 
+  const hrefFor = (item: NavItem) =>
+    'view' in item ? viewToPath(item.view) : `/#${item.section}`;
+
   const goToStartProject = () => {
     setIsOpen(false);
     onViewChange('start-project');
@@ -94,20 +98,22 @@ export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContac
         }`}
       >
         <div className="mx-auto flex h-[72px] w-full items-center justify-between px-5 sm:px-6 md:h-[76px] md:px-7">
-          <button
-            onClick={() => onViewChange('home')}
+          <a
+            href="/"
+            onClick={(e) => { e.preventDefault(); onViewChange('home'); }}
             className="font-display text-[26px] leading-none tracking-[0.01em] text-white select-none transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#D946EF] focus-visible:ring-offset-2 focus-visible:ring-offset-black rounded-sm sm:text-[30px] md:text-[34px]"
             aria-label="PureFlow Studios - go to home"
           >
             PURE<span className="gradient-flow-text">FLOW</span> STUDIOS
-          </button>
+          </a>
 
           {!minimal && (
             <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-[42px] md:flex" aria-label="Primary">
               {navItems.map((item) => (
-                <button
+                <a
                   key={item.label}
-                  onClick={() => handleNav(item)}
+                  href={hrefFor(item)}
+                  onClick={(e) => { e.preventDefault(); handleNav(item); }}
                   className="group relative pb-4 text-[15px] font-medium leading-none text-white/90 transition-colors hover:text-white focus-visible:outline-none focus-visible:text-white"
                 >
                   {item.label}
@@ -115,7 +121,7 @@ export function Navbar({ currentView, onViewChange, onOpenContact: _onOpenContac
                     aria-hidden="true"
                     className="pointer-events-none absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] transition-transform duration-300 ease-out group-hover:scale-x-100 group-focus-visible:scale-x-100"
                   />
-                </button>
+                </a>
               ))}
             </nav>
           )}

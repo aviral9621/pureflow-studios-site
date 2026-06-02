@@ -39,18 +39,15 @@ export function useFitScale(logicalWidth: number): FitScale {
     if (!el) return;
     measure();
 
-    // ResizeObserver is the primary signal; a window-resize listener is kept as
-    // a fallback because some embedded webviews throttle RO callbacks.
-    let ro: ResizeObserver | null = null;
+    // ResizeObserver handles size changes (incl. viewport resizes that change
+    // the element). Fall back to a window-resize listener only when RO is absent.
     if ('ResizeObserver' in window) {
-      ro = new ResizeObserver(measure);
+      const ro = new ResizeObserver(measure);
       ro.observe(el);
+      return () => ro.disconnect();
     }
     window.addEventListener('resize', measure);
-    return () => {
-      ro?.disconnect();
-      window.removeEventListener('resize', measure);
-    };
+    return () => window.removeEventListener('resize', measure);
   }, [measure]);
 
   return { ref, scale, logicalWidth, logicalHeight };

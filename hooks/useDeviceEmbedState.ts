@@ -1,98 +1,95 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 // ─────────────────────────────────────────────────────────────────────────────
-// useDeviceEmbedState — lazy auto-load + interaction state machine for a live
-// device embed (laptop / phone iframe of a real site).
+// useDeviceEmbedState — lazy auto-load + interaction state for a live device
+// embed. Visibility is detected with IntersectionObserver only (passive — no
+// per-scroll layout reads, so it never causes scroll jank). When an embed comes
+// into view its load is scheduled through a small module-level stagger so
+// several embeds on one page don't all fetch external sites simultaneously.
 //
-//   idle        → device not yet in view; iframe has no `src` (zero network)
-//   loading     → in view; `src` attached, waiting for onLoad
-//   loaded      → onLoad fired; poster hidden, but a "Click to interact" guard
-//                 overlay sits on top and the iframe is pointer-events:none so
-//                 the embed never hijacks page scroll
-//   interacting → user clicked the guard; iframe is pointer-events:auto
-//
-// `enabled: false` keeps it permanently idle (used for the laptop on small
-// screens, where we show a poster only to save bandwidth).
+//   idle        → not in view; iframe has no `src` (zero network)
+//   loading     → in view + its turn; `src` attached, waiting for onLoad
+//   loaded      → onLoad fired; poster hidden
+//   interacting → user clicked the guard; iframe pointer-events:auto
 // ─────────────────────────────────────────────────────────────────────────────
 
+// Stagger the START of each embed's load by GAP ms so concurrent external-site
+// loads don't contend for bandwidth (keeps the page responsive).
+const GAP_MS = 550;
+let lastGrantAt = 0;
+function scheduleGrant(grant: () => void): () => void {
+  const now = Date.now();
+  const at = Math.max(now, lastGrantAt + GAP_MS);
+  lastGrantAt = at;
+  const id = window.setTimeout(grant, Math.max(0, at - now));
+  return () => window.clearTimeout(id);
+}
+
 interface Options {
-  enabled?: boolean;     // default true
-  rootMargin?: string;   // IntersectionObserver margin; default '200px 0px'
-  stallMs?: number;      // hint timeout; default 6000
+  enabled?: boolean;
+  rootMargin?: string;
+  stallMs?: number;
 }
 
 interface DeviceEmbedState {
   containerRef: React.RefObject<HTMLDivElement | null>;
-  shouldLoad: boolean;   // attach iframe src
+  shouldLoad: boolean;
   loaded: boolean;
   interacting: boolean;
-  stalled: boolean;      // load took too long — surface an "open live site" hint
+  stalled: boolean;
   onLoad: () => void;
   startInteract: () => void;
   endInteract: () => void;
 }
 
 export function useDeviceEmbedState(options: Options = {}): DeviceEmbedState {
-  const { enabled = true, rootMargin = '200px 0px', stallMs = 6000 } = options;
+  const { enabled = true, rootMargin = '300px 0px', stallMs = 8000 } = options;
 
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const [inView, setInView] = useState(false);
+  const [granted, setGranted] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [interacting, setInteracting] = useState(false);
   const [stalled, setStalled] = useState(false);
 
-  // Auto-load when the device scrolls into view. Uses IntersectionObserver as
-  // the primary signal, plus a getBoundingClientRect fallback on scroll/resize —
-  // some embedded webviews/headless renderers throttle IO callbacks, so the
-  // rect check guarantees the embed still loads when it reaches the viewport.
+  // Auto-load when the device scrolls into view (IntersectionObserver only).
   useEffect(() => {
     if (!enabled) return;
     const el = containerRef.current;
     if (!el) return;
 
-    let done = false;
-    const marginPx = parseInt(rootMargin, 10) || 200;
-
-    let cleanup = () => {};
-    const trigger = () => {
-      if (done) return;
-      done = true;
-      setInView(true);
-      cleanup();
+    let requested = false;
+    let cancelTimer: (() => void) | null = null;
+    const onInView = () => {
+      if (requested) return;
+      requested = true;
+      cancelTimer = scheduleGrant(() => setGranted(true));
     };
 
-    const check = () => {
-      const r = el.getBoundingClientRect();
-      const vh = window.innerHeight || document.documentElement.clientHeight;
-      if (r.top < vh + marginPx && r.bottom > -marginPx) trigger();
-    };
-
-    let io: IntersectionObserver | null = null;
-    if ('IntersectionObserver' in window) {
-      io = new IntersectionObserver(([entry]) => entry.isIntersecting && trigger(), { rootMargin });
-      io.observe(el);
+    if (!('IntersectionObserver' in window)) {
+      onInView();
+      return () => cancelTimer?.();
     }
 
-    const raf = requestAnimationFrame(check);
-    window.addEventListener('scroll', check, { passive: true });
-    window.addEventListener('resize', check);
-
-    cleanup = () => {
-      io?.disconnect();
-      cancelAnimationFrame(raf);
-      window.removeEventListener('scroll', check);
-      window.removeEventListener('resize', check);
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          onInView();
+          io.disconnect();
+        }
+      },
+      { rootMargin }
+    );
+    io.observe(el);
+    return () => {
+      io.disconnect();
+      cancelTimer?.();
     };
-
-    check();
-    return cleanup;
   }, [enabled, rootMargin]);
 
-  const shouldLoad = enabled && inView;
+  const shouldLoad = enabled && granted;
 
-  // While loading, start a stall timer that surfaces a fallback hint. A blocked
-  // cross-origin frame (X-Frame-Options) can't be detected directly, so this is
-  // a soft hint only — never gates the UI.
+  // Soft stall hint if a frame takes too long (e.g. framing blocked). Never
+  // gates the UI — a blocked cross-origin frame can't be detected directly.
   useEffect(() => {
     if (!shouldLoad || loaded) return;
     const t = window.setTimeout(() => setStalled(true), stallMs);
