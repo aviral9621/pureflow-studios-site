@@ -90,9 +90,9 @@ const PAGES = [
   { path: '/work/spectrum-tour-travels', priority: '0.9', h1: 'Spectrum Tour & Travels',
     title: `Spectrum Tour & Travels — Travel & Tourism Case Study | ${SITE}`,
     description: 'A complete travel and tour booking experience — packages, enquiries and trips online.' },
-  { path: '/work/unskills-computer-education-crm', priority: '0.9', h1: 'UnSkills Computer Education',
-    title: `UnSkills Computer Education — Custom CRM & ERP Case Study | ${SITE}`,
-    description: 'One platform that runs a 30+ branch, 7-state computer-education franchise — admissions, fees, exams, certificates and franchise rewards.' },
+  { path: '/work/unskills-computer-education-crm', priority: '0.9', h1: 'UnSkills CRM',
+    title: `UnSkills CRM — CRM for Educational Institutes | ${SITE}`,
+    description: 'A complete CRM for educational institutes — leads, admissions, fees, branches and student relationships streamlined into one real-time platform.' },
 
   // ── Blog posts ──
   { path: '/blog/google-gemini-omni-for-small-business', priority: '0.7',

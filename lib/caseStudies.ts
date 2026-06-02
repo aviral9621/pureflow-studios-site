@@ -34,8 +34,9 @@ export interface CaseStudy {
   category: string;          // hero pill + Work filter tag, e.g. "Hospitality"
   liveUrl: string;           // full URL incl. https://
 
-  /** Optional hero poster (decorative laptop). Falls back to a branded gradient. */
-  hero?: { poster?: string };
+  /** Optional hero extras: feature bullets + a custom CTA label (e.g. a product
+   *  like UnSkills CRM that shows a feature list and a "Request a Demo" button). */
+  hero?: { poster?: string; bullets?: string[]; ctaLabel?: string };
 
   /** How this project appears as a card in the Work listing / homepage. */
   card?: {
@@ -304,19 +305,30 @@ export const CASE_STUDIES: CaseStudy[] = [
     testimonial: null,
   },
 
-  // ── UnSkills — computer-education franchise CRM & ERP (designed mockup) ─────
+  // ── UnSkills CRM — CRM for educational institutes (designed mockup) ─────────
   {
     slug: 'unskills-computer-education-crm',
-    name: 'UnSkills Computer Education',
+    name: 'UnSkills CRM',
     tagline:
-      'One platform that runs a multi-state computer-education franchise — admissions to certificates.',
-    category: 'Custom CRM & ERP',
+      'A complete CRM solution for educational institutes to streamline leads, admissions, fees, and student relationships — all in one place.',
+    category: 'CRM Management',
     liveUrl: '',
 
+    hero: {
+      bullets: [
+        'Centralized Lead & Enquiry Management',
+        'Admission & Student Management',
+        'Fee & Collection Tracking',
+        'Task Automation & Follow-ups',
+        'Real-time Reports & Analytics',
+      ],
+      ctaLabel: 'Request a Demo',
+    },
+
     card: {
-      title: 'A full CRM that runs a national franchise',
+      title: 'A complete CRM for educational institutes',
       description:
-        '30+ branches across 7 states and 1,150+ students — admissions, fees, exams, certificates and franchise rewards in one platform.',
+        'Leads, admissions, fees, branches and student relationships — streamlined into one real-time platform with full reports and automation.',
       year: '2025',
       from: 'from-indigo-950/70',
       to: 'to-fuchsia-950/50',
@@ -324,46 +336,45 @@ export const CASE_STUDIES: CaseStudy[] = [
     },
 
     snapshot: {
-      client: 'UnSkills Computer Education',
-      industry: 'EdTech / Education',
-      services: 'Product Design · Web Dev · Custom CRM & ERP',
-      platforms: 'Admin CRM + Branch Portals',
-      timeline: '10 weeks',
-      stack: 'React 18 · TypeScript · Supabase',
+      client: 'UnSkills CRM',
+      industry: 'Education',
+      services: 'CRM Development',
+      platforms: 'Web',
+      timeline: '12 weeks',
+      stack: 'Next.js · Node.js · PostgreSQL · AWS',
     },
 
     challenge:
-      'UnSkills runs a fast-growing computer-education brand — 30+ branches across 7 states with 1,150+ students. Admissions, fees, batches, exams, certificates and franchise rewards lived in scattered spreadsheets and disconnected tools, with no single source of truth and constant double-entry across branches. They needed one connected system that keeps every branch consistent and gives the head office real-time control.',
+      'A multi-branch educational institute was running leads, admissions, fees and student records across spreadsheets, WhatsApp and disconnected tools — with no single view of enquiries, collections or branch performance. They needed one CRM that centralises the whole student lifecycle, automates follow-ups, and gives the head office real-time numbers across every branch.',
 
     whatWeBuilt: [
       {
-        title: 'Franchise & Branch CRM',
+        title: 'Leads, Admissions & Students',
         icon: 'dashboard',
         items: [
-          'Multi-branch admissions and student records in one place',
-          'Fee tracking and outstanding balances per student and branch',
-          'Batch and course management across every centre',
-          'Role-based access so each branch sees only its own data',
+          'Centralized lead & enquiry capture with status pipelines',
+          'Admission and student management across all branches',
+          'Task automation and follow-up reminders for staff',
+          'Role-based access and per-branch wallets & approvals',
         ],
       },
       {
-        title: 'Exams, Certificates & Rewards',
+        title: 'Fees, Reports & Automation',
         icon: 'globe',
         items: [
-          'Exam and result management with auto-generated marksheets',
-          'Branded certificates issued automatically on completion',
-          'Franchise reward and incentive tracking, end to end',
-          'A head-office dashboard with live numbers across all states',
+          'Fee, due, overdue and collection tracking in real time',
+          'Revenue, profit, expenses and discount analytics',
+          'Trial-class and conversion tracking, end to end',
+          'A live head-office dashboard across every branch',
         ],
       },
     ],
 
     techStack: [
-      { name: 'React 18', logo: 'react' },
-      { name: 'TypeScript', logo: '' },
-      { name: 'Vite', logo: '' },
-      { name: 'Tailwind CSS', logo: 'tailwind' },
-      { name: 'Supabase', logo: 'supabase' },
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Node.js', logo: '' },
+      { name: 'PostgreSQL', logo: '' },
+      { name: 'AWS', logo: '' },
     ],
 
     showcase: {
@@ -372,8 +383,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     },
 
     outcome:
-      'One connected platform runs 30+ branches across 7 states — admissions to certificates, all in sync.',
-    outcomeHighlight: 'all in sync',
+      'One CRM streamlines leads, admissions, fees and students — with real-time numbers across every branch.',
+    outcomeHighlight: 'real-time numbers',
 
     metrics: [],
     testimonial: null,

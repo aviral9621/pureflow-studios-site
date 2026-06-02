@@ -14,6 +14,7 @@ import {
   Layers,
   Quote,
   FileText,
+  CheckCircle2,
 } from 'lucide-react';
 import type { CaseStudy } from '../../lib/caseStudies';
 import { LiveDeviceEmbed } from './LiveDeviceEmbed';
@@ -77,29 +78,53 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
           {cs.name}
         </h1>
         <p className="mt-5 max-w-md text-[15px] leading-relaxed text-white/60 sm:text-base">{cs.tagline}</p>
+
+        {cs.hero?.bullets && cs.hero.bullets.length > 0 && (
+          <ul className="mt-6 space-y-2.5">
+            {cs.hero.bullets.map((b) => (
+              <li key={b} className="flex items-center gap-2.5 text-[14px] text-white/80 sm:text-[15px]">
+                <CheckCircle2 className="h-[18px] w-[18px] shrink-0 text-[#d946ef]" />
+                {b}
+              </li>
+            ))}
+          </ul>
+        )}
+
         <div className="mt-8 flex flex-wrap items-center gap-3">
-          {cs.liveUrl && (
+          {cs.hero?.ctaLabel ? (
             <a
-              href={cs.liveUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              href="/start-project"
               className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]"
             >
-              View Live Site
+              {cs.hero.ctaLabel}
               <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
             </a>
+          ) : (
+            <>
+              {cs.liveUrl && (
+                <a
+                  href={cs.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]"
+                >
+                  View Live Site
+                  <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+                </a>
+              )}
+              <button
+                onClick={scrollToDetails}
+                className={
+                  cs.liveUrl
+                    ? 'inline-flex h-12 items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-7 text-[14px] font-semibold text-white/90 transition-colors hover:border-white/30 hover:bg-white/[0.08]'
+                    : 'group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]'
+                }
+              >
+                {cs.liveUrl ? 'Case Study' : 'Explore Case Study'}
+                <FileText className="h-4 w-4" />
+              </button>
+            </>
           )}
-          <button
-            onClick={scrollToDetails}
-            className={
-              cs.liveUrl
-                ? 'inline-flex h-12 items-center gap-2.5 rounded-full border border-white/15 bg-white/[0.04] px-7 text-[14px] font-semibold text-white/90 transition-colors hover:border-white/30 hover:bg-white/[0.08]'
-                : 'group inline-flex h-12 items-center gap-2.5 rounded-full bg-gradient-to-r from-[#ff2f86] via-[#d946ef] to-[#a855f7] px-7 text-[14px] font-bold text-white shadow-[0_14px_50px_-12px_rgba(217,70,239,0.7)] transition-transform hover:scale-[1.03]'
-            }
-          >
-            {cs.liveUrl ? 'Case Study' : 'Explore Case Study'}
-            <FileText className="h-4 w-4" />
-          </button>
         </div>
       </motion.div>
 
