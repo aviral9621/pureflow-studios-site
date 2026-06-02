@@ -22,7 +22,7 @@ export type DeviceShowcase = {
   /** Optional poster screenshot shown before a live/video embed loads. */
   poster?: string;
   /** For type 'mockup': which designed mockup component to render. */
-  mockup?: 'ai-dashboard';
+  mockup?: 'ai-dashboard' | 'unskills-crm';
 };
 
 export interface CaseStudy {
@@ -46,7 +46,7 @@ export interface CaseStudy {
     from?: string;
     to?: string;
     /** Render a designed mockup as the card preview (no live URL needed). */
-    mockup?: 'ai-dashboard';
+    mockup?: 'ai-dashboard' | 'unskills-crm';
   };
 
   snapshot: {
@@ -299,6 +299,81 @@ export const CASE_STUDIES: CaseStudy[] = [
     outcome:
       'A travel site that turns curious visitors into booked trips — clear, fast and trustworthy.',
     outcomeHighlight: 'booked trips',
+
+    metrics: [],
+    testimonial: null,
+  },
+
+  // ── UnSkills — computer-education franchise CRM & ERP (designed mockup) ─────
+  {
+    slug: 'unskills-computer-education-crm',
+    name: 'UnSkills Computer Education',
+    tagline:
+      'One platform that runs a multi-state computer-education franchise — admissions to certificates.',
+    category: 'Custom CRM & ERP',
+    liveUrl: '',
+
+    card: {
+      title: 'A full CRM that runs a national franchise',
+      description:
+        '30+ branches across 7 states and 1,150+ students — admissions, fees, exams, certificates and franchise rewards in one platform.',
+      year: '2025',
+      from: 'from-indigo-950/70',
+      to: 'to-fuchsia-950/50',
+      mockup: 'unskills-crm',
+    },
+
+    snapshot: {
+      client: 'UnSkills Computer Education',
+      industry: 'EdTech / Education',
+      services: 'Product Design · Web Dev · Custom CRM & ERP',
+      platforms: 'Admin CRM + Branch Portals',
+      timeline: '10 weeks',
+      stack: 'React 18 · TypeScript · Supabase',
+    },
+
+    challenge:
+      'UnSkills runs a fast-growing computer-education brand — 30+ branches across 7 states with 1,150+ students. Admissions, fees, batches, exams, certificates and franchise rewards lived in scattered spreadsheets and disconnected tools, with no single source of truth and constant double-entry across branches. They needed one connected system that keeps every branch consistent and gives the head office real-time control.',
+
+    whatWeBuilt: [
+      {
+        title: 'Franchise & Branch CRM',
+        icon: 'dashboard',
+        items: [
+          'Multi-branch admissions and student records in one place',
+          'Fee tracking and outstanding balances per student and branch',
+          'Batch and course management across every centre',
+          'Role-based access so each branch sees only its own data',
+        ],
+      },
+      {
+        title: 'Exams, Certificates & Rewards',
+        icon: 'globe',
+        items: [
+          'Exam and result management with auto-generated marksheets',
+          'Branded certificates issued automatically on completion',
+          'Franchise reward and incentive tracking, end to end',
+          'A head-office dashboard with live numbers across all states',
+        ],
+      },
+    ],
+
+    techStack: [
+      { name: 'React 18', logo: 'react' },
+      { name: 'TypeScript', logo: '' },
+      { name: 'Vite', logo: '' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+      { name: 'Supabase', logo: 'supabase' },
+    ],
+
+    showcase: {
+      desktop: { type: 'mockup', src: 'https://crm.unskills.app', mockup: 'unskills-crm' },
+      mobile: { type: 'mockup', src: 'https://crm.unskills.app', mockup: 'unskills-crm' },
+    },
+
+    outcome:
+      'One connected platform runs 30+ branches across 7 states — admissions to certificates, all in sync.',
+    outcomeHighlight: 'all in sync',
 
     metrics: [],
     testimonial: null,
