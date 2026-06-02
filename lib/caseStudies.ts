@@ -165,7 +165,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     name: 'Herbal Vantage',
     tagline: 'A premium herbal store experience — luxury wellness commerce, end to end.',
     category: 'Herbal & Wellness',
-    liveUrl: 'https://herbal-vantage-website.vercel.app/products',
+    liveUrl: 'https://herbal-vantage-website.vercel.app/',
 
     card: {
       title: 'Premium Herbal Store Experience',
@@ -219,8 +219,8 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
 
     showcase: {
-      desktop: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/products' },
-      mobile: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/products' },
+      desktop: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/' },
+      mobile: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/' },
     },
 
     outcome:
