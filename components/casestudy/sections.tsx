@@ -366,7 +366,7 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
           <p className="mx-auto mt-3 max-w-md text-[14px] text-white/55">
             {isLive
               ? `The real ${cs.name} site — live inside the frames. Click in to scroll and explore.`
-              : `A look at the ${cs.name} — on desktop and mobile.`}
+              : `A closer look at the ${cs.name} dashboard.`}
           </p>
         </motion.div>
 
@@ -374,27 +374,30 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
           {...reveal(reduced, 0.1)}
           className="mt-12 flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-center lg:gap-10"
         >
-          {/* Laptop — real site in desktop layout, live at every width */}
-          <div className="order-2 w-full lg:order-1 lg:w-[60%]">
+          {/* Laptop — live site, or the project's screenshot for non-live work */}
+          <div className={`order-2 w-full lg:order-1 ${isLive ? 'lg:w-[60%]' : 'mx-auto lg:w-[82%] lg:max-w-[820px]'}`}>
             <LiveDeviceEmbed
               device="laptop"
-              showcase={cs.showcase.desktop}
+              showcase={cs.hero?.image ? { type: 'image' as const, src: cs.hero.image } : cs.showcase.desktop}
               liveUrl={cs.liveUrl}
               label="Desktop"
               siteName={cs.name}
             />
           </div>
 
-          {/* Phone — mobile layout (always interactive) */}
-          <div className="order-1 w-full lg:order-2 lg:w-[34%]">
-            <LiveDeviceEmbed
-              device="phone"
-              showcase={cs.showcase.mobile}
-              liveUrl={cs.liveUrl}
-              label="Mobile"
-              siteName={cs.name}
-            />
-          </div>
+          {/* Phone — only for live sites (real mobile layout). Non-live work has
+              no separate mobile screen, so it's a single laptop. */}
+          {isLive && (
+            <div className="order-1 w-full lg:order-2 lg:w-[34%]">
+              <LiveDeviceEmbed
+                device="phone"
+                showcase={cs.showcase.mobile}
+                liveUrl={cs.liveUrl}
+                label="Mobile"
+                siteName={cs.name}
+              />
+            </div>
+          )}
         </motion.div>
       </div>
     </section>
