@@ -103,9 +103,15 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
         />
       )}
 
-      {/* Static image fallback (type: 'image') */}
+      {/* Static image (type: 'image') — contain so nothing is cropped; white
+          letterbox bands blend with light dashboard screenshots. */}
       {showcase.type === 'image' && (
-        <img src={showcase.src} alt={`${siteName} — ${label}`} className="h-full w-full object-cover object-top" loading="lazy" />
+        <img
+          src={showcase.src}
+          alt={`${siteName} — ${label}`}
+          className="absolute inset-0 h-full w-full bg-white object-contain"
+          loading="lazy"
+        />
       )}
 
       {/* Designed mockup (type: 'mockup') */}
