@@ -15,6 +15,11 @@ import {
   Quote,
   FileText,
   CheckCircle2,
+  TrendingUp,
+  TrendingDown,
+  IndianRupee,
+  Wallet,
+  Users,
 } from 'lucide-react';
 import type { CaseStudy } from '../../lib/caseStudies';
 import { LiveDeviceEmbed } from './LiveDeviceEmbed';
@@ -204,6 +209,15 @@ export const Challenge: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = (
 const BUILT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   globe: Globe,
   dashboard: LayoutDashboard,
+};
+
+const METRIC_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  up: TrendingUp,
+  down: TrendingDown,
+  rupee: IndianRupee,
+  wallet: Wallet,
+  clock: Clock,
+  users: Users,
 };
 
 export const WhatWeBuilt: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => (
@@ -411,13 +425,20 @@ export const Outcome: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ 
       </p>
 
       {cs.metrics && cs.metrics.length > 0 && (
-        <div className="mt-12 grid w-full grid-cols-2 gap-3 sm:grid-cols-4">
-          {cs.metrics.map((m) => (
-            <div key={m.label} className="rounded-xl border border-white/10 bg-white/[0.025] p-4 text-center">
-              <p className="font-display text-[1.9rem] leading-none text-white">{m.value}</p>
-              <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.14em] text-white/45">{m.label}</p>
-            </div>
-          ))}
+        <div className="mt-12 grid w-full max-w-3xl grid-cols-2 gap-y-7 sm:grid-cols-4 sm:gap-y-0">
+          {cs.metrics.map((m, i) => {
+            const Icon = METRIC_ICONS[m.icon ?? ''] ?? TrendingUp;
+            return (
+              <div
+                key={m.label}
+                className={`flex flex-col items-center px-3 text-center ${i > 0 ? 'sm:border-l sm:border-white/10' : ''}`}
+              >
+                <Icon className="h-5 w-5 text-[#d946ef]" />
+                <p className="mt-2 gradient-text font-display text-[2rem] leading-none">{m.value}</p>
+                <p className="mt-1.5 text-[11px] leading-tight text-white/50">{m.label}</p>
+              </div>
+            );
+          })}
         </div>
       )}
     </motion.div>
@@ -432,7 +453,10 @@ export const Testimonial: React.FC<{ cs: CaseStudy; reduced: boolean | null }> =
   return (
     <section className={`${SECTION} py-16 md:py-20`}>
       <motion.div {...reveal(reduced)} className={`${SHELL} relative max-w-3xl text-center`}>
-        <Quote className="mx-auto h-9 w-9 text-[#d946ef]/60" />
+        <h2 className="font-display text-[clamp(2rem,4.5vw,3.2rem)] uppercase leading-none tracking-wide text-white">
+          What Our Client Says
+        </h2>
+        <Quote className="mx-auto mt-6 h-9 w-9 text-[#d946ef]/60" />
         <blockquote className="mt-5 font-serif text-[clamp(1.25rem,3vw,1.9rem)] italic leading-[1.5] text-white/90">
           “{t.quote}”
         </blockquote>
@@ -463,10 +487,10 @@ export const CaseStudyCTA: React.FC<{ reduced: boolean | null; onStart: () => vo
         }}
       />
       <h2 className="relative font-display text-[clamp(2rem,5vw,3.6rem)] uppercase leading-[1.02] tracking-wide text-white">
-        Running a hotel or hospitality business?
+        Want something like this for your business?
       </h2>
       <p className="relative mx-auto mt-4 max-w-xl text-[15px] leading-relaxed text-white/60">
-        We build booking platforms and management systems that just work — designed, developed and shipped end to end.
+        We design, build and ship custom software, CRMs, websites and apps — end to end.
       </p>
       <div className="relative mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row sm:gap-4">
         <button
@@ -476,14 +500,16 @@ export const CaseStudyCTA: React.FC<{ reduced: boolean | null; onStart: () => vo
           Start a project with PureFlow
           <ArrowRight className="h-4 w-4" />
         </button>
-        <a
-          href={liveUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-7 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.08]"
-        >
-          Visit live site <ExternalLink className="h-3.5 w-3.5" />
-        </a>
+        {liveUrl && (
+          <a
+            href={liveUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 items-center justify-center gap-2 rounded-full border border-white/20 bg-white/[0.04] px-7 text-[14px] font-semibold text-white transition-colors hover:bg-white/[0.08]"
+          >
+            Visit live site <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+        )}
       </div>
     </motion.div>
   </section>

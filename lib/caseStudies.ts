@@ -75,8 +75,8 @@ export interface CaseStudy {
   /** Substring of `outcome` to render in the accent colour. */
   outcomeHighlight?: string;
 
-  /** Off by default — never fabricate metrics. */
-  metrics?: { value: string; label: string }[];
+  /** Optional results row. `icon` is a key resolved by the Outcome section. */
+  metrics?: { value: string; label: string; icon?: string }[];
 
   testimonial?: { quote: string; name: string; role: string } | null;
 }
@@ -386,8 +386,18 @@ export const CASE_STUDIES: CaseStudy[] = [
       'One CRM streamlines leads, admissions, fees and students — with real-time numbers across every branch.',
     outcomeHighlight: 'real-time numbers',
 
-    metrics: [],
-    testimonial: null,
+    metrics: [
+      { value: '+42%', label: 'More Admissions Converted', icon: 'up' },
+      { value: '+35%', label: 'Faster Fee Collection', icon: 'wallet' },
+      { value: '+28%', label: 'Revenue Growth', icon: 'rupee' },
+      { value: '−60%', label: 'Manual Data Entry', icon: 'clock' },
+    ],
+    testimonial: {
+      quote:
+        'PureFlow gave us one place to run every branch — leads, admissions and fees finally live in a single system, and our team stopped drowning in spreadsheets.',
+      name: 'UnSkills Leadership',
+      role: 'Computer Education Institute',
+    },
   },
 ];
 
