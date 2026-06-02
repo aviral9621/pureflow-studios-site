@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import type { CaseStudy } from '../../lib/caseStudies';
 import { LiveDeviceEmbed } from './LiveDeviceEmbed';
+import { UnskillsShowcase } from './UnskillsShowcase';
 
 // ── Shared motion preset ──────────────────────────────────────────────────────
 
@@ -370,35 +371,26 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
           </p>
         </motion.div>
 
-        <motion.div
-          {...reveal(reduced, 0.1)}
-          className="mt-12 flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-center lg:gap-10"
-        >
-          {/* Laptop — live site, or the project's screenshot for non-live work */}
-          <div className={`order-2 w-full lg:order-1 ${isLive ? 'lg:w-[60%]' : 'mx-auto lg:w-[82%] lg:max-w-[820px]'}`}>
-            <LiveDeviceEmbed
-              device="laptop"
-              showcase={cs.hero?.image ? { type: 'image' as const, src: cs.hero.image } : cs.showcase.desktop}
-              liveUrl={cs.liveUrl}
-              label="Desktop"
-              siteName={cs.name}
-            />
-          </div>
-
-          {/* Phone — only for live sites (real mobile layout). Non-live work has
-              no separate mobile screen, so it's a single laptop. */}
-          {isLive && (
-            <div className="order-1 w-full lg:order-2 lg:w-[34%]">
-              <LiveDeviceEmbed
-                device="phone"
-                showcase={cs.showcase.mobile}
-                liveUrl={cs.liveUrl}
-                label="Mobile"
-                siteName={cs.name}
-              />
+        {isLive ? (
+          <motion.div
+            {...reveal(reduced, 0.1)}
+            className="mt-12 flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-center lg:gap-10"
+          >
+            {/* Laptop — real site in desktop layout */}
+            <div className="order-2 w-full lg:order-1 lg:w-[60%]">
+              <LiveDeviceEmbed device="laptop" showcase={cs.showcase.desktop} liveUrl={cs.liveUrl} label="Desktop" siteName={cs.name} />
             </div>
-          )}
-        </motion.div>
+            {/* Phone — real mobile layout */}
+            <div className="order-1 w-full lg:order-2 lg:w-[34%]">
+              <LiveDeviceEmbed device="phone" showcase={cs.showcase.mobile} liveUrl={cs.liveUrl} label="Mobile" siteName={cs.name} />
+            </div>
+          </motion.div>
+        ) : (
+          // Non-live (designed) work: a multi-device collage (phone + laptop + tablet).
+          <motion.div {...reveal(reduced, 0.1)}>
+            <UnskillsShowcase image={cs.hero?.image} />
+          </motion.div>
+        )}
       </div>
     </section>
   );
