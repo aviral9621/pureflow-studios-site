@@ -22,7 +22,7 @@ export type DeviceShowcase = {
   /** Optional poster screenshot shown before a live/video embed loads. */
   poster?: string;
   /** For type 'mockup': which designed mockup component to render. */
-  mockup?: 'ai-dashboard';
+  mockup?: 'ai-dashboard' | 'herbal-crm';
 };
 
 export interface CaseStudy {
@@ -46,7 +46,11 @@ export interface CaseStudy {
     from?: string;
     to?: string;
     /** Render a designed mockup as the card preview (no live URL needed). */
-    mockup?: 'ai-dashboard';
+    mockup?: 'ai-dashboard' | 'herbal-crm';
+    /** Optional secondary badge shown on the card preview (e.g. "MLM Platform"). */
+    badge2?: string;
+    /** Render the card's "View case study" CTA in gold. */
+    ctaGold?: boolean;
   };
 
   snapshot: {
@@ -159,73 +163,78 @@ export const CASE_STUDIES: CaseStudy[] = [
     testimonial: null,
   },
 
-  // ── Herbal Vantage — premium herbal e-commerce (live) ──────────────────────
+  // ── Herbal Vantage — herbal CRM & binary MLM platform (designed mockup) ─────
   {
     slug: 'herbal-vantage',
-    name: 'Herbal Vantage',
-    tagline: 'A premium herbal store experience — luxury wellness commerce, end to end.',
-    category: 'Herbal & Wellness',
-    liveUrl: 'https://herbal-vantage-website.vercel.app/',
+    name: 'Herbal Vantage CRM',
+    tagline:
+      'A herbal business CRM + binary MLM platform — inventory, commissions and control in one place.',
+    category: 'Herbal CRM & ERP',
+    liveUrl: '',
 
     card: {
-      title: 'Premium Herbal Store Experience',
+      title: 'Herbal Vantage CRM System',
       description:
-        'Modern herbal e-commerce with a luxury product showcase, smooth shopping flow, clean UI and a conversion-focused design system.',
+        'Advanced herbal business management CRM with inventory tracking, analytics dashboard, order management, customer insights and real-time operational control.',
       year: '2026',
       from: 'from-emerald-950/70',
-      to: 'to-purple-950/50',
+      to: 'to-yellow-900/50',
+      mockup: 'herbal-crm',
+      badge2: 'MLM Platform',
+      ctaGold: true,
     },
 
     snapshot: {
       client: 'Herbal Vantage',
       industry: 'Herbal & Wellness',
-      services: 'Product Design · Web Dev · E-commerce',
-      platforms: 'E-commerce Website',
-      timeline: '5 weeks',
-      stack: 'Next.js · Tailwind · Vercel',
+      services: 'Product Design · Web Dev · Custom CRM',
+      platforms: 'CRM + Admin Portal',
+      timeline: '9 weeks',
+      stack: 'Next.js · Supabase · Razorpay',
     },
 
     challenge:
-      'Herbal Vantage sells premium wellness and herbal products that live or die on how trustworthy and premium the storefront feels. They needed an online store that looked as refined as the products themselves — a luxury showcase with a fast, frictionless path from browsing to checkout — without the clutter and template feel of typical e-commerce builds.',
+      'Herbal Vantage runs a fast-growing herbal business on a binary MLM model — members, e-pins, packages, commissions, KYC and inventory all moving at once. Spreadsheets and disconnected tools couldn’t keep the math, payouts and compliance in sync. They needed one CRM that runs the whole operation: members and the binary tree, commission cycles, KYC approvals and live operational control.',
 
     whatWeBuilt: [
       {
-        title: 'Luxury Storefront',
-        icon: 'globe',
+        title: 'CRM & MLM Engine',
+        icon: 'dashboard',
         items: [
-          'Editorial product showcase with rich imagery and clean typography',
-          'Fast, mobile-first browsing across the full catalogue',
-          'Clear product detail pages built to build trust and intent',
-          'A cohesive, premium design system applied end to end',
+          'Member management with the full binary tree and PV tracking',
+          'E-Pin engine and package activation, end to end',
+          'Automated binary commission calculation and payout cycles',
+          'KYC workflow with review, approval and status tracking',
         ],
       },
       {
-        title: 'Conversion & Commerce',
-        icon: 'dashboard',
+        title: 'Operations & Insight',
+        icon: 'globe',
         items: [
-          'A streamlined, low-friction add-to-cart and checkout flow',
-          'Considered layout and CTAs to guide buyers to purchase',
-          'Reusable components for quick catalogue and campaign updates',
-          'Optimised, globally delivered front end for speed',
+          'Real-time dashboard — members, revenue, e-pins and KYC at a glance',
+          'Inventory and order management across the catalogue',
+          'Payments and invoices tracked against every member',
+          'Role-based admin access with a live activity feed',
         ],
       },
     ],
 
     techStack: [
-      { name: 'Next.js', logo: 'nextjs' },
-      { name: 'React', logo: 'react' },
-      { name: 'Tailwind CSS', logo: 'tailwind' },
-      { name: 'Vercel', logo: 'vercel' },
+      { name: 'Next.js 15', logo: 'nextjs' },
+      { name: 'Binary MLM', logo: '' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'KYC System', logo: '' },
+      { name: 'E-Pin Engine', logo: '' },
     ],
 
     showcase: {
-      desktop: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/' },
-      mobile: { type: 'live', src: 'https://herbal-vantage-website.vercel.app/' },
+      desktop: { type: 'mockup', src: 'https://crm.herbalvantage.app', mockup: 'herbal-crm' },
+      mobile: { type: 'mockup', src: 'https://crm.herbalvantage.app', mockup: 'herbal-crm' },
     },
 
     outcome:
-      'A storefront that feels as premium as the products — turning browsers into confident buyers.',
-    outcomeHighlight: 'confident buyers',
+      'One platform runs members, commissions, KYC and inventory — with the math always in sync.',
+    outcomeHighlight: 'always in sync',
 
     metrics: [],
     testimonial: null,
