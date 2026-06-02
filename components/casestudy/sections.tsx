@@ -57,7 +57,7 @@ const scrollToDetails = () =>
   document.getElementById('case-study-details')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
 export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => (
-  <section className={`${SECTION} pt-3 pb-10 md:pt-4 md:pb-14`}>
+  <section className={`${SECTION} pt-0 pb-8 md:pt-1 md:pb-12`}>
     {/* Subtle grid texture only — the purple ambient glow is rendered at the
         page level so it flows seamlessly from the nav down (no hard seam). */}
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">

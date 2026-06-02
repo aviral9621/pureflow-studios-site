@@ -221,7 +221,7 @@ export const LiveDeviceEmbed: React.FC<LiveDeviceEmbedProps> = ({
           </div>
         ) : (
           /* Browser window — for the hero (real site, desktop layout) */
-          <div className="mx-auto w-full overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b12] shadow-[0_40px_100px_-40px_rgba(164,82,255,0.5)]">
+          <div className="mx-auto w-full max-w-[640px] overflow-hidden rounded-2xl border border-white/12 bg-[#0b0b12] shadow-[0_40px_100px_-40px_rgba(164,82,255,0.5)]">
             <div className="flex h-9 items-center gap-2 border-b border-white/[0.08] bg-black/50 px-4">
               <span className="h-2.5 w-2.5 rounded-full bg-[#4f8cff] shadow-[0_0_6px_rgba(79,140,255,0.6)]" />
               <span className="h-2.5 w-2.5 rounded-full bg-[#b06bff] shadow-[0_0_6px_rgba(176,107,255,0.6)]" />

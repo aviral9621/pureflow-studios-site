@@ -117,7 +117,7 @@ export const UnskillsCrmMockup: React.FC = () => (
       </aside>
 
       {/* main */}
-      <div className="flex flex-1 flex-col gap-1.5 overflow-hidden p-2">
+      <div className="flex flex-1 flex-col justify-between gap-1.5 overflow-hidden p-2">
         {/* topbar */}
         <header className="flex items-center justify-between">
           <div className="leading-none">
