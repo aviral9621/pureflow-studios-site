@@ -79,7 +79,7 @@ export const Hero: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs,
         <span className="inline-flex items-center rounded-full border border-[#d946ef]/30 bg-[#d946ef]/10 px-3.5 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-[#f0abfc]">
           {cs.category}
         </span>
-        <h1 className="mt-6 font-display uppercase leading-[0.9] tracking-[0.005em] text-white" style={{ fontSize: 'clamp(3.2rem, 8vw, 7rem)' }}>
+        <h1 className="mt-6 font-display uppercase leading-[0.92] tracking-[0.005em] text-white" style={{ fontSize: 'clamp(2.6rem, 5vw, 5rem)' }}>
           {cs.name}
         </h1>
         <p className="mt-5 max-w-md text-[15px] leading-relaxed text-white/60 sm:text-base">{cs.tagline}</p>
