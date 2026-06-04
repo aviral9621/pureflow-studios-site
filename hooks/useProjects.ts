@@ -61,7 +61,7 @@ export interface Project {
   /** Optional live URL to embed as the card thumbnail (structured case studies). */
   previewUrl?: string;
   /** Optional designed mockup to render as the card thumbnail. */
-  cardMockup?: 'ai-dashboard' | 'unskills-crm' | 'smart-agro';
+  cardMockup?: 'ai-dashboard' | 'unskills-crm';
 }
 
 // Map a fallback LegacyProject to the new shape (no images, no slug → derived)

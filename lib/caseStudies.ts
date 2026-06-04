@@ -22,7 +22,7 @@ export type DeviceShowcase = {
   /** Optional poster screenshot shown before a live/video embed loads. */
   poster?: string;
   /** For type 'mockup': which designed mockup component to render. */
-  mockup?: 'ai-dashboard' | 'unskills-crm' | 'smart-agro';
+  mockup?: 'ai-dashboard' | 'unskills-crm';
 };
 
 export interface CaseStudy {
@@ -47,7 +47,7 @@ export interface CaseStudy {
     from?: string;
     to?: string;
     /** Render a designed mockup as the card preview (no live URL needed). */
-    mockup?: 'ai-dashboard' | 'unskills-crm' | 'smart-agro';
+    mockup?: 'ai-dashboard' | 'unskills-crm';
     /** Static image used as the card thumbnail. */
     image?: string;
   };
@@ -442,49 +442,39 @@ export const CASE_STUDIES: CaseStudy[] = [
   },
 
   {
-    slug: 'laxmi-agro-crm',
-    matchSlugs: ['ecommerce-retail-platform'],
-    name: 'Smart Agro CRM',
-    tagline: 'A complete business CRM for an agri-trading company — leads, orders, inventory and dispatch in one place.',
-    category: 'Custom CRM · AgriTech',
+    slug: 'ecommerce-retail-platform',
+    name: 'E-commerce & Retail Platform',
+    tagline: 'A fast online store with seamless checkout and in-store point-of-sale on one backend.',
+    category: 'E-commerce',
     liveUrl: '',
-    hero: {
-      bullets: [
-        'Leads & Customer Management',
-        'Orders, Quotations & Dispatch',
-        'Products & Inventory Tracking',
-        'Purchase Orders & Parties',
-        'Real-time Sales & Profit Reports',
-      ],
-      ctaLabel: 'Request a Demo',
-    },
+    hero: { image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
     card: {
-      title: 'A complete agri-business CRM & ERP',
-      description: 'Leads, orders, inventory, dispatch and procurement — with live revenue, profit and sales analytics.',
+      title: 'Online store + in-store POS, one backend',
+      description: 'A conversion-focused storefront with secure payments and a connected retail POS.',
       year: '2025',
-      from: 'from-emerald-950/70',
-      to: 'to-green-900/50',
-      mockup: 'smart-agro',
+      from: 'from-fuchsia-950/70',
+      to: 'to-purple-950/50',
+      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=70&auto=format&fit=crop',
     },
-    snapshot: { client: 'Laxmi Agro', industry: 'AgriTech / Trading', services: 'Product Design · Web Dev · Custom CRM', platforms: 'Web + Admin', timeline: '9 weeks', stack: 'Next.js · Supabase · Razorpay' },
+    snapshot: { client: 'Retail Brand', industry: 'E-commerce', services: 'Web Dev · Payments · POS', platforms: 'Web + POS', timeline: '7 weeks', stack: 'Next.js · Stripe · Tailwind' },
     challenge:
-      'Laxmi Agro was running an agri-trading business on spreadsheets and WhatsApp — leads, orders, inventory, dispatch and procurement all disconnected, with no live view of revenue or profit. They needed one CRM that runs the whole operation and shows the numbers in real time.',
+      'Online and in-store sales lived in separate systems with mismatched stock and no single view of orders. They needed one platform where the storefront and the counter share the same inventory and payments.',
     whatWeBuilt: [
-      { title: 'Sales & CRM', icon: 'dashboard', items: ['Lead capture with source tracking (Instagram, WhatsApp and more)', 'Customer records and quotations', 'Orders with live status — confirmed, dispatched, shipped', 'Live revenue, orders and leads on one dashboard'] },
-      { title: 'Operations & Procurement', icon: 'globe', items: ['Products and real-time inventory tracking', 'Dispatch and delivery management', 'Purchase orders and party (vendor) management', 'Profit & loss and revenue-vs-cost reports'] },
+      { title: 'Storefront & Checkout', icon: 'globe', items: ['Fast, mobile-first product browsing', 'Secure one-page checkout', 'Live inventory and pricing', 'SEO-ready product pages'] },
+      { title: 'Retail POS & Ops', icon: 'dashboard', items: ['In-store POS sharing one backend', 'Orders, refunds and stock in sync', 'Sales and inventory reporting', 'Role-based staff access'] },
     ],
     techStack: [
       { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Stripe', logo: '' },
       { name: 'Supabase', logo: 'supabase' },
-      { name: 'Razorpay', logo: 'razorpay' },
       { name: 'Tailwind CSS', logo: 'tailwind' },
     ],
     showcase: {
-      desktop: { type: 'mockup', src: 'https://crm.laxmiagro.app', mockup: 'smart-agro' },
-      mobile: { type: 'mockup', src: 'https://crm.laxmiagro.app', mockup: 'smart-agro' },
+      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
+      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
     },
-    outcome: 'One CRM runs leads, orders, inventory and dispatch — with revenue and profit live, in real time.',
-    outcomeHighlight: 'in real time',
+    outcome: 'Online and in-store now run on one backend — no double-entry, no mismatched stock.',
+    outcomeHighlight: 'one backend',
     metrics: [],
     testimonial: null,
   },
