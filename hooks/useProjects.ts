@@ -103,7 +103,9 @@ const fromCaseStudy = (cs: CaseStudy, idx: number): Project => ({
   from: cs.card?.from ?? 'from-fuchsia-950/70',
   to: cs.card?.to ?? 'to-purple-950/50',
   body_blocks: [],
-  images: [],
+  images: cs.card?.image
+    ? [{ id: `cs-${cs.slug}-img`, image_url: cs.card.image, alt_text: cs.name, display_order: 0 }]
+    : [],
   display_order: idx - 1000, // sort structured case studies first
   published: true,
   previewUrl: cs.showcase?.desktop?.type === 'live' ? cs.showcase.desktop.src : undefined,

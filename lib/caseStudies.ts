@@ -48,6 +48,8 @@ export interface CaseStudy {
     to?: string;
     /** Render a designed mockup as the card preview (no live URL needed). */
     mockup?: 'ai-dashboard' | 'unskills-crm';
+    /** Static image used as the card thumbnail. */
+    image?: string;
   };
 
   snapshot: {
@@ -399,6 +401,197 @@ export const CASE_STUDIES: CaseStudy[] = [
       name: 'UnSkills Leadership',
       role: 'Computer Education Institute',
     },
+  },
+
+  // ── Additional portfolio projects (representative work) ─────────────────────
+  {
+    slug: 'saas-analytics-dashboard',
+    name: 'SaaS Analytics Platform',
+    tagline: 'A real-time analytics dashboard that turns raw product data into clear decisions.',
+    category: 'SaaS Dashboard',
+    liveUrl: '',
+    hero: { image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=72&auto=format&fit=crop' },
+    card: {
+      title: 'Real-time SaaS analytics dashboard',
+      description: 'KPIs, cohort trends and live charts in one fast, role-based product dashboard.',
+      year: '2025',
+      from: 'from-indigo-950/70',
+      to: 'to-fuchsia-950/50',
+      image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=900&q=70&auto=format&fit=crop',
+    },
+    snapshot: { client: 'SaaS Product', industry: 'SaaS', services: 'Product Design · Web Dev · Data Viz', platforms: 'Web App', timeline: '8 weeks', stack: 'Next.js · Node.js · PostgreSQL' },
+    challenge:
+      'The team had product data scattered across tools with no single, real-time view. They needed one dashboard that surfaces the metrics that matter, updates live, and stays fast as the data grows.',
+    whatWeBuilt: [
+      { title: 'Live Analytics', icon: 'dashboard', items: ['Real-time KPI cards and trend charts', 'Cohort and funnel breakdowns', 'Custom date ranges and saved views', 'Fast queries that scale with the data'] },
+      { title: 'Built for Teams', icon: 'globe', items: ['Role-based access and shared workspaces', 'Exportable reports and alerts', 'A clean, focused dark UI', 'Reusable chart components'] },
+    ],
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Node.js', logo: '' },
+      { name: 'PostgreSQL', logo: '' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+    ],
+    showcase: {
+      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=72&auto=format&fit=crop' },
+      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1400&q=72&auto=format&fit=crop' },
+    },
+    outcome: 'One real-time dashboard replaced a pile of spreadsheets — decisions now take minutes, not days.',
+    outcomeHighlight: 'minutes, not days',
+    metrics: [],
+    testimonial: null,
+  },
+
+  {
+    slug: 'ecommerce-retail-platform',
+    name: 'E-commerce & Retail Platform',
+    tagline: 'A fast online store with seamless checkout and in-store point-of-sale on one backend.',
+    category: 'E-commerce',
+    liveUrl: '',
+    hero: { image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
+    card: {
+      title: 'Online store + in-store POS, one backend',
+      description: 'A conversion-focused storefront with secure payments and a connected retail POS.',
+      year: '2025',
+      from: 'from-fuchsia-950/70',
+      to: 'to-purple-950/50',
+      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=70&auto=format&fit=crop',
+    },
+    snapshot: { client: 'Retail Brand', industry: 'E-commerce', services: 'Web Dev · Payments · POS', platforms: 'Web + POS', timeline: '7 weeks', stack: 'Next.js · Stripe · Tailwind' },
+    challenge:
+      'Online and in-store sales lived in separate systems with mismatched stock and no single view of orders. They needed one platform where the storefront and the counter share the same inventory and payments.',
+    whatWeBuilt: [
+      { title: 'Storefront & Checkout', icon: 'globe', items: ['Fast, mobile-first product browsing', 'Secure one-page checkout', 'Live inventory and pricing', 'SEO-ready product pages'] },
+      { title: 'Retail POS & Ops', icon: 'dashboard', items: ['In-store POS sharing one backend', 'Orders, refunds and stock in sync', 'Sales and inventory reporting', 'Role-based staff access'] },
+    ],
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Stripe', logo: '' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+    ],
+    showcase: {
+      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
+      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
+    },
+    outcome: 'Online and in-store now run on one backend — no double-entry, no mismatched stock.',
+    outcomeHighlight: 'one backend',
+    metrics: [],
+    testimonial: null,
+  },
+
+  {
+    slug: 'healthcare-clinic-system',
+    name: 'Clinic Management System',
+    tagline: 'Appointments, patient records and billing in one secure clinic platform.',
+    category: 'Healthcare',
+    liveUrl: '',
+    hero: { image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=72&auto=format&fit=crop' },
+    card: {
+      title: 'Secure clinic & patient management',
+      description: 'Appointments, patient records, prescriptions and billing in one role-based system.',
+      year: '2025',
+      from: 'from-sky-950/70',
+      to: 'to-indigo-950/50',
+      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=70&auto=format&fit=crop',
+    },
+    snapshot: { client: 'Healthcare Provider', industry: 'Healthcare', services: 'Product Design · Web Dev', platforms: 'Web App', timeline: '10 weeks', stack: 'Next.js · Supabase · Node.js' },
+    challenge:
+      'Patient records, appointments and billing were spread across paper and disconnected apps — slow, error-prone and hard to keep secure. They needed one careful, access-controlled system for the whole clinic workflow.',
+    whatWeBuilt: [
+      { title: 'Patients & Appointments', icon: 'dashboard', items: ['Patient records with full history', 'Appointment scheduling and reminders', 'Prescriptions and visit notes', 'Role-based, access-controlled data'] },
+      { title: 'Billing & Insight', icon: 'globe', items: ['Invoicing and payment tracking', 'Daily collection and dues overview', 'Doctor and department reporting', 'Secure, audit-friendly records'] },
+    ],
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'Node.js', logo: '' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+    ],
+    showcase: {
+      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=72&auto=format&fit=crop' },
+      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=72&auto=format&fit=crop' },
+    },
+    outcome: 'The whole clinic runs from one secure system — records, appointments and billing finally in sync.',
+    outcomeHighlight: 'one secure system',
+    metrics: [],
+    testimonial: null,
+  },
+
+  {
+    slug: 'real-estate-portal',
+    name: 'Real Estate Portal',
+    tagline: 'Property listings, search and enquiry — a portal that turns browsers into leads.',
+    category: 'Real Estate',
+    liveUrl: '',
+    hero: { image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1400&q=72&auto=format&fit=crop' },
+    card: {
+      title: 'Property listings & enquiry portal',
+      description: 'Rich property listings, smart search and a frictionless enquiry-to-visit flow.',
+      year: '2025',
+      from: 'from-emerald-950/70',
+      to: 'to-teal-950/50',
+      image: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=900&q=70&auto=format&fit=crop',
+    },
+    snapshot: { client: 'Property Developer', industry: 'Real Estate', services: 'Web Dev · SEO', platforms: 'Website', timeline: '6 weeks', stack: 'Next.js · Tailwind · Vercel' },
+    challenge:
+      'Listings were hard to browse and enquiries leaked through scattered forms and calls. They needed a fast, trustworthy portal that showcases properties well and makes enquiring effortless.',
+    whatWeBuilt: [
+      { title: 'Listings & Search', icon: 'globe', items: ['Rich property listings with galleries', 'Map and filter-based search', 'Clear, trust-building detail pages', 'Fast, mobile-first, SEO-ready'] },
+      { title: 'Enquiries & Leads', icon: 'dashboard', items: ['Smooth enquiry-to-visit flow', 'Lead capture and follow-up tracking', 'WhatsApp and contact shortcuts', 'Easy listing updates for the team'] },
+    ],
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'Vercel', logo: 'vercel' },
+    ],
+    showcase: {
+      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1400&q=72&auto=format&fit=crop' },
+      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=1400&q=72&auto=format&fit=crop' },
+    },
+    outcome: 'A property portal that looks the part and turns curious visitors into booked site visits.',
+    outcomeHighlight: 'booked site visits',
+    metrics: [],
+    testimonial: null,
+  },
+
+  {
+    slug: 'restaurant-ordering-platform',
+    name: 'Restaurant Ordering Platform',
+    tagline: 'Online ordering, table booking and a kitchen dashboard for a multi-outlet restaurant.',
+    category: 'Food & Hospitality',
+    liveUrl: '',
+    hero: { image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400&q=72&auto=format&fit=crop' },
+    card: {
+      title: 'Online ordering + kitchen dashboard',
+      description: 'Online ordering, table reservations and a live kitchen view across multiple outlets.',
+      year: '2025',
+      from: 'from-amber-950/70',
+      to: 'to-orange-950/50',
+      image: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=900&q=70&auto=format&fit=crop',
+    },
+    snapshot: { client: 'Restaurant Group', industry: 'Food & Hospitality', services: 'Web Dev · Ordering · Admin', platforms: 'Web + Admin', timeline: '8 weeks', stack: 'Next.js · Supabase · Razorpay' },
+    challenge:
+      'Orders came through phone, chat and walk-ins with no single view, and the kitchen had no live queue. They needed one platform for online ordering, reservations and a real-time kitchen dashboard across outlets.',
+    whatWeBuilt: [
+      { title: 'Ordering & Booking', icon: 'globe', items: ['Online menu and ordering', 'Table reservations', 'Secure payments via Razorpay', 'Mobile-first, fast checkout'] },
+      { title: 'Kitchen & Admin', icon: 'dashboard', items: ['Live kitchen order queue', 'Multi-outlet menu and pricing', 'Sales and order reporting', 'Role-based staff access'] },
+    ],
+    techStack: [
+      { name: 'Next.js', logo: 'nextjs' },
+      { name: 'Supabase', logo: 'supabase' },
+      { name: 'Razorpay', logo: 'razorpay' },
+      { name: 'Tailwind CSS', logo: 'tailwind' },
+    ],
+    showcase: {
+      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400&q=72&auto=format&fit=crop' },
+      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=1400&q=72&auto=format&fit=crop' },
+    },
+    outcome: 'Orders, bookings and the kitchen run from one platform — across every outlet, in real time.',
+    outcomeHighlight: 'in real time',
+    metrics: [],
+    testimonial: null,
   },
 ];
 

@@ -87,7 +87,7 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
   return (
     <motion.article
       onClick={() => onOpen(project.slug)}
-      className="case-card group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-xl border border-white/10 bg-[#08060d] transition-all duration-300 hover:-translate-y-1 hover:border-[#ff3f8d]/45 sm:rounded-2xl"
+      className="case-card group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-xl border border-white/10 bg-[#08060d] transition-all duration-300 hover:-translate-y-1.5 hover:border-[#d946ef]/55 hover:shadow-[0_22px_70px_-18px_rgba(217,70,239,0.5)] sm:rounded-2xl"
       initial={reduced ? false : { opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-60px' }}
@@ -101,15 +101,17 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
         <div className="absolute top-2.5 left-2.5 z-20 rounded-full border border-white/10 bg-black/60 px-2 py-0.5 font-mono text-[9px] text-white/60 backdrop-blur-sm sm:top-3 sm:left-3 sm:px-2.5 sm:text-[10px]">
           {project.year} · {project.category}
         </div>
-        {project.images.length > 0 ? (
-          <ProjectImageCarousel images={project.images} intervalMs={4500} />
-        ) : project.cardMockup ? (
-          <Mockup kind={project.cardMockup} />
-        ) : project.previewUrl ? (
-          <LiveCardPreview url={project.previewUrl} siteName={project.client.split('·')[0].trim()} />
-        ) : (
-          <BrowserMockup url={project.url} from={project.from} to={project.to} />
-        )}
+        <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
+          {project.images.length > 0 ? (
+            <ProjectImageCarousel images={project.images} intervalMs={4500} />
+          ) : project.cardMockup ? (
+            <Mockup kind={project.cardMockup} />
+          ) : project.previewUrl ? (
+            <LiveCardPreview url={project.previewUrl} siteName={project.client.split('·')[0].trim()} />
+          ) : (
+            <BrowserMockup url={project.url} from={project.from} to={project.to} />
+          )}
+        </div>
       </div>
 
       {/* BOTTOM — Lean text content */}
