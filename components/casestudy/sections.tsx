@@ -24,6 +24,7 @@ import {
 import type { CaseStudy } from '../../lib/caseStudies';
 import { LiveDeviceEmbed } from './LiveDeviceEmbed';
 import { UnskillsShowcase } from './UnskillsShowcase';
+import { MockupShowcase } from './MockupShowcase';
 
 // ── Shared motion preset ──────────────────────────────────────────────────────
 
@@ -386,9 +387,13 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
             </div>
           </motion.div>
         ) : (
-          // Non-live (designed) work: a multi-device collage (phone + laptop + tablet).
+          // Non-live (designed) work: a multi-device collage of the product UI.
           <motion.div {...reveal(reduced, 0.1)}>
-            <UnskillsShowcase image={cs.hero?.image} />
+            {cs.showcase.desktop.mockup === 'unskills-crm' ? (
+              <UnskillsShowcase image={cs.hero?.image} />
+            ) : (
+              <MockupShowcase kind={cs.showcase.desktop.mockup ?? 'ai-dashboard'} />
+            )}
           </motion.div>
         )}
       </div>
