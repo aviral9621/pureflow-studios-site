@@ -210,8 +210,8 @@ export const StayHubShowcase: React.FC = () => {
   return (
     <div
       ref={fit.ref}
-      className="relative w-full overflow-hidden rounded-[20px] ring-1 ring-white/10"
-      style={{ aspectRatio: `${CW} / ${CH}`, background: '#F3F4F6' }}
+      className="relative w-full"
+      style={{ aspectRatio: `${CW} / ${CH}` }}
     >
       <div
         className="absolute left-0 top-0 origin-top-left font-sans"
