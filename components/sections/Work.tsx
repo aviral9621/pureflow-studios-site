@@ -98,9 +98,6 @@ export const CaseStudyCard: React.FC<CaseStudyCardProps> = ({
 
       {/* TOP — Image carousel (if images) else gradient mockup */}
       <div className="relative z-10 aspect-[16/10] w-full overflow-hidden border-b border-white/8">
-        <div className="absolute top-2.5 left-2.5 z-20 rounded-full border border-white/10 bg-black/60 px-2 py-0.5 font-mono text-[9px] text-white/60 backdrop-blur-sm sm:top-3 sm:left-3 sm:px-2.5 sm:text-[10px]">
-          {project.year} · {project.category}
-        </div>
         <div className="absolute inset-0 transition-transform duration-500 ease-out group-hover:scale-[1.04]">
           {project.images.length > 0 ? (
             <ProjectImageCarousel images={project.images} intervalMs={4500} />
