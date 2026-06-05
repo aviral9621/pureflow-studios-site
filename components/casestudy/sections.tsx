@@ -375,7 +375,7 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
 
         {hasProduct ? (
           <motion.div {...reveal(reduced, 0.1)} className="mt-12">
-            <StayHubShowcase />
+            <StayHubShowcase image={cs.hero?.image} />
           </motion.div>
         ) : isLive ? (
           <motion.div
