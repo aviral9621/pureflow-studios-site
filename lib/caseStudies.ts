@@ -83,7 +83,7 @@ export interface CaseStudy {
   /** Optional results row. `icon` is a key resolved by the Outcome section. */
   metrics?: { value: string; label: string; icon?: string }[];
 
-  testimonial?: { quote: string; name: string; role: string } | null;
+  testimonial?: { quote: string; name: string; role: string; heading?: string } | null;
 }
 
 export const CASE_STUDIES: CaseStudy[] = [
@@ -487,10 +487,21 @@ export const CASE_STUDIES: CaseStudy[] = [
       mobile: { type: 'image', src: '/quickhotel%20crm.png' },
     },
     productShowcase: 'stayhub',
-    outcome: 'Online and in-store now run on one backend — no double-entry, no mismatched stock.',
-    outcomeHighlight: 'one backend',
-    metrics: [],
-    testimonial: null,
+    outcome: 'A digital experience that drives bookings and delights guests.',
+    outcomeHighlight: 'delights',
+    metrics: [
+      { value: '+45%', label: 'Increase in Direct Bookings', icon: 'up' },
+      { value: '+38%', label: 'Higher Guest Engagement', icon: 'users' },
+      { value: '+30%', label: 'Revenue Growth', icon: 'wallet' },
+      { value: '−28%', label: 'Reduction in Support Tickets', icon: 'clock' },
+    ],
+    testimonial: {
+      heading: 'What Our Guests Say',
+      quote:
+        'Quick Hotel made our stay seamless from start to finish. The booking was effortless, the experience was exceptional, and the comfort was beyond expectations.',
+      name: 'Sarah Mitchell',
+      role: 'Travel Enthusiast',
+    },
   },
 
   {

@@ -471,7 +471,7 @@ export const Testimonial: React.FC<{ cs: CaseStudy; reduced: boolean | null }> =
     <section className={`${SECTION} py-16 md:py-20`}>
       <motion.div {...reveal(reduced)} className={`${SHELL} relative max-w-3xl text-center`}>
         <h2 className="font-display text-[clamp(2rem,4.5vw,3.2rem)] uppercase leading-none tracking-wide text-white">
-          What Our Client Says
+          {t.heading ?? 'What Our Client Says'}
         </h2>
         <Quote className="mx-auto mt-6 h-9 w-9 text-[#d946ef]/60" />
         <blockquote className="mt-5 font-serif text-[clamp(1.25rem,3vw,1.9rem)] italic leading-[1.5] text-white/90">
