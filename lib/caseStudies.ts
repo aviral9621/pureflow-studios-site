@@ -509,15 +509,13 @@ export const CASE_STUDIES: CaseStudy[] = [
     name: 'Clinic Management System',
     tagline: 'Appointments, patient records and billing in one secure clinic platform.',
     category: 'Healthcare',
-    liveUrl: '',
-    hero: { image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=72&auto=format&fit=crop' },
+    liveUrl: 'https://piratesmensfashion.com/',
     card: {
       title: 'Secure clinic & patient management',
       description: 'Appointments, patient records, prescriptions and billing in one role-based system.',
       year: '2025',
       from: 'from-sky-950/70',
       to: 'to-indigo-950/50',
-      image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=900&q=70&auto=format&fit=crop',
     },
     snapshot: { client: 'Healthcare Provider', industry: 'Healthcare', services: 'Product Design · Web Dev', platforms: 'Web App', timeline: '10 weeks', stack: 'Next.js · Supabase · Node.js' },
     challenge:
@@ -533,8 +531,8 @@ export const CASE_STUDIES: CaseStudy[] = [
       { name: 'Tailwind CSS', logo: 'tailwind' },
     ],
     showcase: {
-      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=72&auto=format&fit=crop' },
-      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=1400&q=72&auto=format&fit=crop' },
+      desktop: { type: 'live', src: 'https://piratesmensfashion.com/' },
+      mobile: { type: 'live', src: 'https://piratesmensfashion.com/' },
     },
     outcome: 'The whole clinic runs from one secure system — records, appointments and billing finally in sync.',
     outcomeHighlight: 'one secure system',
