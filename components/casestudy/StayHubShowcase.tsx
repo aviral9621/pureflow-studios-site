@@ -22,6 +22,7 @@ import {
   TrendingUp,
   MoreHorizontal,
 } from 'lucide-react';
+import { motion } from 'framer-motion';
 import { useFitScale } from '../../hooks/useFitScale';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -41,13 +42,18 @@ const CW = 1540;
 const CH = 1030;
 
 // ── small primitives ─────────────────────────────────────────────────────────
-const Card: React.FC<{ style?: React.CSSProperties; className?: string; children: React.ReactNode }> = ({ style, className = '', children }) => (
-  <div
-    className={`absolute rounded-2xl bg-white ring-1 ring-black/[0.06] shadow-[0_18px_50px_-20px_rgba(15,23,42,0.35)] ${className}`}
+const Card: React.FC<{ style?: React.CSSProperties; className?: string; delay?: number; children: React.ReactNode }> = ({ style, className = '', delay = 0, children }) => (
+  <motion.div
+    className={`absolute rounded-2xl bg-white ring-1 ring-black/[0.06] shadow-[0_18px_50px_-20px_rgba(15,23,42,0.4)] ${className}`}
     style={style}
+    initial={{ opacity: 0, y: 26, scale: 0.95 }}
+    whileInView={{ opacity: 1, y: 0, scale: 1 }}
+    viewport={{ once: true, amount: 0.25 }}
+    transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+    whileHover={{ y: -5, transition: { duration: 0.25 } }}
   >
     {children}
-  </div>
+  </motion.div>
 );
 
 const Badge: React.FC<{ text: string; color: string }> = ({ text, color }) => (
@@ -218,7 +224,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         style={{ width: CW, height: CH, transform: `scale(${fit.scale || 0.0001})`, visibility: fit.scale ? 'visible' : 'hidden' }}
       >
         {/* ── MAIN DASHBOARD (real screenshot when provided; widened to the right) ── */}
-        <Card style={{ left: 372, top: 40, width: 840, height: 566 }} className="z-30">
+        <Card style={{ left: 372, top: 40, width: 840, height: 566 }} className="z-30" delay={0}>
           {image ? (
             <img
               src={image}
@@ -322,7 +328,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         </Card>
 
         {/* ── HOTELS (top-left) ── */}
-        <Card style={{ left: 36, top: 152, width: 330, height: 420 }}>
+        <Card style={{ left: 36, top: 152, width: 330, height: 420 }} delay={0.14}>
           <div className="flex h-full flex-col p-4">
             <div className="flex items-center justify-between">
               <span className="text-[14px] font-bold text-slate-900">Hotels</span>
@@ -366,7 +372,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         </Card>
 
         {/* ── LEADS & INQUIRIES (right) ── */}
-        <Card style={{ left: 1238, top: 118, width: 262, height: 500 }}>
+        <Card style={{ left: 1238, top: 118, width: 262, height: 500 }} delay={0.28}>
           <div className="flex h-full flex-col p-3.5">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1 text-[13px] font-bold text-slate-900"><ChevronLeft className="h-3.5 w-3.5" /> Leads &amp; inquiries</span>
@@ -408,7 +414,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         </Card>
 
         {/* ── MOBILE APP (bottom-left) ── */}
-        <Card style={{ left: 118, top: 582, width: 184, height: 432 }} className="!rounded-[26px]">
+        <Card style={{ left: 100, top: 582, width: 232, height: 432 }} className="!rounded-[26px]" delay={0.42}>
           <div className="flex h-full flex-col overflow-hidden rounded-[26px] p-3">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-bold text-slate-900">Reports</span>
@@ -443,7 +449,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         </Card>
 
         {/* ── REPORTS (bottom-center) ── */}
-        <Card style={{ left: 392, top: 632, width: 614, height: 384 }}>
+        <Card style={{ left: 392, top: 632, width: 614, height: 384 }} delay={0.56}>
           <div className="flex h-full flex-col p-4">
             <div className="flex items-center justify-between">
               <span className="text-[15px] font-bold text-slate-900">Reports</span>
