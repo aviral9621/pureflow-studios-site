@@ -24,6 +24,7 @@ import {
 import type { CaseStudy } from '../../lib/caseStudies';
 import { LiveDeviceEmbed } from './LiveDeviceEmbed';
 import { UnskillsShowcase } from './UnskillsShowcase';
+import { StayHubShowcase } from './StayHubShowcase';
 
 // ── Shared motion preset ──────────────────────────────────────────────────────
 
@@ -349,8 +350,9 @@ export const TechStack: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = (
 
 export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }> = ({ cs, reduced }) => {
   const kind = cs.showcase.desktop.type;
+  const hasProduct = !!cs.productShowcase;
   // Show the laptop+phone showcase for live sites and designed mockups.
-  if (kind !== 'live' && kind !== 'mockup') return null;
+  if (kind !== 'live' && kind !== 'mockup' && !hasProduct) return null;
   const isLive = kind === 'live';
 
   return (
@@ -371,7 +373,11 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
           </p>
         </motion.div>
 
-        {isLive ? (
+        {hasProduct ? (
+          <motion.div {...reveal(reduced, 0.1)} className="mt-12">
+            <StayHubShowcase />
+          </motion.div>
+        ) : isLive ? (
           <motion.div
             {...reveal(reduced, 0.1)}
             className="mt-12 flex flex-col items-center gap-12 lg:flex-row lg:items-center lg:justify-center lg:gap-10"

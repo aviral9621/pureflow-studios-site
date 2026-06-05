@@ -72,6 +72,9 @@ export interface CaseStudy {
 
   showcase: { desktop: DeviceShowcase; mobile: DeviceShowcase };
 
+  /** Optional designed product-collage rendered in the Visual Showcase slot. */
+  productShowcase?: 'stayhub';
+
   /** One short qualitative sentence — no numbers. */
   outcome: string;
   /** Substring of `outcome` to render in the accent colour. */
@@ -459,8 +462,8 @@ export const CASE_STUDIES: CaseStudy[] = [
       ],
     },
     card: {
-      title: 'Online store + in-store POS, one backend',
-      description: 'A conversion-focused storefront with secure payments and a connected retail POS.',
+      title: 'Quick Hotels CRM',
+      description: 'A modern hospitality management platform — bookings, leads, occupancy and revenue analytics in one dashboard.',
       year: '2025',
       from: 'from-fuchsia-950/70',
       to: 'to-purple-950/50',
@@ -483,6 +486,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       desktop: { type: 'image', src: '/quickhotel%20crm.png' },
       mobile: { type: 'image', src: '/quickhotel%20crm.png' },
     },
+    productShowcase: 'stayhub',
     outcome: 'Online and in-store now run on one backend — no double-entry, no mismatched stock.',
     outcomeHighlight: 'one backend',
     metrics: [],
