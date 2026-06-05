@@ -443,11 +443,21 @@ export const CASE_STUDIES: CaseStudy[] = [
 
   {
     slug: 'ecommerce-retail-platform',
-    name: 'E-commerce & Retail Platform',
-    tagline: 'A fast online store with seamless checkout and in-store point-of-sale on one backend.',
-    category: 'E-commerce',
+    name: 'Modern Hospitality Management Platform',
+    tagline:
+      'An all-in-one hotel operations system designed to manage bookings, guest inquiries, occupancy, revenue analytics, and business performance from a single centralized dashboard.',
+    category: 'Quick Hotel CRM',
     liveUrl: '',
-    hero: { image: '/quickhotel%20crm.png', device: 'laptop' },
+    hero: {
+      image: '/quickhotel%20crm.png',
+      device: 'laptop',
+      bullets: [
+        'Centralized bookings & reservations',
+        'Guest inquiry & lead management',
+        'Live occupancy & revenue analytics',
+        'Business performance at a glance',
+      ],
+    },
     card: {
       title: 'Online store + in-store POS, one backend',
       description: 'A conversion-focused storefront with secure payments and a connected retail POS.',
