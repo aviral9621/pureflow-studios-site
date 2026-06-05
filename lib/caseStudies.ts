@@ -36,7 +36,7 @@ export interface CaseStudy {
 
   /** Optional hero extras: a static image to show in the hero browser frame
    *  (instead of the live/mockup showcase), feature bullets + a custom CTA. */
-  hero?: { poster?: string; image?: string; bullets?: string[]; ctaLabel?: string };
+  hero?: { poster?: string; image?: string; bullets?: string[]; ctaLabel?: string; device?: 'browser' | 'laptop' };
 
   /** How this project appears as a card in the Work listing / homepage. */
   card?: {
@@ -447,14 +447,14 @@ export const CASE_STUDIES: CaseStudy[] = [
     tagline: 'A fast online store with seamless checkout and in-store point-of-sale on one backend.',
     category: 'E-commerce',
     liveUrl: '',
-    hero: { image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
+    hero: { image: '/quickhotel%20crm.png', device: 'laptop' },
     card: {
       title: 'Online store + in-store POS, one backend',
       description: 'A conversion-focused storefront with secure payments and a connected retail POS.',
       year: '2025',
       from: 'from-fuchsia-950/70',
       to: 'to-purple-950/50',
-      image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=900&q=70&auto=format&fit=crop',
+      image: '/quickhotel%20crm.png',
     },
     snapshot: { client: 'Retail Brand', industry: 'E-commerce', services: 'Web Dev · Payments · POS', platforms: 'Web + POS', timeline: '7 weeks', stack: 'Next.js · Stripe · Tailwind' },
     challenge:
@@ -470,8 +470,8 @@ export const CASE_STUDIES: CaseStudy[] = [
       { name: 'Tailwind CSS', logo: 'tailwind' },
     ],
     showcase: {
-      desktop: { type: 'image', src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
-      mobile: { type: 'image', src: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=1400&q=72&auto=format&fit=crop' },
+      desktop: { type: 'image', src: '/quickhotel%20crm.png' },
+      mobile: { type: 'image', src: '/quickhotel%20crm.png' },
     },
     outcome: 'Online and in-store now run on one backend — no double-entry, no mismatched stock.',
     outcomeHighlight: 'one backend',
