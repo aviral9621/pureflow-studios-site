@@ -24,10 +24,10 @@ export const WorkIndexPage: React.FC<Props> = ({ onViewChange, onOpenProject }) 
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1100px] h-[700px] bg-brand/[0.06] rounded-full blur-[140px]" />
       </div>
 
-      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-24 pb-20 sm:px-6 sm:pt-28 lg:px-10 lg:pt-32">
+      <div className="relative z-10 mx-auto max-w-7xl px-4 pt-[88px] pb-20 sm:px-6 sm:pt-24 lg:px-10 lg:pt-24">
         <button
           onClick={() => onViewChange('home')}
-          className="group mb-8 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white sm:mb-10"
+          className="group mb-5 flex items-center gap-2 text-sm text-white/45 transition-colors hover:text-white sm:mb-6"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to home
@@ -38,7 +38,7 @@ export const WorkIndexPage: React.FC<Props> = ({ onViewChange, onOpenProject }) 
           initial={reduced ? false : { opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-10 flex flex-col items-center text-center md:mb-14"
+          className="mb-8 flex flex-col items-center text-center md:mb-10"
         >
           <span className="font-serif italic text-white/95 text-[clamp(1.75rem,3.4vw,3rem)] leading-[1.1] tracking-normal">
             Everything we've
