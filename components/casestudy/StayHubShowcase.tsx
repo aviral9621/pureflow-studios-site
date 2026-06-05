@@ -205,7 +205,7 @@ const Legend: React.FC<{ items: { label: string; meta: string; color: string }[]
 );
 
 // ── the collage ──────────────────────────────────────────────────────────────
-export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
+export const StayHubShowcase: React.FC = () => {
   const fit = useFitScale(CW);
   return (
     <div
@@ -217,16 +217,8 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         className="absolute left-0 top-0 origin-top-left font-sans"
         style={{ width: CW, height: CH, transform: `scale(${fit.scale || 0.0001})`, visibility: fit.scale ? 'visible' : 'hidden' }}
       >
-        {/* ── MAIN DASHBOARD (real screenshot when provided) ── */}
-        <Card style={{ left: 330, top: 95, width: 900, height: 424 }}>
-          {image ? (
-            <img
-              src={image}
-              alt="Quick Hotels CRM dashboard"
-              loading="lazy"
-              className="h-full w-full rounded-2xl bg-white object-cover object-center"
-            />
-          ) : (
+        {/* ── MAIN DASHBOARD ── */}
+        <Card style={{ left: 372, top: 40, width: 656, height: 566 }}>
           <div className="flex h-full overflow-hidden rounded-2xl">
             {/* sidebar */}
             <aside className="flex w-[150px] shrink-0 flex-col p-3 text-white" style={{ background: NAVY }}>
@@ -318,11 +310,10 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
               </div>
             </div>
           </div>
-          )}
         </Card>
 
         {/* ── HOTELS (top-left) ── */}
-        <Card style={{ left: 24, top: 150, width: 320, height: 430 }}>
+        <Card style={{ left: 36, top: 152, width: 330, height: 420 }}>
           <div className="flex h-full flex-col p-4">
             <div className="flex items-center justify-between">
               <span className="text-[14px] font-bold text-slate-900">Hotels</span>
@@ -365,8 +356,8 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
           </div>
         </Card>
 
-        {/* ── LEADS & INQUIRIES (right, raised) ── */}
-        <Card style={{ left: 1232, top: 56, width: 264, height: 470 }}>
+        {/* ── LEADS & INQUIRIES (right) ── */}
+        <Card style={{ left: 1238, top: 118, width: 262, height: 500 }}>
           <div className="flex h-full flex-col p-3.5">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1 text-[13px] font-bold text-slate-900"><ChevronLeft className="h-3.5 w-3.5" /> Leads &amp; inquiries</span>
@@ -408,7 +399,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         </Card>
 
         {/* ── MOBILE APP (bottom-left) ── */}
-        <Card style={{ left: 150, top: 592, width: 184, height: 420 }} className="!rounded-[26px]">
+        <Card style={{ left: 118, top: 582, width: 184, height: 432 }} className="!rounded-[26px]">
           <div className="flex h-full flex-col overflow-hidden rounded-[26px] p-3">
             <div className="flex items-center justify-between">
               <span className="text-[13px] font-bold text-slate-900">Reports</span>
@@ -443,7 +434,7 @@ export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
         </Card>
 
         {/* ── REPORTS (bottom-center) ── */}
-        <Card style={{ left: 360, top: 552, width: 660, height: 400 }}>
+        <Card style={{ left: 392, top: 632, width: 614, height: 384 }}>
           <div className="flex h-full flex-col p-4">
             <div className="flex items-center justify-between">
               <span className="text-[15px] font-bold text-slate-900">Reports</span>
