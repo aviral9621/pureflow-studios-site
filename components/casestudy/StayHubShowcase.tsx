@@ -205,7 +205,7 @@ const Legend: React.FC<{ items: { label: string; meta: string; color: string }[]
 );
 
 // ── the collage ──────────────────────────────────────────────────────────────
-export const StayHubShowcase: React.FC = () => {
+export const StayHubShowcase: React.FC<{ image?: string }> = ({ image }) => {
   const fit = useFitScale(CW);
   return (
     <div
@@ -217,8 +217,16 @@ export const StayHubShowcase: React.FC = () => {
         className="absolute left-0 top-0 origin-top-left font-sans"
         style={{ width: CW, height: CH, transform: `scale(${fit.scale || 0.0001})`, visibility: fit.scale ? 'visible' : 'hidden' }}
       >
-        {/* ── MAIN DASHBOARD ── */}
+        {/* ── MAIN DASHBOARD (real screenshot when provided) ── */}
         <Card style={{ left: 372, top: 40, width: 656, height: 566 }}>
+          {image ? (
+            <img
+              src={image}
+              alt="Quick Hotels CRM dashboard"
+              loading="lazy"
+              className="h-full w-full rounded-2xl bg-white object-cover object-left-top"
+            />
+          ) : (
           <div className="flex h-full overflow-hidden rounded-2xl">
             {/* sidebar */}
             <aside className="flex w-[150px] shrink-0 flex-col p-3 text-white" style={{ background: NAVY }}>
@@ -310,6 +318,7 @@ export const StayHubShowcase: React.FC = () => {
               </div>
             </div>
           </div>
+          )}
         </Card>
 
         {/* ── HOTELS (top-left) ── */}

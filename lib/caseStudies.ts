@@ -486,6 +486,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       desktop: { type: 'image', src: '/quickhotel%20crm.png' },
       mobile: { type: 'image', src: '/quickhotel%20crm.png' },
     },
+    productShowcase: 'stayhub',
     outcome: 'Online and in-store now run on one backend — no double-entry, no mismatched stock.',
     outcomeHighlight: 'one backend',
     metrics: [],
