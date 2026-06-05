@@ -352,7 +352,7 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
   const kind = cs.showcase.desktop.type;
   const hasProduct = !!cs.productShowcase;
   // Show the laptop+phone showcase for live sites and designed mockups.
-  if (kind !== 'live' && kind !== 'mockup' && !hasProduct) return null;
+  if (kind !== 'live' && kind !== 'mockup' && kind !== 'image' && !hasProduct) return null;
   const isLive = kind === 'live';
 
   return (
@@ -390,6 +390,18 @@ export const VisualShowcase: React.FC<{ cs: CaseStudy; reduced: boolean | null }
             <div className="order-1 w-full lg:order-2 lg:w-[34%]">
               <LiveDeviceEmbed device="phone" showcase={cs.showcase.mobile} liveUrl={cs.liveUrl} label="Mobile" siteName={cs.name} />
             </div>
+          </motion.div>
+        ) : kind === 'image' ? (
+          // Static dashboard screenshot — shown big in a laptop frame.
+          <motion.div {...reveal(reduced, 0.1)} className="mx-auto mt-12 w-full max-w-4xl">
+            <LiveDeviceEmbed
+              device="laptop"
+              showcase={cs.showcase.desktop}
+              liveUrl={cs.showcase.desktop.src}
+              label="Dashboard"
+              siteName={cs.name}
+              nonInteractive
+            />
           </motion.div>
         ) : (
           // Non-live (designed) work: a multi-device collage (phone + laptop + tablet).
