@@ -225,6 +225,36 @@ const AppContent: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [currentView]);
 
+  // On the very first load, keep the home page pinned to the top (the hero) for a
+  // few seconds. A live-preview iframe in the Work section can autofocus an input
+  // once it loads, which makes the browser scroll the page down to that section —
+  // so the site appears to "open on the Work section". We snap back to the top
+  // unless the visitor scrolls themselves (any real scroll intent disarms it).
+  useEffect(() => {
+    if (initialRoute.view !== 'home') return;
+    let userIntent = false;
+    const mark = () => { userIntent = true; };
+    const passive = { passive: true } as AddEventListenerOptions;
+    window.addEventListener('wheel', mark, passive);
+    window.addEventListener('touchmove', mark, passive);
+    window.addEventListener('pointerdown', mark, passive);
+    window.addEventListener('keydown', mark);
+    const tick = () => {
+      if (!userIntent && window.scrollY > 4) window.scrollTo(0, 0);
+    };
+    const interval = window.setInterval(tick, 150);
+    const stop = window.setTimeout(() => window.clearInterval(interval), 4500);
+    return () => {
+      window.clearInterval(interval);
+      window.clearTimeout(stop);
+      window.removeEventListener('wheel', mark);
+      window.removeEventListener('touchmove', mark);
+      window.removeEventListener('pointerdown', mark);
+      window.removeEventListener('keydown', mark);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // Keep the URL in sync with the current view/slug (History API). Skips the
   // push when the change originated from a browser back/forward (popstate).
   useEffect(() => {
