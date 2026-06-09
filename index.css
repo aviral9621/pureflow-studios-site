@@ -548,18 +548,55 @@ html:not(.dark) .pf-card:hover .pf-card-inner {
 .automation-card:nth-child(5)::before { animation-delay: 3.6s; }
 .automation-card:nth-child(6)::before { animation-delay: 4.5s; }
 
-/* Brighter one-shot sweep on hover. */
+/* Brighter, repeating sweep on hover. */
 .automation-card:hover::before {
-  animation: cardShineHover 0.85s ease-out;
+  animation: cardShineHover 1.5s ease-in-out infinite;
 }
 
 @keyframes cardShineHover {
   0% { left: -160%; }
+  55% { left: 160%; }
   100% { left: 160%; }
 }
 
+/* Flowing gradient glow border that lights up on hover. */
+.automation-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: linear-gradient(115deg, #ff3f8d, #d946ef, #a855f7, #ec4899, #ff3f8d);
+  background-size: 300% 300%;
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+  z-index: 7;
+}
+
+.automation-card:hover::after {
+  opacity: 1;
+  animation: cardBorderFlow 3.2s linear infinite;
+}
+
+@keyframes cardBorderFlow {
+  to { background-position: 300% 50%; }
+}
+
+/* Soft brand glow under the card on hover. */
+.automation-card:hover {
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 30px 80px -42px rgba(236, 72, 153, 0.9),
+    0 0 34px -12px rgba(168, 85, 247, 0.55);
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .automation-card::before { animation: none; }
+  .automation-card::before,
+  .automation-card::after { animation: none; }
 }
 
 .hero-business-meets {
