@@ -98,7 +98,6 @@ export const CASE_STUDIES: CaseStudy[] = [
 
     card: {
       title: 'Booking website + custom PMS on one backend',
-      image: '/shot-quickhotels.webp',
       description:
         'All-inclusive pricing, split payments and a back-office that stays in sync — automatically.',
       year: '2026',
@@ -176,7 +175,6 @@ export const CASE_STUDIES: CaseStudy[] = [
 
     card: {
       title: 'Premium Herbal Store Experience',
-      image: '/shot-herbal.webp',
       description:
         'Modern herbal e-commerce with a luxury product showcase, smooth shopping flow, clean UI and a conversion-focused design system.',
       year: '2026',
@@ -418,7 +416,6 @@ export const CASE_STUDIES: CaseStudy[] = [
     liveUrl: 'https://www.unskillseducation.org/',
     card: {
       title: 'A modern education & admissions website',
-      image: '/shot-unskills.webp',
       description: 'Course catalogue, clear program pages and a smooth enquiry-to-admission flow on a fast, SEO-ready site.',
       year: '2025',
       from: 'from-indigo-950/70',
