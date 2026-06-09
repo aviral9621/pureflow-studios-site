@@ -513,6 +513,55 @@ html:not(.dark) .pf-card:hover .pf-card-inner {
   }
 }
 
+/* ── Diagonal shine sweep across the "What do you want to Automate?" cards ── */
+.automation-card::before {
+  content: '';
+  position: absolute;
+  top: -12%;
+  left: -160%;
+  width: 65%;
+  height: 124%;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.05) 40%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0.05) 60%,
+    transparent 100%
+  );
+  transform: skewX(-18deg);
+  pointer-events: none;
+  z-index: 6;
+  animation: cardShine 6s ease-in-out infinite;
+}
+
+@keyframes cardShine {
+  0% { left: -160%; }
+  16% { left: 160%; }
+  100% { left: 160%; }
+}
+
+/* Stagger the sweep so the cards shine one after another, not all at once. */
+.automation-card:nth-child(2)::before { animation-delay: 0.9s; }
+.automation-card:nth-child(3)::before { animation-delay: 1.8s; }
+.automation-card:nth-child(4)::before { animation-delay: 2.7s; }
+.automation-card:nth-child(5)::before { animation-delay: 3.6s; }
+.automation-card:nth-child(6)::before { animation-delay: 4.5s; }
+
+/* Brighter one-shot sweep on hover. */
+.automation-card:hover::before {
+  animation: cardShineHover 0.85s ease-out;
+}
+
+@keyframes cardShineHover {
+  0% { left: -160%; }
+  100% { left: 160%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .automation-card::before { animation: none; }
+}
+
 .hero-business-meets {
   font-family: 'Anton', 'Arial Narrow', 'Inter', sans-serif;
   font-stretch: normal;
