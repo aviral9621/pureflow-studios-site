@@ -1,3 +1,4 @@
+import type React from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -41,7 +42,7 @@ export function useFitScale(logicalWidth: number): FitScale {
 
     // ResizeObserver handles size changes (incl. viewport resizes that change
     // the element). Fall back to a window-resize listener only when RO is absent.
-    if ('ResizeObserver' in window) {
+    if (typeof ResizeObserver !== 'undefined') {
       const ro = new ResizeObserver(measure);
       ro.observe(el);
       return () => ro.disconnect();
